@@ -17,6 +17,7 @@ import rocks.inspectit.ui.rcp.ci.form.input.ApplicationDefinitionEditorInput;
 import rocks.inspectit.ui.rcp.ci.form.page.ApplicationDefinitionPage;
 import rocks.inspectit.ui.rcp.ci.form.page.BusinessTransactionPage;
 import rocks.inspectit.ui.rcp.ci.listener.IApplicationDefinitionChangeListener;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
@@ -81,35 +82,43 @@ public class ApplicationDefinitionEditor extends AbstractConfigurationInterfaceF
 		}
 
 		ApplicationDefinitionEditorInput applicationDefinitionEditorInput = (ApplicationDefinitionEditorInput) getEditorInput();
-		CmrRepositoryDefinition cmrRepositoryDefinition = applicationDefinitionEditorInput.getCmrRepositoryDefinition();
-		ApplicationDefinition applicationDefinition = applicationDefinitionEditorInput.getApplication();
+		final CmrRepositoryDefinition cmrRepositoryDefinition = applicationDefinitionEditorInput.getCmrRepositoryDefinition();
+		final ApplicationDefinition applicationDefinition = applicationDefinitionEditorInput.getApplication();
 
 		if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 			try {
 				commitPages(true);
 
+				ProgressDialog<ApplicationDefinition> dialog = new ProgressDialog<ApplicationDefinition>("Saving appplication definition..", IProgressMonitor.UNKNOWN) {
+					@Override
+					public ApplicationDefinition execute(IProgressMonitor monitor) throws BusinessException {
+						return cmrRepositoryDefinition.getConfigurationInterfaceService().updateApplicationDefinition(applicationDefinition);
+					}
+				};
+
+				dialog.start(true, false);
+
 				// store changes to CMR
-				applicationDefinition = cmrRepositoryDefinition.getConfigurationInterfaceService().updateApplicationDefinition(applicationDefinition);
+				ApplicationDefinition updatedApplicationDefinition = dialog.getResult();
 
 				// update listeners
-				InspectIT.getDefault().getInspectITConfigurationInterfaceManager().applicationUpdated(applicationDefinition, cmrRepositoryDefinition);
+				if (updatedApplicationDefinition != null) {
+					InspectIT.getDefault().getInspectITConfigurationInterfaceManager().applicationUpdated(updatedApplicationDefinition, cmrRepositoryDefinition);
+				}
 
 				// set no exception and fire dirty state changed
 				setExceptionOnSave(false);
 				editorDirtyStateChanged();
 			} catch (BusinessException e) {
-				monitor.setCanceled(true);
 				setExceptionOnSave(true);
 				editorDirtyStateChanged();
 				InspectIT.getDefault().createErrorDialog("Saving of the application definition '" + applicationDefinition.getApplicationName() + "' failed due to the exception on the CMR.", e, -1);
 			} catch (Throwable t) { // NOPMD
-				monitor.setCanceled(true);
 				setExceptionOnSave(true);
 				editorDirtyStateChanged();
 				InspectIT.getDefault().createErrorDialog("Unexpected exception occurred during an attempt to save the application '" + applicationDefinition.getApplicationName() + "'.", t, -1);
 			}
 		} else {
-			monitor.setCanceled(true);
 			InspectIT.getDefault().createErrorDialog("Saving of the application '" + applicationDefinition.getApplicationName() + "' failed because CMR is currently not online.", -1);
 		}
 

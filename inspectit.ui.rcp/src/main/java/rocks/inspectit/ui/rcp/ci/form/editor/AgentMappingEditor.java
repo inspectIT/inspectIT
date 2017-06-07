@@ -19,6 +19,7 @@ import rocks.inspectit.ui.rcp.ci.form.input.AgentMappingInput;
 import rocks.inspectit.ui.rcp.ci.form.page.AgentMappingPage;
 import rocks.inspectit.ui.rcp.ci.listener.IAgentMappingsChangeListener;
 import rocks.inspectit.ui.rcp.ci.listener.IEnvironmentChangeListener;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
@@ -80,14 +81,23 @@ public class AgentMappingEditor extends AbstractConfigurationInterfaceFormEditor
 		}
 
 		AgentMappingInput profileEditorInput = (AgentMappingInput) getEditorInput();
-		CmrRepositoryDefinition cmrRepositoryDefinition = profileEditorInput.getCmrRepositoryDefinition();
-		AgentMappings mappings = profileEditorInput.getAgentMappings();
+		final CmrRepositoryDefinition cmrRepositoryDefinition = profileEditorInput.getCmrRepositoryDefinition();
+		final AgentMappings mappings = profileEditorInput.getAgentMappings();
 
 		if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 			try {
 				commitPages(true);
 
-				AgentMappings updated = cmrRepositoryDefinition.getConfigurationInterfaceService().saveAgentMappings(mappings);
+				ProgressDialog<AgentMappings> dialog = new ProgressDialog<AgentMappings>("Saving agent mappings..", IProgressMonitor.UNKNOWN) {
+					@Override
+					public AgentMappings execute(IProgressMonitor monitor) throws BusinessException {
+						return cmrRepositoryDefinition.getConfigurationInterfaceService().saveAgentMappings(mappings);
+					}
+				};
+
+				dialog.start(true, false);
+
+				AgentMappings updated = dialog.getResult();
 
 				// notify listeners
 				if (null != updated) {

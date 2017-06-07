@@ -12,6 +12,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -24,8 +25,11 @@ import rocks.inspectit.shared.all.cmr.model.PlatformIdent;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.AgentConnection;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.InstrumentationStatus;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.ci.dialog.InstrumentationUpdateDialog;
 import rocks.inspectit.ui.rcp.ci.dialog.InstrumentationUpdateDialog.OnSaveBehavior;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.preferences.PreferencesConstants;
 import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryAndAgentProvider;
@@ -124,12 +128,25 @@ public class InstrumentationUpdateHandler extends AbstractHandler implements IHa
 					}
 
 					if (CollectionUtils.isNotEmpty(updateAgents)) {
-						List<Long> updateIds = new ArrayList<>();
+						final List<Long> updateIds = new ArrayList<>();
 						for (PlatformIdent platformIdent : updateAgents) {
 							updateIds.add(platformIdent.getId());
 						}
 
-						repositoryDefinition.getAgentInstrumentationService().updateInstrumentation(updateIds);
+						ProgressDialog<Object> dialog = new ProgressDialog<Object>("Updating instrumentation configurations..", IProgressMonitor.UNKNOWN) {
+							@Override
+							public Object execute(IProgressMonitor monitor) throws BusinessException {
+								repositoryDefinition.getAgentInstrumentationService().updateInstrumentation(updateIds);
+
+								return null;
+							}
+						};
+
+						try {
+							dialog.start(true, false);
+						} catch (Exception e) {
+							InspectIT.getDefault().createErrorDialog("Unexpected exception occurred during an attempt to update the instrumentation configurations.", e, -1);
+						}
 					}
 				}
 			}
@@ -144,8 +161,22 @@ public class InstrumentationUpdateHandler extends AbstractHandler implements IHa
 	 *            the {@link CmrRepositoryDefinition} to use
 	 * @return {@link Map} of agents having pending an instrumentation
 	 */
-	private static Map<PlatformIdent, AgentStatusData> getPendingAgents(CmrRepositoryDefinition repositoryDefinition) {
-		Map<PlatformIdent, AgentStatusData> agentsOverview = repositoryDefinition.getGlobalDataAccessService().getAgentsOverview();
+	private static Map<PlatformIdent, AgentStatusData> getPendingAgents(final CmrRepositoryDefinition repositoryDefinition) {
+		ProgressDialog<Map<PlatformIdent, AgentStatusData>> dialog = new ProgressDialog<Map<PlatformIdent, AgentStatusData>>("Fetching status of agents..", IProgressMonitor.UNKNOWN) {
+			@Override
+			public Map<PlatformIdent, AgentStatusData> execute(IProgressMonitor monitor) throws BusinessException {
+				return repositoryDefinition.getGlobalDataAccessService().getAgentsOverview();
+			}
+		};
+
+		try {
+			dialog.start(true, false);
+		} catch (Exception e) {
+			InspectIT.getDefault().createErrorDialog("Unexpected exception occurred during an attempt to fetch agent status.", e, -1);
+			return null;
+		}
+
+		Map<PlatformIdent, AgentStatusData> agentsOverview = dialog.getResult();
 
 		Map<PlatformIdent, AgentStatusData> resultMap = new HashMap<>();
 		for (Entry<PlatformIdent, AgentStatusData> entry : agentsOverview.entrySet()) {

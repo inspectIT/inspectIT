@@ -1,6 +1,7 @@
 package rocks.inspectit.shared.all.util;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -15,6 +16,11 @@ import org.slf4j.LoggerFactory;
 public final class ExecutorServiceUtils {
 
 	/**
+	 * The global cached thread pool.
+	 */
+	private static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
+
+	/**
 	 * Logger for this class.
 	 */
 	private static final Logger LOG = LoggerFactory.getLogger(ExecutorServiceUtils.class);
@@ -23,6 +29,15 @@ public final class ExecutorServiceUtils {
 	 * Hidden constructor.
 	 */
 	private ExecutorServiceUtils() {
+	}
+
+	/**
+	 * Returns a cached thread pool.
+	 *
+	 * @return A {@link ExecutorService} representing a cached thread pool
+	 */
+	public static ExecutorService getExecutorService() {
+		return EXECUTOR_SERVICE;
 	}
 
 	/**

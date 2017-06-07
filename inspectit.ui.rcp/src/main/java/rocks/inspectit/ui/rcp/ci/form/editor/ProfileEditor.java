@@ -22,6 +22,7 @@ import rocks.inspectit.ui.rcp.ci.form.page.ExcludeRulesPage;
 import rocks.inspectit.ui.rcp.ci.form.page.JmxBeanDefinitionsPage;
 import rocks.inspectit.ui.rcp.ci.form.page.MethodSensorDefinitionsPage;
 import rocks.inspectit.ui.rcp.ci.listener.IProfileChangeListener;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
@@ -103,14 +104,23 @@ public class ProfileEditor extends AbstractConfigurationInterfaceFormEditor impl
 		commitPages(true);
 
 		ProfileEditorInput profileEditorInput = (ProfileEditorInput) getEditorInput();
-		CmrRepositoryDefinition cmrRepositoryDefinition = profileEditorInput.getCmrRepositoryDefinition();
-		Profile profile = profileEditorInput.getProfile();
+		final CmrRepositoryDefinition cmrRepositoryDefinition = profileEditorInput.getCmrRepositoryDefinition();
+		final Profile profile = profileEditorInput.getProfile();
 
 		if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 			try {
 				commitPages(true);
 
-				Profile updated = cmrRepositoryDefinition.getConfigurationInterfaceService().updateProfile(profile);
+				ProgressDialog<Profile> dialog = new ProgressDialog<Profile>("Saving profile..", IProgressMonitor.UNKNOWN) {
+					@Override
+					public Profile execute(IProgressMonitor monitor) throws BusinessException {
+						return cmrRepositoryDefinition.getConfigurationInterfaceService().updateProfile(profile);
+					}
+				};
+
+				dialog.start(true, false);
+
+				Profile updated = dialog.getResult();
 
 				// notify listeners
 				if (null != updated) {

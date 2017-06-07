@@ -7,7 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -24,6 +27,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormText;
 
+import rocks.inspectit.shared.all.util.ExecutorServiceUtils;
 import rocks.inspectit.shared.cs.ci.AlertingDefinition;
 import rocks.inspectit.shared.cs.cmr.service.IInfluxDBService;
 import rocks.inspectit.ui.rcp.InspectIT;
@@ -200,7 +204,13 @@ public class AlertSourceDefinitionWizardPage extends WizardPage {
 		measurementLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		measurementBox = new Combo(main, SWT.BORDER | SWT.DROP_DOWN);
 		measurementBox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		List<String> measurements = influxService.getMeasurements();
+
+		List<String> measurements = executeInBackground(new Callable<List<String>>() {
+			@Override
+			public List<String> call() throws Exception {
+				return influxService.getMeasurements();
+			}
+		});
 		if (null != measurements) {
 			measurementBox.setItems(measurements.toArray(new String[measurements.size()]));
 		}
@@ -210,7 +220,7 @@ public class AlertSourceDefinitionWizardPage extends WizardPage {
 		fieldLabel.setText("Field:");
 		fieldLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		fieldBox = new Combo(main, SWT.BORDER | SWT.DROP_DOWN);
-		fieldBox.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, false, NUM_LAYOUT_COLUMNS - 4, 1));
+		fieldBox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, NUM_LAYOUT_COLUMNS - 4, 1));
 		Label infoLabelMetric = new Label(main, SWT.RIGHT);
 		infoLabelMetric.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 		infoLabelMetric.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_INFORMATION));
@@ -404,12 +414,18 @@ public class AlertSourceDefinitionWizardPage extends WizardPage {
 	 * Updates the selection options of the Field drop-down box.
 	 */
 	private void updateFieldOptions() {
-		String currentText = fieldBox.getText();
-		List<String> fields = influxService.getFields(measurementBox.getText());
+		String currentFieldText = fieldBox.getText();
+		final String measurement = measurementBox.getText();
+		List<String> fields = executeInBackground(new Callable<List<String>>() {
+			@Override
+			public List<String> call() throws Exception {
+				return influxService.getFields(measurement);
+			}
+		});
 		if (null != fields) {
 			fieldBox.setItems(fields.toArray(new String[fields.size()]));
 		}
-		fieldBox.setText(currentText);
+		fieldBox.setText(currentFieldText);
 	}
 
 	/**
@@ -436,6 +452,25 @@ public class AlertSourceDefinitionWizardPage extends WizardPage {
 				TagKeyValueUIComponent tagComponent = new TagKeyValueUIComponent(main, tag.getKey(), tag.getValue());
 				tagComponents.add(tagComponent);
 			}
+		}
+	}
+
+	/**
+	 * Synchronously executes the given {@link Callable} in a background thread.
+	 *
+	 * @param task
+	 *            {@link Callable} to execute
+	 * @param <E>
+	 *            type of the result
+	 * @return the result of the given {@link Callable}
+	 */
+	private <E> E executeInBackground(Callable<E> task) {
+		Future<E> future = ExecutorServiceUtils.getExecutorService().submit(task);
+		try {
+			return future.get();
+		} catch (Exception e) {
+			InspectIT.getDefault().log(IStatus.WARNING, "An error occured during backend call.", e);
+			return null;
 		}
 	}
 
@@ -591,12 +626,18 @@ public class AlertSourceDefinitionWizardPage extends WizardPage {
 		 * measurement box.
 		 */
 		public void updateTagKeyOptions() {
-			String currentText = keyBox.getText();
-			List<String> tagKeys = influxService.getTags(measurementBox.getText());
+			String currentKeyText = keyBox.getText();
+			final String measurement = measurementBox.getText();
+			List<String> tagKeys = executeInBackground(new Callable<List<String>>() {
+				@Override
+				public List<String> call() throws Exception {
+					return influxService.getTags(measurement);
+				}
+			});
 			if (null != tagKeys) {
 				keyBox.setItems(tagKeys.toArray(new String[tagKeys.size()]));
 			}
-			keyBox.setText(currentText);
+			keyBox.setText(currentKeyText);
 		}
 
 		/**
@@ -604,12 +645,19 @@ public class AlertSourceDefinitionWizardPage extends WizardPage {
 		 * the measurement box and the tag key box.
 		 */
 		public void updateAvailableTagValues() {
-			String currentText = valueBox.getText();
-			List<String> tagValues = influxService.getTagValues(measurementBox.getText(), keyBox.getText());
+			String currentValueText = valueBox.getText();
+			final String measurement = measurementBox.getText();
+			final String tagKey = keyBox.getText();
+			List<String> tagValues = executeInBackground(new Callable<List<String>>() {
+				@Override
+				public List<String> call() throws Exception {
+					return influxService.getTagValues(measurement, tagKey);
+				}
+			});
 			if (null != tagValues) {
 				valueBox.setItems(tagValues.toArray(new String[tagValues.size()]));
 			}
-			valueBox.setText(currentText);
+			valueBox.setText(currentValueText);
 		}
 	}
 

@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -42,6 +44,7 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.cmr.CmrStatusData;
 import rocks.inspectit.shared.all.externalservice.ExternalServiceStatus;
 import rocks.inspectit.shared.all.externalservice.ExternalServiceType;
+import rocks.inspectit.shared.all.util.ExecutorServiceUtils;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.shared.all.util.Pair;
 import rocks.inspectit.shared.cs.communication.data.cmr.RecordingData;
@@ -534,7 +537,21 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 		recordingIcon.setImage(null);
 		// recording information
 		if (null != recordingData) {
-			RecordingState recordingState = cmrRepositoryDefinition.getStorageService().getRecordingState();
+			Future<RecordingState> future = ExecutorServiceUtils.getExecutorService().submit(new Callable<RecordingState>() {
+				@Override
+				public RecordingState call() throws Exception {
+					return cmrRepositoryDefinition.getStorageService().getRecordingState();
+				}
+			});
+
+			RecordingState recordingState;
+			try {
+				recordingState = future.get();
+			} catch (Exception e) {
+				InspectIT.getDefault().createErrorDialog("Could not fetch current recording state from CMR.", e, -1);
+				return;
+			}
+
 			if (recordingState == RecordingState.ON) {
 				recordingIcon.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_RECORD));
 				recordingLabel.setText("Active");
@@ -622,11 +639,23 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 		protected IStatus run(IProgressMonitor monitor) {
 			final CmrRepositoryDefinition cmrRepositoryDefinition = CmrRepositoryPropertyForm.this.cmrRepositoryDefinition;
 			if (cmrRepositoryDefinition != null) {
-				final OnlineStatus onlineStatus = cmrRepositoryDefinition.getOnlineStatus();
-				final CmrStatusData cmrStatusData = (onlineStatus == OnlineStatus.ONLINE) ? cmrRepositoryDefinition.getCmrManagementService().getCmrStatusData() : null; // NOPMD
-				recordingData = (onlineStatus == OnlineStatus.ONLINE) ? cmrRepositoryDefinition.getStorageService().getRecordingData() : null; // NOPMD
-				SafeExecutor.asyncExec(new Runnable() {
+				OnlineStatus onlineStatus = cmrRepositoryDefinition.getOnlineStatus();
+				CmrStatusData cmrStatusData;
 
+				try {
+					cmrStatusData = (onlineStatus == OnlineStatus.ONLINE) ? cmrRepositoryDefinition.getCmrManagementService().getCmrStatusData() : null; // NOPMD
+					recordingData = (onlineStatus == OnlineStatus.ONLINE) ? cmrRepositoryDefinition.getStorageService().getRecordingData() : null; // NOPMD
+				} catch (Exception e) {
+					cmrStatusData = null; // NOPMD
+					recordingData = null; // NOPMD
+
+					cmrRepositoryDefinition.changeOnlineStatus(OnlineStatus.OFFLINE);
+				}
+
+				final CmrStatusData finalCmrStatusData = cmrStatusData;
+				final OnlineStatus finalOnlineStatus = onlineStatus;
+
+				SafeExecutor.asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						form.setBusy(true);
@@ -644,17 +673,17 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 						} else {
 							description.setText("", false, false);
 						}
-						status.setText(onlineStatus.toString());
-						if (onlineStatus == OnlineStatus.ONLINE) {
+						status.setText(finalOnlineStatus.toString());
+						if (finalOnlineStatus == OnlineStatus.ONLINE) {
 							form.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SERVER_ONLINE_SMALL));
-						} else if (onlineStatus == OnlineStatus.CHECKING) {
+						} else if (finalOnlineStatus == OnlineStatus.CHECKING) {
 							form.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SERVER_REFRESH_SMALL));
 						} else {
 							form.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SERVER_OFFLINE_SMALL));
 						}
 
 						updateRecordingData(recordingData);
-						updateCmrManagementData(cmrStatusData);
+						updateCmrManagementData(finalCmrStatusData);
 
 						mainComposite.setVisible(true);
 						form.getBody().layout(true, true);

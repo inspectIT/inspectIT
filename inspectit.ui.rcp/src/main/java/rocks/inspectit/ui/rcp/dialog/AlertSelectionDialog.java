@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -25,6 +27,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.google.common.base.Objects;
 
+import rocks.inspectit.shared.all.util.ExecutorServiceUtils;
 import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
@@ -184,7 +187,23 @@ public class AlertSelectionDialog extends TitleAreaDialog {
 	 * Updates the mapping of known alerts.
 	 */
 	private void updateKnownAlerts() {
-		for (Alert knownAlert : cmrRepositoryDefinition.getAlertAccessService().getAlerts()) {
+		Future<List<Alert>> future = ExecutorServiceUtils.getExecutorService().submit(new Callable<List<Alert>>() {
+			@Override
+			public List<Alert> call() throws Exception {
+				return cmrRepositoryDefinition.getAlertAccessService().getAlerts();
+			}
+		});
+
+		List<Alert> alertList = null;
+
+		try {
+			alertList = future.get();
+		} catch (Exception e) {
+			InspectIT.getDefault().createErrorDialog("Unexpected exception occurred during an attempt to fetch existing alerts.", e, -1);
+			return;
+		}
+
+		for (Alert knownAlert : alertList) {
 			availableAlerts.put(knownAlert.getId(), knownAlert);
 		}
 	}

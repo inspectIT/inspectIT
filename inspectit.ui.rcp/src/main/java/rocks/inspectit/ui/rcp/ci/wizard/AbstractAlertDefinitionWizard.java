@@ -1,9 +1,13 @@
 package rocks.inspectit.ui.rcp.ci.wizard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -11,6 +15,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
 import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.util.ExecutorServiceUtils;
 import rocks.inspectit.shared.cs.ci.AlertingDefinition;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
@@ -103,8 +108,22 @@ public abstract class AbstractAlertDefinitionWizard extends Wizard implements IN
 	 * {@inheritDoc}
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public void addPages() {
-		List<AlertingDefinition> alertDefinitions = cmrRepositoryDefinition.getConfigurationInterfaceService().getAlertingDefinitions();
+		Future<List<AlertingDefinition>> future = ExecutorServiceUtils.getExecutorService().submit(new Callable<List<AlertingDefinition>>() {
+			@Override
+			public List<AlertingDefinition> call() throws Exception {
+				return cmrRepositoryDefinition.getConfigurationInterfaceService().getAlertingDefinitions();
+			}
+		});
+		List<AlertingDefinition> alertDefinitions = null;
+		try {
+			alertDefinitions = future.get();
+		} catch (Exception e) {
+			InspectIT.getDefault().log(IStatus.WARNING, "Error while fetching alert definitions", e);
+			alertDefinitions = Collections.EMPTY_LIST;
+		}
+
 		List<String> existingNames = new ArrayList<>();
 		for (AlertingDefinition alertDef : alertDefinitions) {
 			existingNames.add(alertDef.getName());

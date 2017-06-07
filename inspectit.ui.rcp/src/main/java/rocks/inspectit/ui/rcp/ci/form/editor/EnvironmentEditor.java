@@ -19,6 +19,7 @@ import rocks.inspectit.ui.rcp.ci.form.input.EnvironmentEditorInput;
 import rocks.inspectit.ui.rcp.ci.form.page.EnvironmentSettingsPage;
 import rocks.inspectit.ui.rcp.ci.listener.IEnvironmentChangeListener;
 import rocks.inspectit.ui.rcp.ci.listener.IProfileChangeListener;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
@@ -83,14 +84,22 @@ public class EnvironmentEditor extends AbstractConfigurationInterfaceFormEditor 
 		}
 
 		EnvironmentEditorInput environmentEditorInput = (EnvironmentEditorInput) getEditorInput();
-		CmrRepositoryDefinition cmrRepositoryDefinition = environmentEditorInput.getCmrRepositoryDefinition();
-		Environment environment = environmentEditorInput.getEnvironment();
+		final CmrRepositoryDefinition cmrRepositoryDefinition = environmentEditorInput.getCmrRepositoryDefinition();
+		final Environment environment = environmentEditorInput.getEnvironment();
 
 		if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 			try {
 				commitPages(true);
 
-				Environment updated = cmrRepositoryDefinition.getConfigurationInterfaceService().updateEnvironment(environment);
+				ProgressDialog<Environment> progressDialog = new ProgressDialog<Environment>("Saving environment..", IProgressMonitor.UNKNOWN) {
+					@Override
+					public Environment execute(IProgressMonitor monitor) throws BusinessException {
+						return cmrRepositoryDefinition.getConfigurationInterfaceService().updateEnvironment(environment);
+					}
+				};
+				progressDialog.start(true, false);
+
+				Environment updated = progressDialog.getResult();
 
 				// notify listeners
 				if (null != updated) {

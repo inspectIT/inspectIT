@@ -1,5 +1,8 @@
 package rocks.inspectit.ui.rcp.wizard;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
@@ -11,6 +14,7 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.storage.StorageData;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
@@ -77,16 +81,25 @@ public class CreateStorageWizard extends Wizard implements INewWizard {
 	 */
 	@Override
 	public boolean performFinish() {
-		CmrRepositoryDefinition cmrRepositoryDefinition = defineNewStoragePage.getSelectedRepository();
+		final CmrRepositoryDefinition cmrRepositoryDefinition = defineNewStoragePage.getSelectedRepository();
 		if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
-			StorageData storageData = defineNewStoragePage.getStorageData();
+			final StorageData storageData = defineNewStoragePage.getStorageData();
 			try {
-				cmrRepositoryDefinition.getStorageService().createAndOpenStorage(storageData);
+
+				ProgressDialog<StorageData> dialog = new ProgressDialog<StorageData>("Creating storage..", IProgressMonitor.UNKNOWN) {
+					@Override
+					public StorageData execute(IProgressMonitor monitor) throws BusinessException {
+						return cmrRepositoryDefinition.getStorageService().createAndOpenStorage(storageData);
+					}
+				};
+
+				dialog.start(true, false);
+
 				IViewPart viewPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(StorageManagerView.VIEW_ID);
 				if (viewPart instanceof StorageManagerView) {
 					((StorageManagerView) viewPart).refresh();
 				}
-			} catch (BusinessException e) {
+			} catch (BusinessException | InvocationTargetException | InterruptedException e) {
 				InspectIT.getDefault().createErrorDialog("Storage can not be created.", e, -1);
 				return false;
 			}

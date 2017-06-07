@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -168,6 +171,11 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 	private final Map<Integer, List<Object>> expandedElementsPerAgent = new ConcurrentHashMap<>();
 
 	/**
+	 * Single threaded executor service.
+	 */
+	private ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+	/**
 	 * If the inactive instrumentations should be hidden.
 	 */
 	private boolean hideInactiveInstrumentations = true;
@@ -278,12 +286,12 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 
 	/**
 	 * Selects the provided agent for display, if it is in the {@link #availableAgents} list. If
-	 * not, a arbitrary agent will be selected if any is available.
+	 * not, an arbitrary agent will be selected if any is available.
 	 *
 	 * @param agent
 	 *            Hint for agent selection.
 	 */
-	private void selectAgentForDisplay(PlatformIdent agent) {
+	private void selectAgentForDisplay(final PlatformIdent agent) {
 		SafeExecutor.syncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -291,20 +299,35 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 				displayMessage("Loading agent tree..", Display.getDefault().getSystemImage(SWT.ICON_WORKING));
 			}
 		}, mainForm);
-		try {
-			if ((null != agent) && CollectionUtils.isNotEmpty(availableAgents) && availableAgents.contains(agent)) {
-				displayedAgent = displayedRepositoryDefinition.getGlobalDataAccessService().getCompleteAgent(agent.getId());
-				PreferencesUtils.saveLongValue(PreferencesConstants.LAST_SELECTED_AGENT, agent.getId().longValue(), false);
-			} else if (CollectionUtils.isNotEmpty(availableAgents)) {
-				agent = availableAgents.iterator().next();
-				displayedAgent = displayedRepositoryDefinition.getGlobalDataAccessService().getCompleteAgent(agent.getId());
-			} else {
-				displayedAgent = null; // NOPMD
+
+		Future<?> future = executorService.submit(new Runnable() {
+			@Override
+			public void run() {
+				PlatformIdent usedAgent = agent;
+				try {
+					if ((null != usedAgent) && CollectionUtils.isNotEmpty(availableAgents) && availableAgents.contains(usedAgent)) {
+						displayedAgent = displayedRepositoryDefinition.getGlobalDataAccessService().getCompleteAgent(usedAgent.getId());
+						PreferencesUtils.saveLongValue(PreferencesConstants.LAST_SELECTED_AGENT, usedAgent.getId().longValue(), false);
+					} else if (CollectionUtils.isNotEmpty(availableAgents)) {
+						usedAgent = availableAgents.iterator().next();
+						displayedAgent = displayedRepositoryDefinition.getGlobalDataAccessService().getCompleteAgent(usedAgent.getId());
+					} else {
+						displayedAgent = null; // NOPMD
+					}
+				} catch (BusinessException e) {
+					InspectIT.getDefault().createErrorDialog("Exception occurred trying to load the agent tree for the agent " + usedAgent.getAgentName() + ".", e, -1);
+					displayedAgent = null; // NOPMD
+				}
 			}
-		} catch (BusinessException e) {
+		});
+
+		try {
+			future.get();
+		} catch (Exception e) {
 			InspectIT.getDefault().createErrorDialog("Exception occurred trying to load the agent tree for the agent " + agent.getAgentName() + ".", e, -1);
 			displayedAgent = null; // NOPMD
 		}
+
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {

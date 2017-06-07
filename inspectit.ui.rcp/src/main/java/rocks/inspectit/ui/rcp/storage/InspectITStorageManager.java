@@ -18,11 +18,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.lang.mutable.MutableObject;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.swt.widgets.Display;
@@ -36,6 +39,7 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.exception.enumeration.StorageErrorCodeEnum;
 import rocks.inspectit.shared.all.serializer.ISerializer;
 import rocks.inspectit.shared.all.serializer.SerializationException;
+import rocks.inspectit.shared.all.util.ExecutorServiceUtils;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.shared.cs.indexing.storage.IStorageTreeComponent;
 import rocks.inspectit.shared.cs.indexing.storage.impl.ArrayBasedStorageLeaf;
@@ -1037,20 +1041,35 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 * @return Map of online available storages with their {@link CmrRepositoryDefinition} as a
 	 *         value.
 	 */
+	@SuppressWarnings("unchecked")
 	private Map<StorageData, CmrRepositoryDefinition> getOnlineStorages() {
-		Map<StorageData, CmrRepositoryDefinition> storageMap = new HashMap<>();
-		List<CmrRepositoryDefinition> allRepositories = InspectIT.getDefault().getCmrRepositoryManager().getCmrRepositoryDefinitions();
-		for (CmrRepositoryDefinition cmrRepositoryDefinition : allRepositories) {
-			if (cmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE) {
-				List<StorageData> closedStorages = cmrRepositoryDefinition.getStorageService().getReadableStorages();
-				if (null != closedStorages) {
-					for (StorageData storageData : closedStorages) {
-						storageMap.put(storageData, cmrRepositoryDefinition);
+		Future<Map<StorageData, CmrRepositoryDefinition>> future = ExecutorServiceUtils.getExecutorService().submit(new Callable<Map<StorageData, CmrRepositoryDefinition>>() {
+
+			@Override
+			public Map<StorageData, CmrRepositoryDefinition> call() throws Exception {
+				Map<StorageData, CmrRepositoryDefinition> storageMap = new HashMap<>();
+				List<CmrRepositoryDefinition> allRepositories = InspectIT.getDefault().getCmrRepositoryManager().getCmrRepositoryDefinitions();
+				for (CmrRepositoryDefinition cmrRepositoryDefinition : allRepositories) {
+					if (cmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE) {
+						List<StorageData> closedStorages = cmrRepositoryDefinition.getStorageService().getReadableStorages();
+						if (null != closedStorages) {
+							for (StorageData storageData : closedStorages) {
+								storageMap.put(storageData, cmrRepositoryDefinition);
+							}
+						}
 					}
 				}
+				return storageMap;
 			}
+
+		});
+
+		try {
+			return future.get();
+		} catch (Exception e) {
+			InspectIT.getDefault().log(IStatus.WARNING, "Could not fetch online storages.", e);
+			return Collections.EMPTY_MAP;
 		}
-		return storageMap;
 	}
 
 	/**

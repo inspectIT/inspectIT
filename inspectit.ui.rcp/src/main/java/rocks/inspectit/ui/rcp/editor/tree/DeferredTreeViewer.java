@@ -279,8 +279,13 @@ public class DeferredTreeViewer extends TreeViewer {
 			return;
 		}
 		Object parent = getParentElement(elementOrTreePath);
+
+		if (parent == null) {
+			return;
+		}
+
 		// check if the element is already visible, or if it is root
-		if (!(((parent != null) && getExpandedState(parent)) || isRootElement(elementOrTreePath))) {
+		if (!(getExpandedState(parent) || isRootElement(elementOrTreePath))) {
 			// get all the objects that need to be expanded so that object is visible
 			List<Object> objectsToExpand = createObjectList(parent, new ArrayList<>());
 			if (!objectsToExpand.isEmpty()) {

@@ -3,6 +3,7 @@ package rocks.inspectit.ui.rcp.ci.wizard;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbench;
@@ -14,6 +15,7 @@ import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.ci.wizard.page.AlertDetailsWizardPage;
 import rocks.inspectit.ui.rcp.ci.wizard.page.AlertSourceDefinitionWizardPage;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.provider.IAlertDefinitionProvider;
 
 /**
@@ -60,9 +62,23 @@ public class EditAlertDefinitionWizard extends AbstractAlertDefinitionWizard {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void callServiceAndNotify(AlertingDefinition alertDefinition) throws BusinessException {
-		AlertingDefinition updatedAlertingDefinition = cmrRepositoryDefinition.getConfigurationInterfaceService().updateAlertingDefinition(alertDefinition);
-		InspectIT.getDefault().getInspectITConfigurationInterfaceManager().alertDefinitionUpdated(updatedAlertingDefinition, cmrRepositoryDefinition);
+	protected void callServiceAndNotify(final AlertingDefinition alertDefinition) throws BusinessException {
+		ProgressDialog<Object> dialog = new ProgressDialog<Object>("Saving alert definition to the CMR..", IProgressMonitor.UNKNOWN) {
+			@Override
+			public Object execute(IProgressMonitor monitor) throws BusinessException {
+				AlertingDefinition updatedAlertingDefinition = cmrRepositoryDefinition.getConfigurationInterfaceService().updateAlertingDefinition(alertDefinition);
+
+				InspectIT.getDefault().getInspectITConfigurationInterfaceManager().alertDefinitionUpdated(updatedAlertingDefinition, cmrRepositoryDefinition);
+
+				return null;
+			}
+		};
+
+		try {
+			dialog.start(true, false);
+		} catch (Exception e) {
+			InspectIT.getDefault().createErrorDialog("Unexpected exception occurred during an attempt to edit the alert definition.", e, -1);
+		}
 	}
 
 	/**
