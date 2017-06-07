@@ -23,6 +23,7 @@ import rocks.inspectit.shared.cs.cmr.service.IStorageService;
 import rocks.inspectit.shared.cs.cmr.service.ITimerDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.cache.CachedDataService;
 import rocks.inspectit.shared.cs.cmr.service.cache.CachedSpanService;
+import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
 import rocks.inspectit.ui.rcp.repository.service.RefreshEditorsCachedDataService;
@@ -130,7 +131,17 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	/**
 	 * State of the CMR.
 	 */
-	private OnlineStatus onlineStatus;
+	private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
+
+	/**
+	 * The CMR's version.
+	 */
+	private String version = VersionService.UNKNOWN_VERSION;
+
+	/**
+	 * State of recording.
+	 */
+	private RecordingState recordingState = RecordingState.OFF;
 
 	/**
 	 * Key received from the serverStatusService for checking the validation of the registered IDs
@@ -286,6 +297,16 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 		spanService = new CachedSpanService(cmrServiceProvider.getSpanService(this));
 
 		cachedDataService = new RefreshEditorsCachedDataService(globalDataAccessService, businessContextManagementService, this);
+	}
+
+	/**
+	 * Sets {@link #version}.
+	 *
+	 * @param version
+	 *            New value for {@link #version}
+	 */
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	/**
@@ -494,10 +515,35 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	}
 
 	/**
+	 * Returns the CMR's online status.
+	 *
 	 * @return the onlineStatus
 	 */
 	public OnlineStatus getOnlineStatus() {
 		return onlineStatus;
+	}
+
+	/**
+	 * Returns the CMR's online status and refreshes the status before it is returned.
+	 *
+	 * @param refreshOnlineStatus
+	 *            whether the status should be refreshed before returning
+	 * @return the onlineStatus
+	 */
+	public OnlineStatus getOnlineStatus(boolean refreshOnlineStatus) {
+		if (refreshOnlineStatus) {
+			refreshOnlineStatus();
+		}
+		return getOnlineStatus();
+	}
+
+	/**
+	 * Gets {@link #recordingState}.
+	 *
+	 * @return {@link #recordingState}
+	 */
+	public RecordingState getRecordingState() {
+		return this.recordingState;
 	}
 
 	/**
@@ -507,15 +553,7 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 	 * @return Version of this CMR.
 	 */
 	public String getVersion() {
-		if (onlineStatus != OnlineStatus.OFFLINE) {
-			try {
-				return serverStatusService.getVersion();
-			} catch (Exception e) {
-				return VersionService.UNKNOWN_VERSION;
-			}
-		} else {
-			return VersionService.UNKNOWN_VERSION;
-		}
+		return version;
 	}
 
 	/**
@@ -549,6 +587,37 @@ public class CmrRepositoryDefinition implements RepositoryDefinition, ICmrReposi
 			this.changeOnlineStatus(OnlineStatus.ONLINE);
 		} else {
 			this.changeOnlineStatus(OnlineStatus.OFFLINE);
+		}
+	}
+
+	/**
+	 * Refreshes the recording state.
+	 */
+	public void refreshRecordingState() {
+		if (onlineStatus == OnlineStatus.ONLINE) {
+			try {
+				RecordingState state = getStorageService().getRecordingState();
+				recordingState = state;
+			} catch (Exception e) {
+				recordingState = RecordingState.OFF;
+			}
+		} else {
+			recordingState = RecordingState.OFF;
+		}
+	}
+
+	/**
+	 * Refreshes the version.
+	 */
+	public void refreshVersion() {
+		if (onlineStatus == OnlineStatus.ONLINE) {
+			try {
+				version = serverStatusService.getVersion();
+			} catch (Exception e) {
+				version = VersionService.UNKNOWN_VERSION;
+			}
+		} else {
+			version = VersionService.UNKNOWN_VERSION;
 		}
 	}
 

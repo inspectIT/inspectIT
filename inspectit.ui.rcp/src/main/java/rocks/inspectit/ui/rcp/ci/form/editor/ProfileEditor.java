@@ -22,6 +22,7 @@ import rocks.inspectit.ui.rcp.ci.form.page.ExcludeRulesPage;
 import rocks.inspectit.ui.rcp.ci.form.page.JmxBeanDefinitionsPage;
 import rocks.inspectit.ui.rcp.ci.form.page.MethodSensorDefinitionsPage;
 import rocks.inspectit.ui.rcp.ci.listener.IProfileChangeListener;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
@@ -95,7 +96,6 @@ public class ProfileEditor extends AbstractConfigurationInterfaceFormEditor impl
 		monitor.beginTask("Saving profile..", IProgressMonitor.UNKNOWN);
 
 		if (!checkValid()) {
-			monitor.setCanceled(true);
 			monitor.done();
 			return;
 		}
@@ -103,36 +103,44 @@ public class ProfileEditor extends AbstractConfigurationInterfaceFormEditor impl
 		commitPages(true);
 
 		ProfileEditorInput profileEditorInput = (ProfileEditorInput) getEditorInput();
-		CmrRepositoryDefinition cmrRepositoryDefinition = profileEditorInput.getCmrRepositoryDefinition();
-		Profile profile = profileEditorInput.getProfile();
+		final CmrRepositoryDefinition cmrRepositoryDefinition = profileEditorInput.getCmrRepositoryDefinition();
+		final Profile profile = profileEditorInput.getProfile();
 
 		if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 			try {
 				commitPages(true);
 
-				Profile updated = cmrRepositoryDefinition.getConfigurationInterfaceService().updateProfile(profile);
+				ProgressDialog<Profile> dialog = new ProgressDialog<Profile>("Saving profile..", IProgressMonitor.UNKNOWN) {
+					@Override
+					public Profile execute(IProgressMonitor monitor) throws BusinessException {
+						return cmrRepositoryDefinition.getConfigurationInterfaceService().updateProfile(profile);
+					}
+				};
 
-				// notify listeners
-				if (null != updated) {
-					InspectIT.getDefault().getInspectITConfigurationInterfaceManager().profileUpdated(updated, cmrRepositoryDefinition, false);
+				dialog.start(true, false);
+
+				if (dialog.wasSuccessful()) {
+					Profile updated = dialog.getResult();
+
+					// notify listeners
+					if (null != updated) {
+						InspectIT.getDefault().getInspectITConfigurationInterfaceManager().profileUpdated(updated, cmrRepositoryDefinition, false);
+					}
+
+					// set no exception and fire dirty state changed
+					setExceptionOnSave(false);
+					editorDirtyStateChanged();
+				} else {
+					setExceptionOnSave(true);
+					editorDirtyStateChanged();
+					InspectIT.getDefault().createErrorDialog("Saving of the profile '" + profile.getName() + "' failed due to the exception on the CMR.", dialog.getThrownException(), -1);
 				}
-
-				// set no exception and fire dirty state changed
-				setExceptionOnSave(false);
-				editorDirtyStateChanged();
-			} catch (BusinessException e) {
-				monitor.setCanceled(true);
-				setExceptionOnSave(true);
-				editorDirtyStateChanged();
-				InspectIT.getDefault().createErrorDialog("Saving of the profile '" + profile.getName() + "' failed due to the exception on the CMR.", e, -1);
 			} catch (Throwable t) { // NOPMD
-				monitor.setCanceled(true);
 				setExceptionOnSave(true);
 				editorDirtyStateChanged();
 				InspectIT.getDefault().createErrorDialog("Unexpected exception occurred during an attempt to save the profile '" + profile.getName() + "'.", t, -1);
 			}
 		} else {
-			monitor.setCanceled(true);
 			InspectIT.getDefault().createErrorDialog("Saving of the profile '" + profile.getName() + "' failed because CMR is currently not online.", -1);
 		}
 

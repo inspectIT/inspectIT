@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -48,6 +49,7 @@ import rocks.inspectit.shared.cs.storage.StorageManager;
 import rocks.inspectit.shared.cs.storage.label.StringStorageLabel;
 import rocks.inspectit.shared.cs.storage.label.type.impl.ExploredByLabelType;
 import rocks.inspectit.ui.rcp.InspectIT;
+import rocks.inspectit.ui.rcp.job.BlockingJob;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryChangeListener;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
@@ -1038,19 +1040,25 @@ public class InspectITStorageManager extends StorageManager implements CmrReposi
 	 *         value.
 	 */
 	private Map<StorageData, CmrRepositoryDefinition> getOnlineStorages() {
-		Map<StorageData, CmrRepositoryDefinition> storageMap = new HashMap<>();
-		List<CmrRepositoryDefinition> allRepositories = InspectIT.getDefault().getCmrRepositoryManager().getCmrRepositoryDefinitions();
-		for (CmrRepositoryDefinition cmrRepositoryDefinition : allRepositories) {
-			if (cmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE) {
-				List<StorageData> closedStorages = cmrRepositoryDefinition.getStorageService().getReadableStorages();
-				if (null != closedStorages) {
-					for (StorageData storageData : closedStorages) {
-						storageMap.put(storageData, cmrRepositoryDefinition);
+		BlockingJob<Map<StorageData, CmrRepositoryDefinition>> blockingJob = new BlockingJob<>("Loading readable storages..", new Callable<Map<StorageData, CmrRepositoryDefinition>>() {
+			@Override
+			public Map<StorageData, CmrRepositoryDefinition> call() throws Exception {
+				Map<StorageData, CmrRepositoryDefinition> storageMap = new HashMap<>();
+				List<CmrRepositoryDefinition> allRepositories = InspectIT.getDefault().getCmrRepositoryManager().getCmrRepositoryDefinitions();
+				for (CmrRepositoryDefinition cmrRepositoryDefinition : allRepositories) {
+					if (cmrRepositoryDefinition.getOnlineStatus() == OnlineStatus.ONLINE) {
+						List<StorageData> closedStorages = cmrRepositoryDefinition.getStorageService().getReadableStorages();
+						if (null != closedStorages) {
+							for (StorageData storageData : closedStorages) {
+								storageMap.put(storageData, cmrRepositoryDefinition);
+							}
+						}
 					}
 				}
+				return storageMap;
 			}
-		}
-		return storageMap;
+		});
+		return blockingJob.scheduleAndJoin();
 	}
 
 	/**

@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -25,6 +26,7 @@ import rocks.inspectit.shared.cs.storage.recording.RecordingProperties;
 import rocks.inspectit.shared.cs.storage.recording.RecordingState;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.provider.IStorageDataProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
@@ -175,8 +177,8 @@ public class StartRecordingWizard extends Wizard implements INewWizard {
 	 */
 	@Override
 	public boolean performFinish() {
-		StorageData storageData;
-		CmrRepositoryDefinition cmrRepositoryDefinition;
+		final StorageData storageData;
+		final CmrRepositoryDefinition cmrRepositoryDefinition;
 		boolean autoFinalize;
 
 		if (newOrExistsingStorageWizardPage.useNewStorage()) {
@@ -216,16 +218,25 @@ public class StartRecordingWizard extends Wizard implements INewWizard {
 					}
 				}
 			}
-			boolean canStart = cmrRepositoryDefinition.getStorageService().getRecordingState() == RecordingState.OFF;
+			boolean canStart = cmrRepositoryDefinition.getRecordingState() == RecordingState.OFF;
 			if (canStart) {
-				try {
-					StorageData recordingStorage = cmrRepositoryDefinition.getStorageService().startOrScheduleRecording(storageData, recordingProperties);
-					List<AbstractStorageLabel<?>> labels = addLabelWizardPage.getLabelsToAdd();
-					if (!labels.isEmpty()) {
-						cmrRepositoryDefinition.getStorageService().addLabelsToStorage(recordingStorage, labels, true);
+				ProgressDialog<Void> dialog = new ProgressDialog<Void>("Start or schedule recording..", IProgressMonitor.UNKNOWN) {
+					@Override
+					public Void execute(IProgressMonitor monitor) throws BusinessException {
+						StorageData recordingStorage = cmrRepositoryDefinition.getStorageService().startOrScheduleRecording(storageData, recordingProperties);
+						List<AbstractStorageLabel<?>> labels = addLabelWizardPage.getLabelsToAdd();
+						if (!labels.isEmpty()) {
+							cmrRepositoryDefinition.getStorageService().addLabelsToStorage(recordingStorage, labels, true);
+						}
+
+						return null;
 					}
-				} catch (BusinessException e) {
-					InspectIT.getDefault().createErrorDialog("Recording did not start.", e, -1);
+				};
+
+				dialog.start(true, false);
+
+				if (!dialog.wasSuccessful()) {
+					InspectIT.getDefault().createErrorDialog("Recording did not start.", dialog.getThrownException(), -1);
 					return false;
 				}
 			}

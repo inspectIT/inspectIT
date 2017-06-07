@@ -493,6 +493,8 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 		}
 		cachedStatusMap.remove(cmrRepositoryDefinition);
 
+		removeRepositoryFromExpandedList(cmrRepositoryDefinition);
+
 		SafeExecutor.asyncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -507,6 +509,26 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 				}
 			}
 		}, treeViewer.getTree(), mainForm.getBody());
+	}
+
+	/**
+	 * Removes the given {@link CmrRepositoryDefinition} from the {@link #expandedList}.
+	 *
+	 * @param cmrRepositoryDefinition
+	 *            {@link CmrRepositoryDefinition} which should be removed
+	 */
+	public void removeRepositoryFromExpandedList(CmrRepositoryDefinition cmrRepositoryDefinition) {
+		Object object = null;
+		for (Iterator<Object> iterator = expandedList.iterator(); iterator.hasNext();) {
+			object = iterator.next();
+			if (object instanceof DeferredAgentsComposite) {
+				DeferredAgentsComposite daComp = (DeferredAgentsComposite) object;
+				if (daComp.getCmrRepositoryDefinition().equals(cmrRepositoryDefinition)) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
 	}
 
 	/**
@@ -561,37 +583,34 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 		expandedList = new ArrayList<>(Arrays.asList(expandedElements));
 		expandedList.removeAll(parents);
 
-		// execute refresh
-		Collection<UpdateRepositoryJob> jobs = cmrRepositoryManager.forceAllCmrRepositoriesOnlineStatusUpdate();
-		for (final UpdateRepositoryJob updateRepositoryJob : jobs) {
-			updateRepositoryJob.addJobChangeListener(new JobChangeAdapter() {
-				@Override
-				public void done(IJobChangeEvent event) {
-					CmrRepositoryDefinition cmrRepositoryDefinition = updateRepositoryJob.getCmrRepositoryDefinition();
-					DeferredAgentsComposite toUpdate = null;
-					for (DeferredAgentsComposite composite : inputList) {
-						if (ObjectUtils.equals(composite.getRepositoryDefinition(), cmrRepositoryDefinition)) {
-							toUpdate = composite;
-							break;
-						}
-					}
-					if (null != toUpdate) {
-						final DeferredAgentsComposite finalToUpdate = toUpdate;
-						SafeExecutor.asyncExec(new Runnable() {
-							@Override
-							public void run() {
-								treeViewer.refresh(finalToUpdate, true);
-								if (ObjectUtils.equals(finalToUpdate, lastSelectedRepository)) {
-									if ((null != cmrPropertyForm) && !cmrPropertyForm.isDisposed()) {
-										cmrPropertyForm.refresh();
-									}
-								}
-							}
-						}, treeViewer.getTree());
-					}
-					updateRepositoryJob.removeJobChangeListener(this);
+		// refresh all repositories
+		for (CmrRepositoryDefinition repositoryDefinition : cmrRepositoryManager.getCmrRepositoryDefinitions()) {
+			cmrRepositoryManager.forceCmrRepositoryOnlineStatusUpdate(repositoryDefinition);
+		}
+	}
+
+	/**
+	 * Refresh the view elements related to the given {@link CmrRepositoryDefinition}. This method
+	 * is usually called by the {@link UpdateRepositoryJob}.
+	 *
+	 * @param cmrRepositoryDefinition
+	 *            {@link CmrRepositoryDefinition} defining the element to refresh
+	 */
+	public void refreshCmrRepository(CmrRepositoryDefinition cmrRepositoryDefinition) {
+		DeferredAgentsComposite toUpdate = null;
+		for (DeferredAgentsComposite composite : inputList) {
+			if (ObjectUtils.equals(composite.getRepositoryDefinition(), cmrRepositoryDefinition)) {
+				toUpdate = composite;
+				break;
+			}
+		}
+		if (null != toUpdate) {
+			treeViewer.refresh(toUpdate, true);
+			if (ObjectUtils.equals(toUpdate, lastSelectedRepository)) {
+				if ((null != cmrPropertyForm) && !cmrPropertyForm.isDisposed()) {
+					cmrPropertyForm.refresh();
 				}
-			});
+			}
 		}
 	}
 
@@ -656,7 +675,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 		/**
 		 * Default constructor.
 		 */
-		public ShowPropertiesAction() {
+		ShowPropertiesAction() {
 			super(null, AS_CHECK_BOX);
 			setImageDescriptor(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_PROPERTIES));
 			setChecked(true);
@@ -689,7 +708,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 		/**
 		 * Default constructor.
 		 */
-		public ShowAgentsAction() {
+		ShowAgentsAction() {
 			super(null, AS_CHECK_BOX);
 			setImageDescriptor(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_AGENT));
 			setChecked(showOldAgents);
@@ -886,7 +905,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 		/**
 		 * Default constructor.
 		 */
-		public AgentStatusUpdateJob() {
+		AgentStatusUpdateJob() {
 			super("Agents status auto-update");
 			setUser(false);
 			setProperty(IProgressConstants.ICON_PROPERTY, InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_AGENT));
