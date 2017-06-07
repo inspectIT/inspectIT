@@ -278,12 +278,12 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 
 	/**
 	 * Selects the provided agent for display, if it is in the {@link #availableAgents} list. If
-	 * not, a arbitrary agent will be selected if any is available.
+	 * not, an arbitrary agent will be selected if any is available.
 	 *
 	 * @param agent
 	 *            Hint for agent selection.
 	 */
-	private void selectAgentForDisplay(PlatformIdent agent) {
+	private void selectAgentForDisplay(final PlatformIdent agent) {
 		SafeExecutor.syncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -291,20 +291,39 @@ public class DataExplorerView extends ViewPart implements CmrRepositoryChangeLis
 				displayMessage("Loading agent tree..", Display.getDefault().getSystemImage(SWT.ICON_WORKING));
 			}
 		}, mainForm);
-		try {
-			if ((null != agent) && CollectionUtils.isNotEmpty(availableAgents) && availableAgents.contains(agent)) {
-				displayedAgent = displayedRepositoryDefinition.getGlobalDataAccessService().getCompleteAgent(agent.getId());
-				PreferencesUtils.saveLongValue(PreferencesConstants.LAST_SELECTED_AGENT, agent.getId().longValue(), false);
-			} else if (CollectionUtils.isNotEmpty(availableAgents)) {
-				agent = availableAgents.iterator().next();
-				displayedAgent = displayedRepositoryDefinition.getGlobalDataAccessService().getCompleteAgent(agent.getId());
-			} else {
-				displayedAgent = null; // NOPMD
+
+		Job job = new Job("Loading agent data..") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				PlatformIdent usedAgent = agent;
+				try {
+					if ((null != usedAgent) && CollectionUtils.isNotEmpty(availableAgents) && availableAgents.contains(usedAgent)) {
+						displayedAgent = displayedRepositoryDefinition.getGlobalDataAccessService().getCompleteAgent(usedAgent.getId());
+						PreferencesUtils.saveLongValue(PreferencesConstants.LAST_SELECTED_AGENT, usedAgent.getId().longValue(), false);
+					} else if (CollectionUtils.isNotEmpty(availableAgents)) {
+						usedAgent = availableAgents.iterator().next();
+						displayedAgent = displayedRepositoryDefinition.getGlobalDataAccessService().getCompleteAgent(usedAgent.getId());
+					} else {
+						displayedAgent = null; // NOPMD
+					}
+				} catch (BusinessException e) {
+					InspectIT.getDefault().createErrorDialog("Exception occurred trying to load the agent tree for the agent " + usedAgent.getAgentName() + ".", e, -1);
+					displayedAgent = null; // NOPMD
+				}
+
+				return Status.OK_STATUS;
 			}
-		} catch (BusinessException e) {
-			InspectIT.getDefault().createErrorDialog("Exception occurred trying to load the agent tree for the agent " + agent.getAgentName() + ".", e, -1);
+		};
+
+		job.schedule();
+
+		try {
+			job.join();
+		} catch (InterruptedException e) {
+			InspectIT.getDefault().log(IStatus.WARNING, "Job was interrupted while fetching agent data.");
 			displayedAgent = null; // NOPMD
 		}
+
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {

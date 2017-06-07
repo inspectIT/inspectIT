@@ -2,6 +2,7 @@ package rocks.inspectit.ui.rcp.ci.wizard;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -14,6 +15,7 @@ import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.ci.job.OpenProfileJob;
 import rocks.inspectit.ui.rcp.ci.wizard.page.DefineNameAndDescriptionWizardPage;
 import rocks.inspectit.ui.rcp.ci.wizard.page.DefineProfileWizardPage;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
@@ -118,7 +120,7 @@ public class CreateProfileWizard extends Wizard implements INewWizard {
 
 		String name = defineProfileWizardPage.getName();
 		String description = defineProfileWizardPage.getDescription();
-		Profile profile = new Profile();
+		final Profile profile = new Profile();
 		profile.setName(name);
 		if (StringUtils.isNotBlank(description)) {
 			profile.setDescription(description);
@@ -132,20 +134,28 @@ public class CreateProfileWizard extends Wizard implements INewWizard {
 			profile.setProfileData(defineProfileWizardPage.getProfileData());
 		}
 
-		try {
-			Profile created = cmrRepositoryDefinition.getConfigurationInterfaceService().createProfile(profile);
+		ProgressDialog<Profile> dialog = new ProgressDialog<Profile>("Creating new profile..", IProgressMonitor.UNKNOWN) {
+			@Override
+			public Profile execute(IProgressMonitor monitor) throws BusinessException {
+				return cmrRepositoryDefinition.getConfigurationInterfaceService().createProfile(profile);
+			}
+		};
+
+		dialog.start(true, false);
+
+		if (dialog.wasSuccessful()) {
+			Profile created = dialog.getResult();
 
 			// open the created one immediately
 			new OpenProfileJob(cmrRepositoryDefinition, created.getId(), workbench.getActiveWorkbenchWindow().getActivePage()).schedule();
 
 			// notify listeners
 			InspectIT.getDefault().getInspectITConfigurationInterfaceManager().profileCreated(created, cmrRepositoryDefinition);
-		} catch (BusinessException e) {
-			InspectIT.getDefault().createErrorDialog("Profile can not be created.", e, -1);
+			return true;
+		} else {
+			InspectIT.getDefault().createErrorDialog("Profile can not be created.", dialog.getThrownException(), -1);
 			return false;
 		}
-
-		return true;
 	}
 
 	/**

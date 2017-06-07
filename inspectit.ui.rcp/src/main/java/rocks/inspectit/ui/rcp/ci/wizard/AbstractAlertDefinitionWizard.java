@@ -1,9 +1,12 @@
 package rocks.inspectit.ui.rcp.ci.wizard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -16,6 +19,7 @@ import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.ci.wizard.page.AlertDetailsWizardPage;
 import rocks.inspectit.ui.rcp.ci.wizard.page.AlertSourceDefinitionWizardPage;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
@@ -103,8 +107,24 @@ public abstract class AbstractAlertDefinitionWizard extends Wizard implements IN
 	 * {@inheritDoc}
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public void addPages() {
-		List<AlertingDefinition> alertDefinitions = cmrRepositoryDefinition.getConfigurationInterfaceService().getAlertingDefinitions();
+		ProgressDialog<List<AlertingDefinition>> dialog = new ProgressDialog<List<AlertingDefinition>>("Loading alerting definitions..", IProgressMonitor.UNKNOWN) {
+			@Override
+			public List<AlertingDefinition> execute(IProgressMonitor monitor) throws BusinessException {
+				return cmrRepositoryDefinition.getConfigurationInterfaceService().getAlertingDefinitions();
+			}
+		};
+
+		List<AlertingDefinition> alertDefinitions = null;
+		try {
+			dialog.start(true, false);
+			alertDefinitions = dialog.getResult();
+		} catch (Exception e) {
+			InspectIT.getDefault().log(IStatus.WARNING, "Error while fetching alert definitions", e);
+			alertDefinitions = Collections.EMPTY_LIST;
+		}
+
 		List<String> existingNames = new ArrayList<>();
 		for (AlertingDefinition alertDef : alertDefinitions) {
 			existingNames.add(alertDef.getName());

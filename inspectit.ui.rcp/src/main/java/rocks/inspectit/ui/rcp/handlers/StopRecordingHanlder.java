@@ -53,7 +53,7 @@ public class StopRecordingHanlder extends AbstractHandler implements IHandler {
 		}
 		if (null != cmrRepositoryDefinition) {
 			if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
-				boolean canStop = cmrRepositoryDefinition.getStorageService().getRecordingState() != RecordingState.OFF;
+				boolean canStop = cmrRepositoryDefinition.getRecordingState() != RecordingState.OFF;
 				if (canStop) {
 					final CmrRepositoryDefinition finalCmrRepositoryDefinition = cmrRepositoryDefinition;
 					Job stopRecordingJob = new Job("Stop Recording") {

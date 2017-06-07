@@ -1,5 +1,6 @@
 package rocks.inspectit.ui.rcp;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -11,6 +12,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -99,6 +101,11 @@ public class InspectIT extends AbstractUIPlugin {
 	 * {@link ILogListener} used for logging.
 	 */
 	private ILogListener logListener;
+
+	/**
+	 * Whether the current environment is a development environment.
+	 */
+	private Boolean developmentEnvironment;
 
 	/**
 	 * This method is called upon plug-in activation.
@@ -202,6 +209,30 @@ public class InspectIT extends AbstractUIPlugin {
 	 */
 	public static InspectIT getDefault() {
 		return plugin;
+	}
+
+	/**
+	 * Returns whether the current environment is a development environment.
+	 *
+	 * @return <code>true</code> if the current environment is a development environment
+	 */
+	public boolean isDevelopment() {
+		if (developmentEnvironment == null) {
+			File bundleFile = null;
+			try {
+				bundleFile = FileLocator.getBundleFile(getBundle());
+
+				if ((bundleFile != null) && bundleFile.isDirectory()) {
+					developmentEnvironment = Boolean.TRUE;
+				} else {
+					developmentEnvironment = Boolean.FALSE;
+				}
+			} catch (IOException e) {
+				developmentEnvironment = Boolean.FALSE;
+			}
+		}
+
+		return developmentEnvironment.booleanValue();
 	}
 
 	/**

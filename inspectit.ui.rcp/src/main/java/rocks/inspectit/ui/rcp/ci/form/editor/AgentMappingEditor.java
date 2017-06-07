@@ -19,6 +19,7 @@ import rocks.inspectit.ui.rcp.ci.form.input.AgentMappingInput;
 import rocks.inspectit.ui.rcp.ci.form.page.AgentMappingPage;
 import rocks.inspectit.ui.rcp.ci.listener.IAgentMappingsChangeListener;
 import rocks.inspectit.ui.rcp.ci.listener.IEnvironmentChangeListener;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
 
@@ -74,42 +75,49 @@ public class AgentMappingEditor extends AbstractConfigurationInterfaceFormEditor
 		monitor.beginTask("Saving agent mappings..", IProgressMonitor.UNKNOWN);
 
 		if (!checkValid()) {
-			monitor.setCanceled(true);
 			monitor.done();
 			return;
 		}
 
 		AgentMappingInput profileEditorInput = (AgentMappingInput) getEditorInput();
-		CmrRepositoryDefinition cmrRepositoryDefinition = profileEditorInput.getCmrRepositoryDefinition();
-		AgentMappings mappings = profileEditorInput.getAgentMappings();
+		final CmrRepositoryDefinition cmrRepositoryDefinition = profileEditorInput.getCmrRepositoryDefinition();
+		final AgentMappings mappings = profileEditorInput.getAgentMappings();
 
 		if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 			try {
 				commitPages(true);
 
-				AgentMappings updated = cmrRepositoryDefinition.getConfigurationInterfaceService().saveAgentMappings(mappings);
+				ProgressDialog<AgentMappings> dialog = new ProgressDialog<AgentMappings>("Saving agent mappings..", IProgressMonitor.UNKNOWN) {
+					@Override
+					public AgentMappings execute(IProgressMonitor monitor) throws BusinessException {
+						return cmrRepositoryDefinition.getConfigurationInterfaceService().saveAgentMappings(mappings);
+					}
+				};
 
-				// notify listeners
-				if (null != updated) {
-					InspectIT.getDefault().getInspectITConfigurationInterfaceManager().agentMappingsUpdated(updated, cmrRepositoryDefinition);
+				dialog.start(true, false);
+
+				if (dialog.wasSuccessful()) {
+					AgentMappings updated = dialog.getResult();
+
+					// notify listeners
+					if (null != updated) {
+						InspectIT.getDefault().getInspectITConfigurationInterfaceManager().agentMappingsUpdated(updated, cmrRepositoryDefinition);
+					}
+
+					// set no exception and fire dirty state changed
+					setExceptionOnSave(false);
+					editorDirtyStateChanged();
+				} else {
+					setExceptionOnSave(true);
+					editorDirtyStateChanged();
+					InspectIT.getDefault().createErrorDialog("Saving of the agent mappings failed due to the exception on the CMR.", dialog.getThrownException(), -1);
 				}
-
-				// set no exception and fire dirty state changed
-				setExceptionOnSave(false);
-				editorDirtyStateChanged();
-			} catch (BusinessException e) {
-				monitor.setCanceled(true);
-				setExceptionOnSave(true);
-				editorDirtyStateChanged();
-				InspectIT.getDefault().createErrorDialog("Saving of the agent mappings failed due to the exception on the CMR.", e, -1);
 			} catch (Throwable t) { // NOPMD
-				monitor.setCanceled(true);
 				setExceptionOnSave(true);
 				editorDirtyStateChanged();
 				InspectIT.getDefault().createErrorDialog("Unexpected exception occurred during an attempt to save the agent mappings.", t, -1);
 			}
 		} else {
-			monitor.setCanceled(true);
 			InspectIT.getDefault().createErrorDialog("Saving of the agent mappings failed because CMR is currently not online.", -1);
 		}
 

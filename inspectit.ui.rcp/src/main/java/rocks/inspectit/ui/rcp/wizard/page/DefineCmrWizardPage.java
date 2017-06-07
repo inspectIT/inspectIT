@@ -188,6 +188,11 @@ public class DefineCmrWizardPage extends WizardPage {
 
 		String ip = ipBox.getText().trim();
 		int port = Integer.parseInt(portBox.getText().trim());
+
+		if ((port <= 0) || (port > 65535)) {
+			return false;
+		}
+
 		for (CmrRepositoryDefinition cmrRepositoryDefinition : existingRepositories) {
 			if (Objects.equals(ip, cmrRepositoryDefinition.getIp()) && (port == cmrRepositoryDefinition.getPort())) {
 				return false;
@@ -235,6 +240,12 @@ public class DefineCmrWizardPage extends WizardPage {
 
 		String ip = ipBox.getText().trim();
 		int port = Integer.parseInt(portBox.getText().trim());
+
+		if ((port <= 0) || (port > 65535)) {
+			setMessage("The port is out of the valid port range.", ERROR);
+			return;
+		}
+
 		for (CmrRepositoryDefinition cmrRepositoryDefinition : existingRepositories) {
 			if (Objects.equals(ip, cmrRepositoryDefinition.getIp()) && (port == cmrRepositoryDefinition.getPort())) {
 				setMessage("The repository with given IP address and port already exists", ERROR);
