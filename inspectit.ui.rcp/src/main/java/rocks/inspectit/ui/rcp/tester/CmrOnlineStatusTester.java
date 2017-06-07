@@ -61,7 +61,7 @@ public class CmrOnlineStatusTester extends PropertyTester {
 		} else if ("recordingActive".equals(property)) {
 			if (expectedValue instanceof Boolean) {
 				if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
-					boolean recordingActive = cmrRepositoryDefinition.getStorageService().getRecordingState() != RecordingState.OFF;
+					boolean recordingActive = cmrRepositoryDefinition.getRecordingState() != RecordingState.OFF;
 					return ((Boolean) expectedValue).booleanValue() == recordingActive;
 				} else {
 					return false;

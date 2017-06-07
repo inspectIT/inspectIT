@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -29,6 +30,7 @@ import rocks.inspectit.shared.cs.communication.data.cmr.Alert;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
+import rocks.inspectit.ui.rcp.job.BlockingJob;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
 /**
@@ -184,7 +186,16 @@ public class AlertSelectionDialog extends TitleAreaDialog {
 	 * Updates the mapping of known alerts.
 	 */
 	private void updateKnownAlerts() {
-		for (Alert knownAlert : cmrRepositoryDefinition.getAlertAccessService().getAlerts()) {
+		BlockingJob<List<Alert>> blockingJob = new BlockingJob<>("Loading alerts..", new Callable<List<Alert>>() {
+			@Override
+			public List<Alert> call() throws Exception {
+				return cmrRepositoryDefinition.getAlertAccessService().getAlerts();
+			}
+		});
+
+		List<Alert> alertList = blockingJob.scheduleAndJoin();
+
+		for (Alert knownAlert : alertList) {
 			availableAlerts.put(knownAlert.getId(), knownAlert);
 		}
 	}

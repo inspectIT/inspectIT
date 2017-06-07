@@ -19,6 +19,7 @@ import rocks.inspectit.ui.rcp.ci.form.input.EnvironmentEditorInput;
 import rocks.inspectit.ui.rcp.ci.form.page.EnvironmentSettingsPage;
 import rocks.inspectit.ui.rcp.ci.listener.IEnvironmentChangeListener;
 import rocks.inspectit.ui.rcp.ci.listener.IProfileChangeListener;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
@@ -77,42 +78,49 @@ public class EnvironmentEditor extends AbstractConfigurationInterfaceFormEditor 
 		monitor.beginTask("Saving environment..", IProgressMonitor.UNKNOWN);
 
 		if (!checkValid()) {
-			monitor.setCanceled(true);
 			monitor.done();
 			return;
 		}
 
 		EnvironmentEditorInput environmentEditorInput = (EnvironmentEditorInput) getEditorInput();
-		CmrRepositoryDefinition cmrRepositoryDefinition = environmentEditorInput.getCmrRepositoryDefinition();
-		Environment environment = environmentEditorInput.getEnvironment();
+		final CmrRepositoryDefinition cmrRepositoryDefinition = environmentEditorInput.getCmrRepositoryDefinition();
+		final Environment environment = environmentEditorInput.getEnvironment();
 
 		if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
 			try {
 				commitPages(true);
 
-				Environment updated = cmrRepositoryDefinition.getConfigurationInterfaceService().updateEnvironment(environment);
+				ProgressDialog<Environment> progressDialog = new ProgressDialog<Environment>("Saving environment..", IProgressMonitor.UNKNOWN) {
+					@Override
+					public Environment execute(IProgressMonitor monitor) throws BusinessException {
+						return cmrRepositoryDefinition.getConfigurationInterfaceService().updateEnvironment(environment);
+					}
+				};
+				progressDialog.start(true, false);
 
-				// notify listeners
-				if (null != updated) {
-					InspectIT.getDefault().getInspectITConfigurationInterfaceManager().environmentUpdated(updated, cmrRepositoryDefinition);
+				if (progressDialog.wasSuccessful()) {
+					Environment updated = progressDialog.getResult();
+
+					// notify listeners
+					if (null != updated) {
+						InspectIT.getDefault().getInspectITConfigurationInterfaceManager().environmentUpdated(updated, cmrRepositoryDefinition);
+					}
+
+					// set no exception and fire dirty state changed
+					setExceptionOnSave(false);
+					editorDirtyStateChanged();
+				} else {
+					setExceptionOnSave(true);
+					editorDirtyStateChanged();
+					InspectIT.getDefault().createErrorDialog("Saving of the environment '" + environment.getName() + "' failed due to the exception on the CMR.", progressDialog.getThrownException(),
+							-1);
 				}
-
-				// set no exception and fire dirty state changed
-				setExceptionOnSave(false);
-				editorDirtyStateChanged();
-			} catch (BusinessException e) {
-				monitor.setCanceled(true);
-				setExceptionOnSave(true);
-				editorDirtyStateChanged();
-				InspectIT.getDefault().createErrorDialog("Saving of the environment '" + environment.getName() + "' failed due to the exception on the CMR.", e, -1);
 			} catch (Throwable t) { // NOPMD
-				monitor.setCanceled(true);
 				setExceptionOnSave(true);
 				editorDirtyStateChanged();
 				InspectIT.getDefault().createErrorDialog("Unexpected exception occurred during an attempt to save the environment '" + environment.getName() + "'.", t, -1);
 			}
 		} else {
-			monitor.setCanceled(true);
 			InspectIT.getDefault().createErrorDialog("Saving of the environment '" + environment.getName() + "' failed because CMR is currently not online.", -1);
 		}
 

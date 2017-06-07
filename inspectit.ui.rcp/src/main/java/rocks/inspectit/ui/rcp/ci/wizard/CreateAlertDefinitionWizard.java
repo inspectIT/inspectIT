@@ -2,11 +2,14 @@ package rocks.inspectit.ui.rcp.ci.wizard;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.ci.AlertingDefinition;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.ci.wizard.page.AlertDetailsWizardPage;
 import rocks.inspectit.ui.rcp.ci.wizard.page.AlertSourceDefinitionWizardPage;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 
 /**
  * Wizard for creating alert definitions.
@@ -31,9 +34,28 @@ public class CreateAlertDefinitionWizard extends AbstractAlertDefinitionWizard {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void callServiceAndNotify(AlertingDefinition alertDefinition) throws BusinessException {
-		AlertingDefinition newAlertingDefinition = cmrRepositoryDefinition.getConfigurationInterfaceService().createAlertingDefinition(alertDefinition);
-		InspectIT.getDefault().getInspectITConfigurationInterfaceManager().alertDefinitionCreated(newAlertingDefinition, cmrRepositoryDefinition);
+	protected void callServiceAndNotify(final AlertingDefinition alertDefinition) throws BusinessException {
+
+		ProgressDialog<Void> dialog = new ProgressDialog<Void>("Saving alert definition to the CMR..", IProgressMonitor.UNKNOWN) {
+			@Override
+			public Void execute(IProgressMonitor monitor) throws BusinessException {
+				AlertingDefinition createdAlertingDefinition = cmrRepositoryDefinition.getConfigurationInterfaceService().createAlertingDefinition(alertDefinition);
+
+				InspectIT.getDefault().getInspectITConfigurationInterfaceManager().alertDefinitionCreated(createdAlertingDefinition, cmrRepositoryDefinition);
+
+				return null;
+			}
+		};
+
+		try {
+			dialog.start(true, false);
+
+			if (!dialog.wasSuccessful()) {
+				InspectIT.getDefault().createErrorDialog("Unexpected exception occurred during an attempt to save the alert definition.", dialog.getThrownException(), -1);
+			}
+		} catch (Exception e) {
+			InspectIT.getDefault().createErrorDialog("Unexpected exception occurred during an attempt to save the alert definition.", e, -1);
+		}
 	}
 
 	/**
