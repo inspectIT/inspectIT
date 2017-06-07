@@ -1,7 +1,6 @@
 package rocks.inspectit.ui.rcp.repository;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -129,20 +128,6 @@ public class CmrRepositoryManager {
 			}
 		}
 		return updateRepositoryJob;
-	}
-
-	/**
-	 * Forces update of all repositories.
-	 *
-	 * @return Returns the collection of jobs that will be performing the update. Caller can use
-	 *         these jobs to react on the one or more jobs being done.
-	 */
-	public Collection<UpdateRepositoryJob> forceAllCmrRepositoriesOnlineStatusUpdate() {
-		List<UpdateRepositoryJob> jobs = new ArrayList<>();
-		for (CmrRepositoryDefinition cmrRepositoryDefinition : cmrRepositoryDefinitions) {
-			jobs.add(this.forceCmrRepositoryOnlineStatusUpdate(cmrRepositoryDefinition));
-		}
-		return jobs;
 	}
 
 	/**
