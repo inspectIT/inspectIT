@@ -1,6 +1,7 @@
 package rocks.inspectit.ui.rcp.ci.wizard;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -12,6 +13,7 @@ import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.ci.job.OpenEnvironmentJob;
 import rocks.inspectit.ui.rcp.ci.wizard.page.DefineNameAndDescriptionWizardPage;
+import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
@@ -84,22 +86,32 @@ public class CreateEnvironmentWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		String name = defineNameAndDescriptionWizardPage.getName();
 		String description = defineNameAndDescriptionWizardPage.getDescription();
-		Environment environment = new Environment();
+		final Environment environment = new Environment();
 		environment.setName(name);
 		if (StringUtils.isNotBlank(description)) {
 			environment.setDescription(description);
 		}
 
 		if (cmrRepositoryDefinition.getOnlineStatus() != OnlineStatus.OFFLINE) {
-			try {
-				Environment created = cmrRepositoryDefinition.getConfigurationInterfaceService().createEnvironment(environment);
+			ProgressDialog<Environment> dialog = new ProgressDialog<Environment>("Creating new environment..", IProgressMonitor.UNKNOWN) {
+				@Override
+				public Environment execute(IProgressMonitor monitor) throws BusinessException {
+					return cmrRepositoryDefinition.getConfigurationInterfaceService().createEnvironment(environment);
+				}
+
+			};
+
+			dialog.start(true, false);
+
+			if (dialog.wasSuccessful()) {
+				Environment created = dialog.getResult();
 
 				// open created one
 				new OpenEnvironmentJob(cmrRepositoryDefinition, created.getId(), workbench.getActiveWorkbenchWindow().getActivePage()).schedule();
 
 				InspectIT.getDefault().getInspectITConfigurationInterfaceManager().environmentCreated(created, cmrRepositoryDefinition);
-			} catch (BusinessException e) {
-				InspectIT.getDefault().createErrorDialog("Environment can not be created.", e, -1);
+			} else {
+				InspectIT.getDefault().createErrorDialog("Environment can not be created.", dialog.getThrownException(), -1);
 				return false;
 			}
 		} else {
