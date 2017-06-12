@@ -2,6 +2,9 @@ package rocks.inspectit.shared.all.tracing.data;
 
 import java.io.Serializable;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
 import rocks.inspectit.shared.all.communication.Sizeable;
 
@@ -13,6 +16,7 @@ import rocks.inspectit.shared.all.communication.Sizeable;
  * @author Ivan Senic
  *
  */
+@JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public class SpanIdent implements Sizeable, Serializable {
 
 	/**
