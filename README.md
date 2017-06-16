@@ -5,6 +5,8 @@
 
 Various sensors capture end-to-end information for every request from the end user, to the business tier all the way to the backends. inspectIT is based on an application-centric, business-focused approach, where each technical request is mapped to an application and to a business use-case. With inspectIT you always know about the health of your software and can easily analyze any problems that arise.
 
+For Web applications the tool integrates the [End user monitoring](#user-content-end-user-monitoring) using automatic JavaScript agent injection. This allows easy monitoring of the performance that real users are facing in the browser. In addition, the inspectIT can correlate all user actions in the browser to the backend traces, thus providing a complete picture on the user experience.
+
 We hope that together we can build an alternative to the (great!) commercial tools available so that it is up the end user to choose his tooling. **Let's make inspectIT even more awesome!**
 
 ## Features
@@ -13,11 +15,15 @@ We hope that together we can build an alternative to the (great!) commercial too
 | --- | --- | --- | --- |
 | ![](http://inspectit.github.io/inspectIT/screenshots/httOverview.png) | ![](http://inspectit.github.io/inspectIT/screenshots/invocWithSQLLocate.png) | ![](http://inspectit.github.io/inspectIT/screenshots/tracingOverview.png) | ![](http://inspectit.github.io/inspectIT/screenshots/sqlOverviewWithStorage.png) |
 
-| Details (Exceptions) | Sensor configuration | Business context | Grafana dashboards |
+| Details (Exceptions) | Sensor configuration | Business context | Alerting |
 | --- | --- | --- | --- |
-| ![](http://inspectit.github.io/inspectIT/screenshots/detailsExceptions.png) | ![](http://inspectit.github.io/inspectIT/screenshots/sensorConfiguration.png) | ![](http://inspectit.github.io/inspectIT/screenshots/businessContext.png) | ![](http://inspectit.github.io/inspectIT/screenshots/grafanaDashboards.png) | 
+| ![](http://inspectit.github.io/inspectIT/screenshots/detailsExceptions.png) | ![](http://inspectit.github.io/inspectIT/screenshots/sensorConfiguration.png) | ![](http://inspectit.github.io/inspectIT/screenshots/businessContext.png) | ![](http://inspectit.github.io/inspectIT/screenshots/alerting.png) | 
 
+| Monitoring dashboards | EUM Summary | EUM Single Page | EUM 3rd Party Content |
+| --- | --- | --- | --- |
+| ![](http://inspectit.github.io/inspectIT/screenshots/grafanaDashboards.png) | ![](http://inspectit.github.io/inspectIT/screenshots/EUM_Summary.png) | ![](http://inspectit.github.io/inspectIT/screenshots/EUM_One_page.png) | ![](http://inspectit.github.io/inspectIT/screenshots/EUM-3rd-Party.png) |
 
+- Browser end user monitoring: automatic injection of a JavaScript agent into your application HTML code.
 - Detailed trace representation (invocation sequence) for every request containing all interactions with the systems.
 - Support for inter-JVM communication based on HTTP and JMS: each trace shows interaction with all correlated JVMs.
 - Automatic enrichment of every trace with HTTP information, SQL queries, exceptions, parameters and many more.
@@ -42,6 +48,11 @@ We hope that together we can build an alternative to the (great!) commercial too
 - RESTful API for automation and integration with other tools.
 - Fully adaptable user interface.
 - Extensible system: Missing something? Write your own extensions.
+
+### End user monitoring
+<sup>:warning: *Experimental*</sup>
+
+The inspectIT 1.8 line comes with a new feature: Browser End User Experience Monitoring (EUM). This feature allows you to measure the performance at the browser side of the end user, giving more detailed insights than the back-end instrumentation alone. This is done by automatically injecting a JavaScript agent into your applications HTML code, which in turn captures relevant metrics at the client-side and sends them back to inspectIT using AJAX Requests. Check the [official feature documentation](https://inspectit-performance.atlassian.net/wiki/display/DOC18/Working+with+End+User+Monitoring) to help you started.
 
 ### Out-of-the-box profiles
 inspectIT already ships with out-of-the-box instrumentations for commonly used Java technologies. If your technology is missing, you can easily instrument it manually (or [request a new profile](https://inspectit-performance.atlassian.net/wiki/display/CONTRIBUTE/Add+feature+requests)). We currently support:
