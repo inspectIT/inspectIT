@@ -4,6 +4,11 @@
  * @author Rene Kugel
  * @author Ivan Senic
  */
+ 
+plugins {
+  id "com.moowork.node" version "1.2.0"
+}
+
 evaluationDependsOn(':inspectit.shared.all')
 defaultTasks 'releaseAndAnalyze'
 
@@ -84,35 +89,149 @@ jar {
 	}
 }
 
+/**
+ * Compilation and minification of the browser Agent.
+ */
+
+node {
+  download = true
+}
+
+def nodeWorkingDir = "${buildRoot}/node";
+
+task npmInstallLocal(type: NpmTask) {
+    description = "Installs dependencies from package.json"
+    workingDir = file(nodeWorkingDir)
+    args = ['install']
+
+	inputs.file "${mainRoot}/ts/package.json"
+	outputs.dir nodeWorkingDir
+
+	doFirst {
+		copy {
+            from "${mainRoot}/ts"
+            into nodeWorkingDir
+            include "package.json"
+        }
+	}
+}
+
+task compileTS {
+	description = 'Compile TypeScript Sources'
+	dependsOn(npmInstallLocal)
+
+	def compileTSProject = { projectFile -> 
+		def runner = new com.moowork.gradle.node.exec.NodeExecRunner(project)
+
+		runner.arguments = []
+	    runner.arguments.add(file("${nodeWorkingDir}/node_modules/typescript/lib/tsc.js").absolutePath )
+	    runner.arguments.addAll( ['--project', projectFile.absolutePath] )
+
+	    runner.execute().rethrowFailure();
+	}
+
+	def inputDir = "${mainRoot}/ts"
+	//build folder
+	def buildDir = "${buildRoot}/ts"
+	//folder to copy the JS-files to
+	def outputDir = "${buildRoot}/resources/main/js"
+	inputs.dir file(inputDir)
+	outputs.dir file(outputDir)
+
+	//compile the core project first
+	doFirst {
+		compileTSProject(file("${inputDir}/core"));
+        copy {
+            from "${buildDir}/core"
+            into outputDir
+            include "*.js"
+        }
+	}
+	//compile and copy all plugins
+	fileTree(dir: "${inputDir}/plugins", include:"**/tsconfig.json").each {File projectFile ->
+		doLast {
+			compileTSProject(projectFile);
+		}
+	}
+	doLast {
+        copy {
+            from "${buildDir}/plugins"
+            into "${outputDir}/plugins"
+            include "*.js"
+        }
+	}
+}
+
+task lintTS {
+	description = 'Run TSLint on TypeScript Sources'
+	dependsOn(compileTS)
+
+	def resultsFile = file("${buildQAAnalysis}/tslint/results.txt");
+
+	inputs.dir "${mainRoot}/ts"
+	outputs.file resultsFile
+
+	doFirst {
+		//create an empty log
+		resultsFile.getParentFile().mkdirs();
+		resultsFile.createNewFile();
+	}
+
+	def lintTSProject = { lintConfig -> 
+		def runner = new com.moowork.gradle.node.exec.NodeExecRunner(project)
+		runner.ignoreExitValue = true;
+
+		runner.arguments = []
+	    runner.arguments.add(file("${nodeWorkingDir}/node_modules/tslint/lib/tslint-cli.js").absolutePath )
+	    runner.arguments.addAll( ['--project', lintConfig.getParentFile().absolutePath] )
+	    runner.arguments.addAll( ['--out', resultsFile.absolutePath] )
+
+	    def result = runner.execute();
+	    
+	    if(result.getExitValue() != 0) {
+	    	println "tslint found some issues, see QA/tslint/results.txt:"
+	    	println resultsFile.text
+	    }
+	    result.assertNormalExitValue();
+	}
+	fileTree(dir: "${mainRoot}/ts", include:"**/tslint.json").each {File lintConfig ->
+		doLast {
+			lintTSProject(lintConfig);
+		}
+	}
+}
+
 task minifyJS {
 	description = 'Minify JS Agent sources'
-	
-	def inputDir = file("${mainResources}/js")
-	def outputDir = file("${buildRoot}/resources/main/js/min")
-	
-	inputs.dir inputDir
+	dependsOn lintTS
+
+	def inputDir = file("${buildRoot}/resources/main/js")
+	def outputDir = file("${buildRoot}/resources/main/js_min")
+
+	inputs.dir file("${mainRoot}/ts")
 	outputs.dir outputDir
-	
+
 	def inputDirPath = java.nio.file.Paths.get(inputDir.path);
 	def outputDirPath = java.nio.file.Paths.get(outputDir.path)
-			
-	fileTree(dir: inputDirPath.toString(), include:"**/*.js").each {File file ->
-		doLast {
+
+	doLast {
+		fileTree(dir: inputDirPath.toString(), include:"**/*.js").each {File file ->
 			def relativeInputFilePath = inputDirPath.relativize(file.toPath());
 			def outputFilePath = outputDirPath.resolve(relativeInputFilePath);
-			
+
 			//create the directory if required			
 			outputFilePath.getParent().toFile().mkdirs()
-			
+
 			javaexec {
-			
+
 				workingDir = inputDirPath.toString()
-			
+
 				classpath configurations.closureCompiler
 				main = 'com.google.javascript.jscomp.CommandLineRunner'
-				
+
 				def closureArgs = []
 				closureArgs << "--compilation_level=SIMPLE_OPTIMIZATIONS"
+				closureArgs << "--language_in=ECMASCRIPT5"
 				closureArgs << "--js_output_file=" +  outputFilePath.toString()
 				closureArgs << relativeInputFilePath.toString()
 				args closureArgs

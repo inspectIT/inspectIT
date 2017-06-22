@@ -19,7 +19,7 @@ QUnit.begin(function( details ) {
     }
     
     function test(){}
-    supportMap["functionNames"] = inspectIT.util.getFunctionName(test) == "test";
+    supportMap["functionNames"] = Util.getFunctionName(test) == "test";
     
     
 });
@@ -29,7 +29,7 @@ function assertSent(assert, expectedElement, message) {
 	for(var i=0; i<mocking.sentElements.length; i++) {
 		var elem = mocking.sentElements[i];
 		if(elem.id == expectedElement.id) {
-			assert.deepEqual(elem,expectedElement, message);
+			assert.ok(true, message);
 			return;
 		}
 	}	
@@ -58,13 +58,13 @@ QUnit.test("Soft-Reference Freeing", function( assert ) {
 	//has to be changed if the configuration of the soft references is changed
 	var MAX_ACTIVE_REFERENCES = 1000;
 	
-	var parent = inspectIT.createEUMElement("test");
-	var first = inspectIT.createEUMElement("test");
+	var parent = new ListenerExecutionRecord();
+	var first = new ListenerExecutionRecord();
 	var rest = [];
 	first.setParent(parent);
 	//go just at the limit
 	for(var i = 0; i < MAX_ACTIVE_REFERENCES; i++) {
-		var elem = inspectIT.createEUMElement("test");
+		var elem = new ListenerExecutionRecord();
 		elem.setParent(parent);
 		rest.push(elem);
 	}
@@ -79,7 +79,7 @@ QUnit.test("Soft-Reference Freeing", function( assert ) {
 
 
 QUnit.test("Element sending policies", function( assert ) {
-	var elementA = inspectIT.createEUMElement("testRec");
+	var elementA = new ListenerExecutionRecord();
 	elementA.require("data");
 	elementA.markComplete("data");
 	
@@ -88,7 +88,7 @@ QUnit.test("Element sending policies", function( assert ) {
 	assertSent(assert, elementA, "Send element after marked as relevant.");
 	
 	
-	var elementB = inspectIT.createEUMElement("testRec");
+	var elementB = new ListenerExecutionRecord();
 	elementB.require("data");
 	elementB.markRelevant();
 	
@@ -101,13 +101,13 @@ QUnit.test("Element sending policies", function( assert ) {
 
 QUnit.test("Trace building and Relevancy Inheritance", function( assert ) {
 	
-	var grandParent = inspectIT.createEUMElement("testRec");
+	var grandParent = new ListenerExecutionRecord();
 	grandParent.require("data");
 	
-	var parent = inspectIT.createEUMElement("testRec");
+	var parent = new ListenerExecutionRecord();
 	parent.require("data");
 
-	var asyncChild = inspectIT.createEUMElement("testRec");
+	var asyncChild = new ListenerExecutionRecord();
 	asyncChild.require("data");
 	
 	//test synchronous call
@@ -115,8 +115,8 @@ QUnit.test("Trace building and Relevancy Inheritance", function( assert ) {
 		parent.buildTrace(true,function() {
 		});
 	});
-	//test asynchronous call
-	asyncChild.setParent(parent,true);
+	//test child call
+	asyncChild.setParent(parent);
 	
 	//complete all
 	grandParent.markComplete("data");
@@ -127,10 +127,11 @@ QUnit.test("Trace building and Relevancy Inheritance", function( assert ) {
 	asyncChild.markRelevant();
 	
 
-	assert.ok("enterTimestamp" in parent && "duration" in parent && "enterTimestamp" in grandParent && "duration" in grandParent, "Enter timestamp / duration capturing");
+	assert.ok("enterTimestamp" in parent && "duration" in parent && "enterTimestamp" in grandParent && "duration" in grandParent, "Enter timestamp and duration capturing");
 	assert.ok(asyncChild.parentId == parent.id && parent.parentId == grandParent.id, "Parent IDs correctly captured");
+	assert.ok(asyncChild.traceId == parent.traceId && parent.traceId == grandParent.traceId, "Trace IDs correctly captured");
 	
-	assertSent(assert, asyncChild, "Asynchronous child sent.");
+	assertSent(assert, asyncChild, "Child sent.");
 	assertSent(assert, parent, "Parent sent.");
 	assertSent(assert, grandParent, "GrandParent sent.");
 	
@@ -195,17 +196,22 @@ QUnit.test("Listener Instrumentation Mechanism", function( assert ) {
 	target.addEventListener("test",listenerB);
 	
 	//add instrumentation
-	function instrumentation(executeOriginalListener, originalCallback, event) {
-		if(event === testEvent) {
-			if(originalCallback === listenerA) {
-				instrumentationACount++;
-			} else if(originalCallback === listenerB) {
-				instrumentationBCount++;
+	var instrumentation = {
+		shouldInstrument : function(target, type) {
+			return type ==="test";
+		},
+		instrument : function(event,originalCallback, executeOriginalListener) {
+			if(event === testEvent) {
+				if(originalCallback === listenerA) {
+					instrumentationACount++;
+				} else if(originalCallback === listenerB) {
+					instrumentationBCount++;
+				}
 			}
+			executeOriginalListener();
 		}
-		executeOriginalListener();
-	}
-	inspectIT.instrumentation.instrumentEventListener(instrumentation);
+	};
+	Instrumentation.addListenerInstrumentation(instrumentation);
 	
 	//fire two events
 	target.dispatchEvent(testEvent);
@@ -231,15 +237,7 @@ QUnit.test("Listener Instrumentation Mechanism", function( assert ) {
 			assert.equal(listenerACount,instrumentationACount,"Instrumentation of listenerA not executed anymore");
 			assert.equal(listenerBCount,instrumentationBCount,"Instrumentation of listenerB was executed correctly");
 			
-			//remove the instrumentation but keep listener B
-			inspectIT.instrumentation.uninstrumentEventListener(instrumentation);
-			target.dispatchEvent(testEvent);
-			setTimeout(function() {
-				assert.equal(listenerBCount,4,"ListenerB was executed the correct number of times");
-				assert.equal(instrumentationBCount,3,"Instrumentation of listenerB was not executed after removal");
-				done();
-			}, 500);
-			
+			done();
 		}, 500);		
 		
 	}, 500);
@@ -272,7 +270,7 @@ QUnit.test( "Speedindex & Firstpaint test", function( assert ) {
     		var elem = mocking.sentElements[i];
     		if(elem.type == "pageLoadRequest") {
     			found = true;
-    			assert.ok("navigationTimings" in elem, "NavigationTimings collection avaialble");
+    			assert.ok("navigationTimings" in elem, "NavigationTimings collection available");
     			if("navigationTimings" in elem) {
         			assert.ok(elem.navigationTimings.speedIndex > 0, "SpeedIndex available.");
         			assert.ok(elem.navigationTimings.firstPaint > 0, "FirstPaint available.");    				
@@ -342,10 +340,10 @@ QUnit.test("setTimeout instrumentation test", function(assert) {
     }
     
     function timerB() {
-    	var start = inspectIT.util.timestampMS();
+    	var start = Util.timestampMS();
     	//active waiting to make this relevant
-    	while( ( inspectIT.util.timestampMS() - start) < 200) {}
-    	inspectIT.instrumentation.runWithout(function() {
+    	while( (Util.timestampMS() - start) < 200) {}
+    	Instrumentation.runWithout(function() {
     		setTimeout(checkSentData,0);
     	});
     }
@@ -398,7 +396,7 @@ QUnit.test("Ajax capturing", function(assert) {
 	
     var done = assert.async();
 
-    var parent = inspectIT.createEUMElement("test");
+    var parent = new ListenerExecutionRecord();
     parent.require("nodata");
     parent.markComplete("nodata");
     parent.markRelevant();
@@ -407,10 +405,10 @@ QUnit.test("Ajax capturing", function(assert) {
     
     parent.buildTrace(false, function() {
     	sampleAjax(function() {
-        	var start = inspectIT.util.timestampMS();
+        	var start = Util.timestampMS();
         	//active waiting to make this relevant
-        	while( ( inspectIT.util.timestampMS() - start) < 200) {}
-        	inspectIT.instrumentation.runWithout(function() {
+        	while( (Util.timestampMS() - start) < 200) {}
+        	Instrumentation.runWithout(function() {
         		setTimeout(checkSentData,0);
         	});
     	});
@@ -442,8 +440,8 @@ QUnit.test("Ajax capturing", function(assert) {
 
 function myClickListener() {
 	//NOP loop to make this reelvant
-	var start = inspectIT.util.timestampMS();
-	while( ( inspectIT.util.timestampMS() - start) < 200) {}
+	var start = Util.timestampMS();
+	while( ( Util.timestampMS() - start) < 200) {}
 }
 
 QUnit.module("Listener instrumentation module.", {

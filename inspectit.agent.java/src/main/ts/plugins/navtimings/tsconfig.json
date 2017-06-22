@@ -1,0 +1,10 @@
+{
+	"extends" : "../../tsconfig.global.json",
+    "compilerOptions": {
+        "outFile" : "../../../../../build/ts/plugins/navtimings.js"
+    },
+	"include" : [
+		"**/*.ts",
+		"../../../../../build/ts/core/*.d.ts"
+	]
+}

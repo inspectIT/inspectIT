@@ -1,0 +1,14 @@
+{
+	"extends" : "../tsconfig.global.json",
+    "compilerOptions": {
+        "noEmitHelpers": false,
+		"declaration" : true,
+        "outFile" : "../../../../build/ts/core/core.js"
+    },
+	"include" : [
+		"**/*.ts"
+	],
+	"exclude" : [
+		"./core.d.ts"
+	]	
+}
