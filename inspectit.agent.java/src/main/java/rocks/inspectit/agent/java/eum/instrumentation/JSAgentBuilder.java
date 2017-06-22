@@ -53,11 +53,6 @@ public class JSAgentBuilder {
 	public static final long JS_AGENT_CACHE_MAX_AGE_SECONDS = 7 * 24 * 60 * 60;
 
 	/**
-	 * Javascript code which starts the execution at the end when all plugins are loaded.
-	 */
-	private static final String EXECUTE_START_JAVASCRIPT = "inspectIT.init();";
-
-	/**
 	 * The path to the not minified javascript in the resources.
 	 */
 	private static final String NORMAL_SCRIPT_RESOURCE_PATH = "/js/";
@@ -65,12 +60,22 @@ public class JSAgentBuilder {
 	/**
 	 * The path to the minified javascript in the resources.
 	 */
-	private static final String MINIFIED_SCRIPT_RESOURCE_PATH = "/js/min/";
+	private static final String MINIFIED_SCRIPT_RESOURCE_PATH = "/js_min/";
+
+	/**
+	 * Javascript code which starts the execution at the end when all plugins are loaded.
+	 */
+	private static final String JS_AGENT_PREAMBLE = "\"use strict\"; \n if(!window.inspectIT) {(function(){\n";
+
+	/**
+	 * Javascript code which starts the execution at the end when all plugins are loaded.
+	 */
+	private static final String JS_AGENT_EPILOGUE = "\n})();window.inspectIT.init(); }";
 
 	/**
 	 * the path to the js agent without any plugins.
 	 */
-	private static final String JSBASE_RESOURCE = "inspectit_jsagent_base.js";
+	private static final String JSBASE_RESOURCE = "core.js";
 
 	/**
 	 * Cache for the source of the individual JS Agent modules.
@@ -118,6 +123,7 @@ public class JSAgentBuilder {
 	public String buildJsFile(String arguments) {
 
 		StringBuilder script = new StringBuilder();
+		script.append(JS_AGENT_PREAMBLE);
 		script.append("window.inspectIT_settings.activeAgentModules = \"").append(arguments).append("\";");
 
 		script.append(getAgentCoreSource());
@@ -135,7 +141,7 @@ public class JSAgentBuilder {
 				}
 			}
 		}
-		script.append(EXECUTE_START_JAVASCRIPT);
+		script.append(JS_AGENT_EPILOGUE);
 
 		return script.toString();
 	}

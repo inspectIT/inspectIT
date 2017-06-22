@@ -12,9 +12,9 @@ window.mocking = (function() {
 
 	function preAgentModules() {
 
-		inspectIT.beaconService.init = function() {
+		BeaconService.init = function() {
 		};
-		inspectIT.beaconService.send = function(data) {
+		BeaconService.send = function(data) {
 			sentElements.push(data);
 		};
 	}

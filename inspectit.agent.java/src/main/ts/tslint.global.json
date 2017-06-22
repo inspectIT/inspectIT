@@ -1,0 +1,19 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+        "max-line-length": {
+            "options": [160]
+        },
+        "no-reference": false,
+        "no-namespace" : false,
+        "space-before-function-paren" : false,
+        "only-arrow-functions" : false,
+        "object-literal-sort-keys" : false,
+        "forin" : false,
+        "no-trailing-whitespace": [true, "ignore-comments"],
+        "trailing-comma" : false,
+        "ban-types" : false,
+        "array-type" : false,
+        "eofline" : false
+    }
+}
