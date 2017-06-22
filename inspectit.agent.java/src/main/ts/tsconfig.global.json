@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+    	"noEmitOnError" : true,
+    
+        "target": "es5",
+        "module": "none",
+
+        "strict": true,
+
+		"stripInternal" : true,
+        "sourceMap": false,
+        //do not emit helper functions in plugins, as the helper functions are already created by the core part
+        "noEmitHelpers": true
+    }	
+}

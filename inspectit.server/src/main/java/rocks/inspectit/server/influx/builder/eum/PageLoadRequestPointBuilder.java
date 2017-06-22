@@ -118,8 +118,11 @@ public class PageLoadRequestPointBuilder extends AbstractEUMRequestPointBuilder<
 			}
 
 		} else {
-			builder.time(pageLoadRequest.getOwningSpan().getTimeStamp().getTime(), TimeUnit.MILLISECONDS);
-			builder.addField(Series.EumPageLoad.FIELD_NAVIGATION_START, (double) pageLoadRequest.getOwningSpan().getTimeStamp().getTime());
+			long estimatedStartTime = pageLoadRequest.getOwningSpan().getTimeStamp().getTime();
+			double estimatedDuration = pageLoadRequest.getOwningSpan().getDuration();
+			builder.time(estimatedStartTime, TimeUnit.MILLISECONDS);
+			builder.addField(Series.EumPageLoad.FIELD_NAVIGATION_START, (double) estimatedStartTime);
+			builder.addField(Series.EumPageLoad.FIELD_LOAD_EVENT_END, estimatedDuration);
 		}
 
 		return Collections.singleton(builder);

@@ -2,6 +2,8 @@ package rocks.inspectit.shared.all.communication.data.eum;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import rocks.inspectit.shared.all.tracing.constants.ExtraTags;
@@ -25,7 +27,8 @@ public abstract class JSFunctionExecution extends AbstractEUMSpanDetails {
 	 * is "<anonymous>". If the name could not be queried by platform limitations, the value is "".
 	 */
 	@JsonProperty
-	private String functionName;
+	@JsonInclude(value = Include.NON_DEFAULT)
+	private String functionName = "";
 
 	/**
 	 * Gets {@link #functionName}.

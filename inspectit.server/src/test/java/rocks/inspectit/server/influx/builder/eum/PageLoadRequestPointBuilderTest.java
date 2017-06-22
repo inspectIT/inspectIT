@@ -198,7 +198,7 @@ public class PageLoadRequestPointBuilderTest extends AbstractEUMRequestPointBuil
 			assertThat(fields.get(Series.EumPageLoad.FIELD_DOM_LOADING), equalTo(null));
 			assertThat(fields.get(Series.EumPageLoad.FIELD_FIRSTPAINT), equalTo(null));
 			assertThat(fields.get(Series.EumPageLoad.FIELD_LOAD_EVENT_START), equalTo(null));
-			assertThat(fields.get(Series.EumPageLoad.FIELD_LOAD_EVENT_END), equalTo(null));
+			assertThat(fields.get(Series.EumPageLoad.FIELD_LOAD_EVENT_END), equalTo((Object) (LOAD_END - NAV_START)));
 			assertThat(fields.get(Series.EumPageLoad.FIELD_RESPONSE_START), equalTo(null));
 			assertThat(fields.get(Series.EumPageLoad.FIELD_RESPONSE_END), equalTo(null));
 			assertThat(fields.get(Series.EumPageLoad.FIELD_SECURE_CONNECT_START), equalTo(null));

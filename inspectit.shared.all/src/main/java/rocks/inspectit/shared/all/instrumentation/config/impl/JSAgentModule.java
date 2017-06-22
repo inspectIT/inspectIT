@@ -34,7 +34,7 @@ public enum JSAgentModule {
 	/**
 	 * Speedindex module.
 	 */
-	SPEEDINDEX_MODULE('r', "plugins/rum-speedindex.js", "Speed Index Module",
+	SPEEDINDEX_MODULE('r', "plugins/speedindex.js", "Speed Index Module",
 			"This module handles the calculation of the RUM speed index. See: https://github.com/WPO-Foundation/RUM-SpeedIndex/"),
 	/**
 	 * Navigation timings API module.
@@ -67,11 +67,11 @@ public enum JSAgentModule {
 	public static final Map<Character, JSAgentModule> IDENTIFIER_MAP;
 
 	/**
-	 * Increment for eah release where the JS Agent has changed. This value is embedded into the URL
-	 * for fetching hte agent, therefore incrementing the revision ensures that the newest version
-	 * is fetched instead of using an old one from the HTTP cache.
+	 * Increment for each release where the JS Agent has changed. This value is embedded into the
+	 * URL for fetching the agent, therefore incrementing the revision ensures that the newest
+	 * version is fetched instead of using an old one from the HTTP cache.
 	 */
-	public static final int JS_AGENT_REVISION = 1;
+	public static final int JS_AGENT_REVISION = 2;
 
 	static {
 		HashMap<Character, JSAgentModule> temp = new HashMap<Character, JSAgentModule>();
