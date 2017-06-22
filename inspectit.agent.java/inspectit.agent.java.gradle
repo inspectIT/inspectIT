@@ -4,6 +4,11 @@
  * @author Rene Kugel
  * @author Ivan Senic
  */
+ 
+plugins {
+  id "com.moowork.node" version "1.2.0"
+}
+
 evaluationDependsOn(':inspectit.shared.all')
 defaultTasks 'releaseAndAnalyze'
 
@@ -84,13 +89,126 @@ jar {
 	}
 }
 
+/**
+ * Compilation and minification of the browser Agent.
+ */
+
+node {
+  download = true
+}
+
+def nodeWorkingDir = "${buildRoot}/node";
+
+task npmInstallLocal(type: NpmTask) {
+    description = "Installs dependencies from package.json"
+    workingDir = file(nodeWorkingDir)
+    args = ['install']
+    
+	inputs.file "${mainRoot}/tsagent/package.json"
+	outputs.dir nodeWorkingDir
+	
+	doFirst {
+		copy {
+            from "${mainRoot}/tsagent"
+            into nodeWorkingDir
+            include "package.json"
+        }
+	}
+	
+    
+}
+
+task compileTS {
+	description = 'Compile TypeScript Sources'
+	dependsOn(npmInstallLocal)
+	
+	def compileTSProject = { projectFile -> 
+		def runner = new com.moowork.gradle.node.exec.NodeExecRunner(project)
+		
+		runner.arguments = []
+	    runner.arguments.add(file("${nodeWorkingDir}/node_modules/typescript/lib/tsc.js").absolutePath )
+	    runner.arguments.addAll( ['--project', projectFile.absolutePath] )
+	
+	    runner.execute().rethrowFailure();
+	}
+	
+	def inputDir = "${mainRoot}/tsagent"
+	
+	
+	//compile the core first
+	def outputDir = "${buildRoot}/resources/main/js"
+	inputs.dir file(inputDir)
+	outputs.dir file(outputDir)
+	
+	//compile the core project first
+	doFirst {
+		compileTSProject(file("${mainRoot}/tsagent/core"));
+        copy {
+            from "${mainRoot}/tsagent/core"
+            into "${buildRoot}/resources/main/js"
+            include "*.js"
+        }
+	}
+	//compile all plugins
+	fileTree(dir: "${mainRoot}/tsagent/plugins", include:"**/tsconfig.json").each {File projectFile ->
+		doLast {
+			compileTSProject(projectFile);
+	        copy {
+	            from projectFile.getParentFile().absolutePath
+	            into "${buildRoot}/resources/main/js/plugins"
+	            include "*.js"
+	        }
+		}
+	}
+}
+
+task lintTS {
+	description = 'Run TSLint on TypeScript Sources'
+	dependsOn(compileTS)
+	
+	def resultsFile = file("${buildQAAnalysis}/tslint/results.txt");
+	
+	inputs.dir "${mainRoot}/tsagent"
+	outputs.file resultsFile
+	
+	doFirst {
+		//create an empty log
+		resultsFile.getParentFile().mkdirs();
+		resultsFile.createNewFile();
+	}
+	
+	def lintTSProject = { lintConfig -> 
+		def runner = new com.moowork.gradle.node.exec.NodeExecRunner(project)
+		runner.ignoreExitValue = true;
+		
+		runner.arguments = []
+	    runner.arguments.add(file("${nodeWorkingDir}/node_modules/tslint/lib/tslint-cli.js").absolutePath )
+	    runner.arguments.addAll( ['--project', lintConfig.getParentFile().absolutePath] )
+	    runner.arguments.addAll( ['--out', resultsFile.absolutePath] )
+	    	
+	    def result = runner.execute();
+	    
+	    if(result.getExitValue() != 0) {
+	    	println "tslint found some issues, see QA/tslint/results.txt:"
+	    	println resultsFile.text
+	    }
+	    result.assertNormalExitValue();
+	}
+	fileTree(dir: "${mainRoot}/tsagent", include:"**/tslint.json").each {File lintConfig ->
+		doLast {
+			lintTSProject(lintConfig);
+		}
+	}
+}
+
 task minifyJS {
 	description = 'Minify JS Agent sources'
+	dependsOn lintTS
 	
-	def inputDir = file("${mainResources}/js")
-	def outputDir = file("${buildRoot}/resources/main/js/min")
+	def inputDir = file("${buildRoot}/resources/main/js")
+	def outputDir = file("${buildRoot}/resources/main/js_min")
 	
-	inputs.dir inputDir
+	inputs.dir file("${mainRoot}/tsagent")
 	outputs.dir outputDir
 	
 	def inputDirPath = java.nio.file.Paths.get(inputDir.path);
@@ -113,6 +231,7 @@ task minifyJS {
 				
 				def closureArgs = []
 				closureArgs << "--compilation_level=SIMPLE_OPTIMIZATIONS"
+				closureArgs << "--language_in=ECMASCRIPT5"
 				closureArgs << "--js_output_file=" +  outputFilePath.toString()
 				closureArgs << relativeInputFilePath.toString()
 				args closureArgs

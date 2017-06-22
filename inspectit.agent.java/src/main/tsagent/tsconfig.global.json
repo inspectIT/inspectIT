@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+    	"noEmitOnError" : true,
+    
+        "target": "es5",
+        "module": "none",
+
+        "strict": true,
+
+		"stripInternal" : true,
+        "sourceMap": false,
+        "noEmitHelpers": true
+    }	
+}

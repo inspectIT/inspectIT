@@ -3,7 +3,6 @@ package rocks.inspectit.shared.all.communication.data.eum;
 import java.io.Serializable;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,8 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.opentracing.tag.Tags;
 
 /**
- * Represents the initial request responsible for loadign hte page showed in this tab. This request
- * is always a direct child of the corresponding {@link PageLoadAction}.
+ * Represents the initial request responsible for loading the page showed in this tab.
  *
  * @author David Monschein, Jonas Kunz
  *
@@ -37,7 +35,7 @@ public class PageLoadRequest extends AbstractRequest {
 	 */
 	@JsonInclude(value = Include.NON_DEFAULT)
 	@JsonProperty
-	private int resourceCount = -1;
+	private int resourceCount = 0;
 
 	/**
 	 * Stores the navigation timings and the speedindex if the corresponding modules are enabled.
@@ -49,7 +47,6 @@ public class PageLoadRequest extends AbstractRequest {
 	 * @author Jonas Kunz
 	 *
 	 */
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class NavigationTimings implements Serializable {
 
 		/**
@@ -62,7 +59,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("navigationStartW")
+		@JsonProperty("navigationStart")
 		private double navigationStart = 0;
 
 		/**
@@ -70,7 +67,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("unloadEventStartW")
+		@JsonProperty("unloadEventStart")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double unloadEventStart = 0;
 
@@ -79,7 +76,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("unloadEventEndW")
+		@JsonProperty("unloadEventEnd")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double unloadEventEnd = 0;
 
@@ -88,7 +85,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("redirectStartW")
+		@JsonProperty("redirectStart")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double redirectStart = 0;
 
@@ -97,7 +94,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("redirectEndW")
+		@JsonProperty("redirectEnd")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double redirectEnd = 0;
 
@@ -106,7 +103,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("fetchStartW")
+		@JsonProperty("fetchStart")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double fetchStart = 0;
 
@@ -115,7 +112,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("domainLookupStartW")
+		@JsonProperty("domainLookupStart")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double domainLookupStart = 0;
 
@@ -124,7 +121,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("domainLookupEndW")
+		@JsonProperty("domainLookupEnd")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double domainLookupEnd = 0;
 
@@ -133,7 +130,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("connectStartW")
+		@JsonProperty("connectStart")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double connectStart = 0;
 
@@ -142,7 +139,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("connectEndW")
+		@JsonProperty("connectEnd")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double connectEnd = 0;
 
@@ -151,7 +148,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("secureConnectionStartW")
+		@JsonProperty("secureConnectionStart")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double secureConnectionStart = 0;
 
@@ -160,7 +157,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("requestStartW")
+		@JsonProperty("requestStart")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double requestStart = 0;
 
@@ -169,7 +166,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("responseStartW")
+		@JsonProperty("responseStart")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double responseStart = 0;
 
@@ -178,7 +175,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("responseEndW")
+		@JsonProperty("responseEnd")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double responseEnd = 0;
 
@@ -187,7 +184,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("domLoadingW")
+		@JsonProperty("domLoading")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double domLoading = 0;
 
@@ -196,7 +193,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("domInteractiveW")
+		@JsonProperty("domInteractive")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double domInteractive = 0;
 
@@ -205,7 +202,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("domContentLoadedEventStartW")
+		@JsonProperty("domContentLoadedEventStart")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double domContentLoadedEventStart = 0;
 
@@ -214,7 +211,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("domContentLoadedEventEndW")
+		@JsonProperty("domContentLoadedEventEnd")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double domContentLoadedEventEnd = 0;
 
@@ -223,7 +220,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("domCompleteW")
+		@JsonProperty("domComplete")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double domComplete = 0;
 
@@ -232,7 +229,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("loadEventStartW")
+		@JsonProperty("loadEventStart")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double loadEventStart = 0;
 
@@ -241,7 +238,7 @@ public class PageLoadRequest extends AbstractRequest {
 		 * "https://www.w3.org/TR/navigation-timing/#sec-navigation-timing-interface">Navigation
 		 * timings</a>.
 		 */
-		@JsonProperty("loadEventEndW")
+		@JsonProperty("loadEventEnd")
 		@JsonInclude(value = Include.NON_DEFAULT)
 		private double loadEventEnd = 0;
 

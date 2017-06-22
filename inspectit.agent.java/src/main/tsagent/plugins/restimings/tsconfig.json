@@ -1,0 +1,10 @@
+{
+	"extends" : "../../tsconfig.global.json",
+    "compilerOptions": {
+        "outFile" : "./restimings.js"
+    },
+	"include" : [
+		"**/*.ts",
+		"../../core/*.d.ts"
+	]
+}

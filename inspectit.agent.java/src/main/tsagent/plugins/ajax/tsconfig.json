@@ -1,0 +1,10 @@
+{
+	"extends" : "../../tsconfig.global.json",
+    "compilerOptions": {
+        "outFile" : "./ajax.js"
+    },
+	"include" : [
+		"**/*.ts",
+		"../../core/*.d.ts"
+	]
+}

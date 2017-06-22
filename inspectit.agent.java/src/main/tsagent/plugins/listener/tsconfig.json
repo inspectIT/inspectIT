@@ -1,0 +1,10 @@
+{
+	"extends" : "../../tsconfig.global.json",
+    "compilerOptions": {
+        "outFile" : "./listener.js"
+    },
+	"include" : [
+		"**/*.ts",
+		"../../core/*.d.ts"
+	]
+}
