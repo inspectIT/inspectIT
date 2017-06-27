@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="inspectIT" uid="rocks.inspectit.ui.rcp.product" id="rocks.inspectit.ui.rcp.product" application="rocks.inspectit.ui.rcp.application" version="1.7.0" useFeatures="false" includeLaunchers="true">
+<product name="inspectIT" uid="rocks.inspectit.ui.rcp.product" id="rocks.inspectit.ui.rcp.product" application="rocks.inspectit.ui.rcp.application" version="1.8.0" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="about.png"/>
