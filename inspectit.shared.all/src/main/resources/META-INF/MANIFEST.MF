@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: inspectIT Shared All
 Bundle-SymbolicName: rocks.inspectit.shared.all
-Bundle-Version: 1.7.0
+Bundle-Version: 1.8.0
 Export-Package: rocks.inspectit.shared.all.cmr.cache,
  rocks.inspectit.shared.all.cmr.cache.impl,
  rocks.inspectit.shared.all.cmr.model,
