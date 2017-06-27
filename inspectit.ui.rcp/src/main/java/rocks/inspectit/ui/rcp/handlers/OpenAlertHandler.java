@@ -47,7 +47,7 @@ public class OpenAlertHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		CmrRepositoryDefinition cmrRepositoryDefinition = null;
-		if (!selection.isEmpty() && (selection instanceof StructuredSelection)) {
+		if ((selection != null) && !selection.isEmpty() && (selection instanceof StructuredSelection)) {
 			Iterator<?> iterator = ((StructuredSelection) selection).iterator();
 			while (iterator.hasNext()) {
 				Object object = iterator.next();
