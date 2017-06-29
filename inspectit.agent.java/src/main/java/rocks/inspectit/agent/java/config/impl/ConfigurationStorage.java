@@ -29,6 +29,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationSt
 import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.spring.logger.Log;
+import rocks.inspectit.shared.all.version.VersionService;
 
 /**
  * New version of the {@link IConfigurationStorage} that reads configuration from the
@@ -53,6 +54,12 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	 */
 	@Autowired
 	private SpringConfiguration springConfiguration;
+
+	/**
+	 * The version service.
+	 */
+	@Autowired
+	private VersionService versionService;
 
 	/**
 	 * The name of the property for the agent name.
@@ -413,7 +420,13 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		// log version
+		if (log.isInfoEnabled()) {
+			log.info("Using agent version " + versionService.getVersionAsString() + ".");
+		}
+
 		loadConfigurationFromJvmParameters();
+
 		if ((null == repository) || StringUtils.isEmpty(agentName)) {
 			throw new BeanInitializationException("inspectIT agent must be initialized with IP and port of the CMR via JVM parameters.");
 		}

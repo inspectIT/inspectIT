@@ -25,7 +25,6 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.RetransformationSt
 import rocks.inspectit.shared.all.pattern.IMatchPattern;
 import rocks.inspectit.shared.all.util.UnderlyingSystemInfo;
 import rocks.inspectit.shared.all.util.UnderlyingSystemInfo.JvmProvider;
-import rocks.inspectit.shared.all.version.VersionService;
 
 /**
  * The {@link SpringAgent} is used by the javaagent to analyze the passed bytecode if its needed to
@@ -171,12 +170,6 @@ public class SpringAgent implements IAgent {
 
 			if (LOG.isInfoEnabled()) {
 				LOG.info("Spring successfully initialized");
-			}
-
-			// log version
-			if (LOG.isInfoEnabled()) {
-				VersionService versionService = beanFactory.getBean(VersionService.class);
-				LOG.info("Using agent version " + versionService.getVersionAsString() + ".");
 			}
 
 			// load all necessary beans right away
