@@ -969,12 +969,10 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 	private void addSpanOrInvoc(List<Object> objects, InvocationSequenceData data) {
 		if (InvocationSequenceDataHelper.hasSpanIdent(data)) {
 			Span span = spanService.get(data.getSpanIdent());
-			if (null != span) {
-				if (span.isCaller()) {
-					objects.add(data);
-				} else {
-					objects.add(span);
-				}
+			if ((null != span) && !span.isCaller()) {
+				objects.add(span);
+			} else {
+				objects.add(data);
 			}
 		} else {
 			objects.add(data);
