@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -388,19 +390,44 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 		// agent name
 		String agentName = System.getProperty(AGENT_NAME_PROPERTY);
 		if (StringUtils.isNotBlank(agentName)) {
+			String newAgentName = checkPatternAgentName(agentName);
 			try {
-				log.info("Agent name found in the JVM parameters: AgentName=" + agentName);
-				setAgentName(agentName);
+				log.info("Agent name found in the JVM parameters: AgentName=" + newAgentName);
+				setAgentName(newAgentName);
 			} catch (Exception e) {
 				log.warn("Agent name could not be defined from the data in the JVM parameters", e);
 			}
 		} else {
 			try {
+				log.info("Agent name set by default: AgentName = " + DEFAULT_AGENT_NAME);
 				setAgentName(DEFAULT_AGENT_NAME);
 			} catch (StorageException e) {
 				log.warn("Agent name could not be defined from default agent name", e);
 			}
 		}
+	}
+
+	/**
+	 * @param originalAgentName
+	 *            Name of the agent passed by the user in the JVM arguments.
+	 *
+	 * @return Returns the name of the agent based in the pattern in case the argument has one,
+	 *         otherwise the name of the agent will be the DEFAULT_NAME concatenated with the PID.
+	 */
+	private String checkPatternAgentName(String originalAgentName) {
+		Pattern pattern = Pattern.compile("\\$\\[(.+?)\\]");
+		Matcher matcher = pattern.matcher(originalAgentName);
+		if (matcher.find()) {
+			String propertyName = matcher.group(1);
+			if (System.getProperty(propertyName) != null) {
+				return matcher.replaceFirst(System.getProperty(propertyName));
+			} else if (System.getenv(propertyName) != null) {
+				return matcher.replaceFirst(System.getenv(propertyName));
+			} else {
+				return matcher.replaceFirst("NA");
+			}
+		}
+		return originalAgentName;
 	}
 
 	/**
