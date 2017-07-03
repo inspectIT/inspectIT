@@ -5,6 +5,7 @@ import org.eclipse.swt.layout.GridData;
 
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
+import rocks.inspectit.ui.rcp.editor.banner.InfluxBannerSubView;
 import rocks.inspectit.ui.rcp.editor.composite.GridCompositeSubView;
 import rocks.inspectit.ui.rcp.editor.composite.SashCompositeSubView;
 import rocks.inspectit.ui.rcp.editor.composite.TabbedCompositeSubView;
@@ -81,31 +82,31 @@ public final class SubViewFactory {
 			timerSubView.addSubView(new GraphSubView(sensorTypeEnum), new GridData(SWT.FILL, SWT.FILL, true, true));
 			ISubView aggregatedTimerSummarySubView = new TableSubView(new AggregatedTimerSummaryInputController());
 			timerSubView.addSubView(aggregatedTimerSummarySubView, new GridData(SWT.FILL, SWT.FILL, true, false));
-			return timerSubView;
+			return wrapInfluxBanner(timerSubView);
 		case CHARTING_MULTI_TIMER:
-			return new GraphSubView(SensorTypeEnum.CHARTING_MULTI_TIMER);
+			return wrapInfluxBanner(new GraphSubView(SensorTypeEnum.CHARTING_MULTI_TIMER));
 		case CLASSLOADING_INFORMATION:
 			GridCompositeSubView classLoadingSubView = new GridCompositeSubView();
 			classLoadingSubView.addSubView(new GraphSubView(sensorTypeEnum), new GridData(SWT.FILL, SWT.FILL, true, true));
 			classLoadingSubView.addSubView(new TextSubView(new ClassesInputController()), new GridData(SWT.FILL, SWT.FILL, true, false));
-			return classLoadingSubView;
+			return wrapInfluxBanner(classLoadingSubView);
 		case MEMORY_INFORMATION:
 			GridCompositeSubView memorySubView = new GridCompositeSubView();
 			memorySubView.addSubView(new GraphSubView(sensorTypeEnum), new GridData(SWT.FILL, SWT.FILL, true, true));
 			memorySubView.addSubView(new TextSubView(new MemoryInputController()), new GridData(SWT.FILL, SWT.FILL, true, false));
-			return memorySubView;
+			return wrapInfluxBanner(memorySubView);
 		case CPU_INFORMATION:
 			GridCompositeSubView cpuSubView = new GridCompositeSubView();
 			cpuSubView.addSubView(new GraphSubView(sensorTypeEnum), new GridData(SWT.FILL, SWT.FILL, true, true));
 			cpuSubView.addSubView(new TextSubView(new CpuInputController()), new GridData(SWT.FILL, SWT.FILL, true, false));
-			return cpuSubView;
+			return wrapInfluxBanner(cpuSubView);
 		case SYSTEM_INFORMATION:
 			return new TextSubView(new VmSummaryInputController());
 		case THREAD_INFORMATION:
 			GridCompositeSubView threadSubView = new GridCompositeSubView();
 			threadSubView.addSubView(new GraphSubView(sensorTypeEnum), new GridData(SWT.FILL, SWT.FILL, true, true));
 			threadSubView.addSubView(new TextSubView(new ThreadsInputController()), new GridData(SWT.FILL, SWT.FILL, true, false));
-			return threadSubView;
+			return wrapInfluxBanner(threadSubView);
 		case INVOCATION_SEQUENCE:
 			GridCompositeSubView sqlCombinedView = new GridCompositeSubView();
 			ISubView invocSql = new TreeSubView(new SqlInvocInputController());
@@ -203,10 +204,8 @@ public final class SubViewFactory {
 		case CHARTING_HTTP_TIMER_SENSOR:
 			return new GraphSubView(SensorTypeEnum.CHARTING_HTTP_TIMER_SENSOR);
 		case JMX_SENSOR_DATA:
-			SashCompositeSubView jmxSashSubView = new SashCompositeSubView();
-			ISubView jmxTableSubView = new TableSubView(new JmxSensorDataInputController());
-			jmxSashSubView.addSubView(jmxTableSubView);
-			return jmxSashSubView;
+			ISubView jmxView = new TableSubView(new JmxSensorDataInputController());
+			return wrapInfluxBanner(jmxView);
 		case CHARTING_JMX_SENSOR_DATA:
 			GraphSubView jmxGraphSubView = new GraphSubView(SensorTypeEnum.CHARTING_JMX_SENSOR_DATA);
 
@@ -216,7 +215,7 @@ public final class SubViewFactory {
 			SashCompositeSubView jmxChartSashSubView = new SashCompositeSubView();
 			jmxChartSashSubView.addSubView(jmxGraphSubView, 3);
 			jmxChartSashSubView.addSubView(jmxTextSubView, 2);
-			return jmxChartSashSubView;
+			return wrapInfluxBanner(jmxChartSashSubView);
 		case ALERT_INVOCATION:
 			GridCompositeSubView alertSqlCombinedView = new GridCompositeSubView();
 			ISubView alertInvocSql = new TreeSubView(new SqlInvocInputController());
@@ -274,4 +273,21 @@ public final class SubViewFactory {
 		return createSubView(SensorTypeEnum.get(fqn));
 	}
 
+	/**
+	 * Wraps the given {@link ISubView} inside an {@link InfluxBannerSubView}.
+	 * 
+	 * @param subView
+	 *            the view to wrap
+	 * @return An {@link InfluxBannerSubView} which wraps the given {@link ISubView}
+	 */
+	private static ISubView wrapInfluxBanner(ISubView subView) {
+		GridCompositeSubView gridView = new GridCompositeSubView(1, false, 0, 0);
+
+		InfluxBannerSubView influxBanner = new InfluxBannerSubView();
+		gridView.addSubView(influxBanner, new GridData(0, 0));
+
+		gridView.addSubView(subView, new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		return gridView;
+	}
 }

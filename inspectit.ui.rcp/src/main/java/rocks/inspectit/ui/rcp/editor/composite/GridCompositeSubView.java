@@ -62,7 +62,28 @@ public class GridCompositeSubView extends AbstractCompositeSubView {
 	 * @see GridLayout
 	 */
 	public GridCompositeSubView(int numColumns, boolean makeColumnsEqualWidth) {
+		this(numColumns, makeColumnsEqualWidth, 5, 5);
+	}
+
+	/**
+	 * Constructor which constructs the {@link GridLayout} object with the passed values.
+	 *
+	 * @param numColumns
+	 *            The number of columns.
+	 * @param makeColumnsEqualWidth
+	 *            If the columns should have an equal width.
+	 * @param marginHeight
+	 *            Specifies the number of pixels of vertical margin that will be placed along the
+	 *            top and bottom edges of the layout. The default value is 5.
+	 * @param verticalSpacing
+	 *            Specifies the number of pixels between the bottom edge of one cell and the top
+	 *            edge of its neighbouring cell underneath. The default value is 5.
+	 * @see GridLayout
+	 */
+	public GridCompositeSubView(int numColumns, boolean makeColumnsEqualWidth, int marginHeight, int verticalSpacing) {
 		gridLayout = new GridLayout(numColumns, makeColumnsEqualWidth);
+		gridLayout.marginHeight = marginHeight;
+		gridLayout.verticalSpacing = verticalSpacing;
 	}
 
 	/**
