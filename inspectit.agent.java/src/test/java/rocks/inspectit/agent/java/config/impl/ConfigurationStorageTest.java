@@ -106,6 +106,99 @@ public class ConfigurationStorageTest extends TestBase {
 			assertThat(configurationStorage.getRepositoryConfig().getPort(), is(8000));
 			assertThat(configurationStorage.getAgentName(), is(not(nullValue())));
 		}
+
+		@Test
+		public void agentNameIsCorrectIfThePatternIsAtTheEndOfTheNameAndItIsNotRecognize() throws Exception {
+			Properties properties = System.getProperties();
+			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "agentName_${test}");
+			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
+
+			configurationStorage.afterPropertiesSet();
+
+			assertThat(configurationStorage.getAgentName(), is(("agentName_NA")));
+		}
+
+		@Test
+		public void agentNameIsCorrectIfThePatternIsAtTheEndOfTheNameAndItIsFromSystemProperties() throws Exception {
+			Properties properties = System.getProperties();
+			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "agentName_${systemProperty}");
+			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
+			properties.put("systemProperty", "systemPropertyValue");
+
+			configurationStorage.afterPropertiesSet();
+
+			assertThat(configurationStorage.getAgentName(), is(("agentName_systemPropertyValue")));
+		}
+
+		@Test
+		public void agentNameIsCorrectIfThePatternIsInTheMiddleOfTheNameAndItIsNotRecognize() throws Exception {
+			Properties properties = System.getProperties();
+			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "agent_${test}_Name");
+			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
+
+			configurationStorage.afterPropertiesSet();
+
+			assertThat(configurationStorage.getAgentName(), is(("agent_NA_Name")));
+		}
+
+		@Test
+		public void agentNameIsCorrectIfThePatternIsInTheMiddleOfTheNameAndItIsFromSystemProperties() throws Exception {
+			Properties properties = System.getProperties();
+			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "agent_${systemProperty}_Name");
+			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
+			properties.put("systemProperty", "systemPropertyValue");
+
+			configurationStorage.afterPropertiesSet();
+
+			assertThat(configurationStorage.getAgentName(), is(("agent_systemPropertyValue_Name")));
+		}
+
+		@Test
+		public void agentNameIsCorrectIfThePatternIsAtTheBegginingOfTheNameAndItIsNotRecognize() throws Exception {
+			Properties properties = System.getProperties();
+			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "${test}_agentName");
+			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
+
+			configurationStorage.afterPropertiesSet();
+
+			assertThat(configurationStorage.getAgentName(), is(("NA_agentName")));
+		}
+
+		@Test
+		public void agentNameIsCorrectIfThePatternIsAtTheBegginingOfTheNameAndItIsFromSystemProperties() throws Exception {
+			Properties properties = System.getProperties();
+			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "${systemProperty}_agentName");
+			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
+			properties.put("systemProperty", "systemPropertyValue");
+
+			configurationStorage.afterPropertiesSet();
+
+			assertThat(configurationStorage.getAgentName(), is(("systemPropertyValue_agentName")));
+		}
+
+		@Test
+		public void agentNameIsCorrectIfThePatternIsAtTheBegginingOfTheNameAndThereIsMoreThanOnePatternInTheArgumentWhenThePropertyIsTheFirstFound() throws Exception {
+			Properties properties = System.getProperties();
+			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "${systemProperty}_agent_${systemProperty}_Name_${test}");
+			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
+			properties.put("systemProperty", "systemPropertyValue");
+
+			configurationStorage.afterPropertiesSet();
+
+			assertThat(configurationStorage.getAgentName(), is(("systemPropertyValue_agent_${systemProperty}_Name_${test}")));
+		}
+
+		@Test
+		public void agentNameIsCorrectIfThePatternIsAtTheBegginingOfTheNameAndThereIsMoreThanOnePatternInTheArgumentWhenThePropertyIsNotTheFirstFound() throws Exception {
+			Properties properties = System.getProperties();
+			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "${test}_agentName_${systemProperty}");
+			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
+			properties.put("systemProperty", "systemPropertyValue");
+
+			configurationStorage.afterPropertiesSet();
+
+			assertThat(configurationStorage.getAgentName(), is(("NA_agentName_${systemProperty}")));
+		}
 	}
 
 	public class GetAgentName extends ConfigurationStorageTest {
