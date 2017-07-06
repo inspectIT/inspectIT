@@ -9,7 +9,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IDetailsPage;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.editor.FormPage;
 
 import com.google.common.base.Objects;
 
@@ -30,11 +29,6 @@ public class BusinessTransactionDetailsPage implements IDetailsPage {
 	 * Name of the business transaction mapping form part.
 	 */
 	private static final String BUSINESS_TRANSACTION_MAPPING_PART_NAME = "Business Transaction Mapping";
-
-	/**
-	 * The {@link FormPage} this details page belongs to.
-	 */
-	private final FormPage formPage;
 
 	/**
 	 * Corresponding {@link IManagedForm}.
@@ -62,15 +56,11 @@ public class BusinessTransactionDetailsPage implements IDetailsPage {
 
 	/**
 	 * Constructor.
-	 *
-	 * @param formPage
-	 *            The {@link FormPage} this details page belongs to.
 	 * @param validationManager
 	 *            {@link AbstractValidationManager} instance to be notified on validation state
 	 *            changes.
 	 */
-	public BusinessTransactionDetailsPage(FormPage formPage, AbstractValidationManager<BusinessTransactionDefinition> validationManager) {
-		this.formPage = formPage;
+	public BusinessTransactionDetailsPage(AbstractValidationManager<BusinessTransactionDefinition> validationManager) {
 		this.upstreamValidationManager = validationManager;
 	}
 
@@ -81,10 +71,10 @@ public class BusinessTransactionDetailsPage implements IDetailsPage {
 	public void createContents(Composite parent) {
 		parent.setLayout(new GridLayout(2, true));
 		BusinessTransactionPartsValidationManager<AbstractExpression> rulesValidationManager = new BusinessTransactionPartsValidationManager<AbstractExpression>(upstreamValidationManager);
-		rulesPart = new SelectiveRulesPart(BUSINESS_TRANSACTION_MAPPING_PART_NAME, parent, formPage.getManagedForm(), rulesValidationManager);
+		rulesPart = new SelectiveRulesPart(BUSINESS_TRANSACTION_MAPPING_PART_NAME, parent, managedForm, rulesValidationManager);
 
 		BusinessTransactionPartsValidationManager<String> nameExtractionValidationManager = new BusinessTransactionPartsValidationManager<String>(upstreamValidationManager);
-		nameExtractionPart = new DynamicNameExtractionPart(parent, formPage.getManagedForm(), nameExtractionValidationManager);
+		nameExtractionPart = new DynamicNameExtractionPart(parent, managedForm, nameExtractionValidationManager);
 	}
 
 	/**
@@ -163,14 +153,17 @@ public class BusinessTransactionDetailsPage implements IDetailsPage {
 	@Override
 	public void selectionChanged(IFormPart part, ISelection selection) {
 		if (!selection.isEmpty()) {
-			selectedBusinessTransaction = (BusinessTransactionDefinition) ((StructuredSelection) selection).getFirstElement();
+			Object selected = ((StructuredSelection) selection).getFirstElement();
+			if (Objects.equal(selectedBusinessTransaction, selected)) {
+				return;
+			}
+			selectedBusinessTransaction = (BusinessTransactionDefinition) selected;
 			if (null != selectedBusinessTransaction) {
 				rulesPart.initContent(selectedBusinessTransaction);
 				rulesPart.setDescriptionText("Define the matching rule that should be used to match the selected business transaction:");
 				nameExtractionPart.setEditable(selectedBusinessTransaction.getId() != BusinessTransactionDefinition.DEFAULT_ID);
 				nameExtractionPart.init(selectedBusinessTransaction);
 			}
-			managedForm.getForm().layout(true, true);
 		}
 	}
 
