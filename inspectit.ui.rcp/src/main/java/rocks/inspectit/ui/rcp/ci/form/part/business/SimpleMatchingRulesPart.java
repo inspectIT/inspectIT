@@ -18,7 +18,7 @@ import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.ScrolledPageBook;
 import org.eclipse.ui.forms.widgets.Section;
 
 import rocks.inspectit.shared.cs.ci.business.expression.AbstractExpression;
@@ -143,25 +143,21 @@ public class SimpleMatchingRulesPart extends SectionPart implements IMatchingRul
 	 */
 	@Override
 	public void createContent(IManagedForm managedForm, Composite parent) {
-		this.getSection().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		Section section = getSection();
+		section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		section.setText(title);
+
 		FormToolkit toolkit = managedForm.getToolkit();
-		getSection().setText(title);
-		ScrolledForm form = toolkit.createScrolledForm(getSection());
-		form.setLayout(new GridLayout(1, false));
-		form.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		main = form.getBody();
-		main.setBackground(parent.getBackground());
+
+		main = toolkit.createComposite(getSection(), SWT.NONE);
 		GridLayout layout = new GridLayout(AbstractRuleEditingElement.NUM_GRID_COLUMNS, false);
 		layout.horizontalSpacing = 8;
 		main.setLayout(layout);
-		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		toolkit.decorateFormHeading(form.getForm());
 
-		getSection().setClient(form);
-
-		descriptionLabel = toolkit.createLabel(getSection(), "");
+		descriptionLabel = toolkit.createLabel(section, "");
 		descriptionLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		getSection().setDescriptionControl(descriptionLabel);
+		section.setDescriptionControl(descriptionLabel);
+		section.setClient(main);
 
 		createToolbar();
 		updateEnabledState();
@@ -189,8 +185,11 @@ public class SimpleMatchingRulesPart extends SectionPart implements IMatchingRul
 			for (AbstractExpression expression : ((OrExpression) matchingRuleExpression).getOperands()) {
 				addNewRuleEditingElement(expression);
 			}
+			commit(false);
 		}
-		main.layout(true, true);
+
+		layoutAndReflow();
+
 		initializationPhase = false;
 		listValidation.executeValidation(true);
 	}
@@ -353,7 +352,7 @@ public class SimpleMatchingRulesPart extends SectionPart implements IMatchingRul
 		AbstractRuleEditingElement<?> ruleComposite = MatchingRulesEditingElementFactory.createRuleComposite(expression, isEditable(), validationManager);
 		ruleElements.add(ruleComposite);
 		listValidation.executeValidation();
-		commit(false);
+
 		ruleComposite.createControls(main, getManagedForm().getToolkit(), true);
 		ruleComposite.addModifyListener(new IDetailsModifiedListener<AbstractExpression>() {
 			@Override
@@ -368,17 +367,44 @@ public class SimpleMatchingRulesPart extends SectionPart implements IMatchingRul
 				if ((event.data instanceof AbstractRuleEditingElement) && !initializationPhase) {
 					ruleElements.remove(event.data);
 					listValidation.executeValidation();
-					main.layout(true, true);
 					ruleProvider.setMatchingRuleExpression(constructMatchingRuleExpression());
 					markDirty();
+
+					layoutAndReflow();
 				}
 			}
 		});
 
-		main.layout(true, true);
 		ruleComposite.initialize();
 		if (!initializationPhase) {
+			commit(false);
 			markDirty();
+			layoutAndReflow();
+		}
+	}
+
+	/**
+	 * Layouts the main composite and reflows the managed form.
+	 */
+	private void layoutAndReflow() {
+		main.layout(true, true);
+
+		boolean reflow = false;
+		// this is a hack in order to get the ScrolledPageBook when part is used in details part of
+		// the details master block and reflow it
+		Composite parent = getSection().getParent();
+		while (parent != null) {
+			if (parent instanceof ScrolledPageBook) {
+				((ScrolledPageBook) parent).reflow(true);
+				reflow = true;
+				break;
+			}
+			parent = parent.getParent();
+		}
+
+		// if we are not in details part then reflow to managed form
+		if (!reflow) {
+			getManagedForm().reflow(true);
 		}
 	}
 

@@ -122,7 +122,6 @@ public class ApplicationDefinitionPage extends FormPage implements IPropertyList
 			application = input.getApplication();
 
 			if (null != mainForm) {
-				mainForm.reflow(true);
 				applicationMatchingRulesPart.initContent(application);
 				applicationMatchingRulesPart.setDescriptionText(DESCRIPTION);
 			}

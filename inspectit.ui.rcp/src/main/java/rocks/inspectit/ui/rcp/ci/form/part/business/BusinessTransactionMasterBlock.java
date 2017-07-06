@@ -230,7 +230,7 @@ public class BusinessTransactionMasterBlock extends MasterDetailsBlock implement
 	@Override
 	protected void registerPages(DetailsPart detailsPart) {
 		this.detailsPart = detailsPart;
-		detailsPart.registerPage(BusinessTransactionDefinition.class, new BusinessTransactionDetailsPage(formPage, validationManager));
+		detailsPart.registerPage(BusinessTransactionDefinition.class, new BusinessTransactionDetailsPage(validationManager));
 	}
 
 	/**
