@@ -2,15 +2,16 @@ package rocks.inspectit.server.diagnosis.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
@@ -21,6 +22,7 @@ import rocks.inspectit.server.diagnosis.engine.IDiagnosisEngine;
 import rocks.inspectit.server.diagnosis.service.rules.RuleConstants;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.testbase.TestBase;
+import rocks.inspectit.shared.cs.communication.data.diagnosis.ProblemOccurrence;
 
 /**
  * @author Christian Voegele
@@ -31,11 +33,14 @@ public class DiagnosisServiceTest extends TestBase {
 
 	DiagnosisService diagnosisService;
 
+	@Mock
+	Consumer<ProblemOccurrence> problemOccurrenceConsumer;
+
 	public static class Diagnose extends DiagnosisServiceTest {
 		@Test
 		public void canBeDiagnosed() {
 			double baseline = 1000;
-			diagnosisService = new DiagnosisService(new ArrayList<String>() {
+			diagnosisService = new DiagnosisService(problemOccurrenceConsumer, new ArrayList<String>() {
 				private static final long serialVersionUID = 1L;
 				{
 					add("rocks.inspectit.server.diagnosis.service.rules.testrules");
@@ -52,7 +57,7 @@ public class DiagnosisServiceTest extends TestBase {
 		@Test(expectedExceptions = IllegalArgumentException.class)
 		public void cannotBeDiagnosedWithInvocationSequenceDataNull() {
 			double baseline = 1000;
-			diagnosisService = new DiagnosisService(new ArrayList<String>() {
+			diagnosisService = new DiagnosisService(problemOccurrenceConsumer, new ArrayList<String>() {
 				private static final long serialVersionUID = 1L;
 				{
 					add("rocks.inspectit.server.diagnosis.service.rules.testrules");
@@ -63,7 +68,7 @@ public class DiagnosisServiceTest extends TestBase {
 
 		@Test(expectedExceptions = IllegalArgumentException.class)
 		public void cannotBeDiagnosedWithBaselineNegative() {
-			diagnosisService = new DiagnosisService(new ArrayList<String>() {
+			diagnosisService = new DiagnosisService(problemOccurrenceConsumer, new ArrayList<String>() {
 				private static final long serialVersionUID = 1L;
 				{
 					add("rocks.inspectit.server.diagnosis.service.rules.testrules");
@@ -77,7 +82,7 @@ public class DiagnosisServiceTest extends TestBase {
 
 		@Test(expectedExceptions = IllegalArgumentException.class)
 		public void cannotBeDiagnosedWithNullAndNegativeBaseline() {
-			diagnosisService = new DiagnosisService(new ArrayList<String>() {
+			diagnosisService = new DiagnosisService(problemOccurrenceConsumer, new ArrayList<String>() {
 				private static final long serialVersionUID = 1L;
 				{
 					add("rocks.inspectit.server.diagnosis.service.rules.testrules");
@@ -90,19 +95,19 @@ public class DiagnosisServiceTest extends TestBase {
 	public static class Init extends DiagnosisServiceTest {
 		@Test
 		public void initSuccessfully() {
-			diagnosisService = new DiagnosisService(new ArrayList<String>() {
+			diagnosisService = new DiagnosisService(problemOccurrenceConsumer, new ArrayList<String>() {
 				private static final long serialVersionUID = 1L;
 				{
 					add("rocks.inspectit.server.diagnosis.service.rules.testrules");
 				}
 			}, 2, 50L, 2);
 
-			assertEquals(diagnosisService.init(), true);
+			assertThat(diagnosisService.init(), is(true));
 		}
 
 		@Test
 		public void initFailureWithoutRules() {
-			diagnosisService = new DiagnosisService(new ArrayList<String>() {
+			diagnosisService = new DiagnosisService(problemOccurrenceConsumer, new ArrayList<String>() {
 				private static final long serialVersionUID = 1L;
 				{
 					add("rocks.inspectit.shared.all");
@@ -111,12 +116,12 @@ public class DiagnosisServiceTest extends TestBase {
 			InvocationSequenceData invocationSequenceData = new InvocationSequenceData();
 			invocationSequenceData.setDuration(5000d);
 
-			assertEquals(diagnosisService.init(), false);
+			assertThat(diagnosisService.init(), is(false));
 		}
 
 		@Test(expectedExceptions = IllegalArgumentException.class)
 		public void initFailureWithNegativeNumberOfSessionWorkers() {
-			diagnosisService = new DiagnosisService(new ArrayList<String>() {
+			diagnosisService = new DiagnosisService(problemOccurrenceConsumer, new ArrayList<String>() {
 				private static final long serialVersionUID = 1L;
 				{
 					add("rocks.inspectit.server.diagnosis.service.rules.testrules");
@@ -125,12 +130,12 @@ public class DiagnosisServiceTest extends TestBase {
 			InvocationSequenceData invocationSequenceData = new InvocationSequenceData();
 			invocationSequenceData.setDuration(5000d);
 
-			assertEquals(diagnosisService.init(), false);
+			assertThat(diagnosisService.init(), is(false));
 		}
 
 		@Test
 		public void initFailureWithRulesInPackageWithMultipleActionTag() {
-			diagnosisService = new DiagnosisService(new ArrayList<String>() {
+			diagnosisService = new DiagnosisService(problemOccurrenceConsumer, new ArrayList<String>() {
 				private static final long serialVersionUID = 1L;
 				{
 					add("rocks.inspectit.server.diagnosis.engine.testrules");
@@ -139,7 +144,7 @@ public class DiagnosisServiceTest extends TestBase {
 			InvocationSequenceData invocationSequenceData = new InvocationSequenceData();
 			invocationSequenceData.setDuration(5000d);
 
-			assertEquals(diagnosisService.init(), false);
+			assertThat(diagnosisService.init(), is(false));
 		}
 
 	}
@@ -155,7 +160,7 @@ public class DiagnosisServiceTest extends TestBase {
 		private void init() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 			InvocationSequenceData invocationSequenceData = new InvocationSequenceData();
 			invocationSequenceData.setDuration(5000d);
-			diagnosisService = new DiagnosisService(new ArrayList<String>() {
+			diagnosisService = new DiagnosisService(problemOccurrenceConsumer, new ArrayList<String>() {
 				private static final long serialVersionUID = 1L;
 				{
 					add("rocks.inspectit.server.diagnosis.service.rules.testrules");
@@ -208,7 +213,7 @@ public class DiagnosisServiceTest extends TestBase {
 	public static class Shutdown extends DiagnosisServiceTest {
 		@Test
 		public void initAndShutDown() {
-			diagnosisService = new DiagnosisService(new ArrayList<String>() {
+			diagnosisService = new DiagnosisService(problemOccurrenceConsumer, new ArrayList<String>() {
 				private static final long serialVersionUID = 1L;
 				{
 					add("rocks.inspectit.server.diagnosis.service.rules.testrules");
@@ -218,9 +223,7 @@ public class DiagnosisServiceTest extends TestBase {
 
 			diagnosisService.shutdown(true);
 
-			assertEquals(diagnosisService.isShutdown(), true);
+			assertThat(diagnosisService.isShutdown(), is(true));
 		}
-
 	}
-
 }

@@ -102,7 +102,7 @@ public class InvocationIdentifier {
 	 *
 	 * @return {@link #diagnosisTimerData}
 	 */
-	public final DiagnosisTimerData getDiagnosisTimerData() {
+	public DiagnosisTimerData getDiagnosisTimerData() {
 		return this.diagnosisTimerData;
 	}
 
