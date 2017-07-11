@@ -43,6 +43,7 @@ configurations {
 dependencies {
 	compile project(':inspectit.shared.all')
 	compile project(':inspectit.shared.cs')
+	compile project(':inspectit.server.diagnosis')
 	testCompile project (path: ':inspectit.shared.all', configuration: 'testArchives')
 }
 
@@ -221,6 +222,7 @@ def releaseSingle(os) {
 		into('CMR/libs') {
 			from project(':inspectit.shared.all').jar.outputs
 			from project(':inspectit.shared.cs').jar.outputs
+			from project(':inspectit.server.diagnosis').jar.outputs
 			from configurations.serverProd
 		}
 		into('CMR') {

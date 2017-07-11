@@ -88,4 +88,18 @@
 		<property name="beanSingleton" value="true" />
 	</bean>
 	
+	<bean id="diagnosisService" class="rocks.inspectit.server.diagnosis.service.DiagnosisService" >
+		<constructor-arg index="0">
+			<util:list value-type="java.lang.String">
+				<value>rocks.inspectit.server.diagnosis.service.rules.impl</value>
+			</util:list>
+		</constructor-arg>
+		<constructor-arg index="1" type="int" value="2"/>
+		<constructor-arg index="2" type="long" value="10"/>
+		<constructor-arg index="3" type="int" value="2"/>
+	</bean>
+	
+	<bean id="diagnosisResults" class="rocks.inspectit.server.diagnosis.results.DiagnosisResults" >
+	</bean>
+	
 </beans>

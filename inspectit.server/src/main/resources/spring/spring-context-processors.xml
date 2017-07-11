@@ -8,7 +8,7 @@
 	<bean id="bufferInserterCmrProcessor" class="rocks.inspectit.server.processor.impl.BufferInserterCmrProcessor" />
 	<bean id="exceptionMessageCmrProcessor" class="rocks.inspectit.server.processor.impl.ExceptionMessageCmrProcessor" />
 	<bean id="indexerCmrProcessor" class="rocks.inspectit.server.processor.impl.IndexerCmrProcessor" />
-	<bean id="inxfluxProcessor" class="rocks.inspectit.server.processor.impl.InfluxProcessor" />
+	<bean id="influxProcessor" class="rocks.inspectit.server.processor.impl.InfluxProcessor" />
 	<bean id="persistingCmrProcessor" class="rocks.inspectit.server.processor.impl.PersistingCmrProcessor">
 		<constructor-arg>
 			<util:list value-type="java.lang.Class">
@@ -25,6 +25,9 @@
 	<bean id="systemInformationPersistingCmrProcessor" class="rocks.inspectit.server.processor.impl.SystemInformationPersistingCmrProcessor" />
 	<bean id="sqlExclusiveTimeCmrProcessor" class="rocks.inspectit.server.processor.impl.SqlExclusiveTimeCmrProcessor" />
 	<bean id="timerDataChartingCmrProcessor" class="rocks.inspectit.server.processor.impl.TimerDataChartingCmrProcessor" />
+	<bean id="diagnosisCmrProcessor" class="rocks.inspectit.server.processor.impl.DiagnosisCmrProcessor">
+		<constructor-arg index="0" type="double" value="1000"/>
+	</bean>
 	<bean id="invocationModifierCmrProcessor" class="rocks.inspectit.server.processor.impl.InvocationModifierCmrProcessor">
 		<constructor-arg>
 			<util:list value-type="rocks.inspectit.server.processor.AbstractCmrDataProcessor">
@@ -32,7 +35,7 @@
 				<ref bean="timerDataChartingCmrProcessor" />
 				<ref bean="indexerCmrProcessor" />
 				<ref bean="sqlExclusiveTimeCmrProcessor" />
-				<ref bean="inxfluxProcessor" />
+				<ref bean="influxProcessor" />
 			</util:list>
 		</constructor-arg>
 	</bean>
@@ -49,7 +52,8 @@
 		<ref bean="sqlExclusiveTimeCmrProcessor" />
 		<ref bean="timerDataChartingCmrProcessor" />
 		<ref bean="invocationModifierCmrProcessor" />
-		<ref bean="inxfluxProcessor" />
+		<ref bean="diagnosisCmrProcessor" />
+		<ref bean="influxProcessor" />
 		<ref bean="recorderCmrProcessor" /> <!-- Must be last when all are processed -->
 	</util:list>
 	

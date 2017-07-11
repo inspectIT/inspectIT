@@ -226,6 +226,82 @@ public interface Series {
 	}
 
 	/**
+	 * Series for the
+	 * {@link rocks.inspectit.shared.cs.communication.data.diagnosis.ProblemOccurrence}.
+	 *
+	 * @author Christian Voegele
+	 *
+	 */
+	interface ProblemOccurrenceInformation extends Series {
+
+		/**
+		 * Series name.
+		 */
+		String NAME = "problemoccurrence";
+
+		/**
+		 * ApplicationName of ProblemOccurence.
+		 */
+		String TAG_APPLICATION_NAME = "ApplicationName";
+
+		/**
+		 * BusinessContext of ProblemOccurence.
+		 */
+		String TAG_BUSINESS_CONTEXT = "BusinessContext";
+
+		/**
+		 * Duration of InvocationSequenceRoot.
+		 */
+		String FIELD_INVOCATION_ROOT_DURATION = "InvocationSequenceRootDuration";
+
+		/**
+		 * Name of GlobalContext method.
+		 */
+		String TAG_GLOBAL_CONTEXT_METHOD_NAME = "GlobalContextMethodName";
+
+		/**
+		 * GlobalContext exclusiveTime.
+		 */
+		String FIELD_GLOBAL_CONTEXT_METHOD_EXCLUSIVE_TIME = "GlobalContextMethodExclusiveTime";
+
+		/**
+		 * Name of ProblemContext method.
+		 */
+		String TAG_PROBLEM_CONTEXT_METHOD_NAME = "ProblemContextMethodName";
+
+		/**
+		 * ProblemContext exclusiveTime.
+		 */
+		String FIELD_PROBLEM_CONTEXT_METHOD_EXCLUSIVE_TIME = "ProblemContextMethodExclusiveTime";
+
+		/**
+		 * Name of RootCause method.
+		 */
+		String TAG_ROOTCAUSE_METHOD_NAME = "RootCauseMethodName";
+
+		/**
+		 * RootCause exclusiveTime.
+		 */
+		String FIELD_ROOTCAUSE_METHOD_EXCLUSIVE_TIME = "RootCauseMethodExclusiveTime";
+
+		/**
+		 * RootCause exclusiveCount.
+		 */
+		String FIELD_ROOTCAUSE_METHOD_EXCLUSIVE_COUNT = "RootCauseMethodExclusiveCount";
+
+		/**
+		 * CauseType of ProblemOccurrence.
+		 */
+		String TAG_CAUSESTRUCTURE_CAUSE_TYPE = "CauseStructureCauseType";
+
+		/**
+		 * SourceType of ProblemOccurrence.
+		 */
+		String TAG_CAUSESTRUCTURE_SOURCE_TYPE = "CauseStructureSourceType";
+
+	}
+
+	/**
 	 * Series for the {@link rocks.inspectit.shared.all.communication.data.JmxSensorValueData}.
 	 *
 	 * @author Ivan Senic
