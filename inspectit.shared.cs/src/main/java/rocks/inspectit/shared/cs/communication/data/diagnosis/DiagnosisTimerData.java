@@ -90,7 +90,7 @@ public class DiagnosisTimerData {
 	 *
 	 * @return {@link #duration}
 	 */
-	public final double getDuration() {
+	public double getDuration() {
 		return this.duration;
 	}
 
@@ -109,7 +109,7 @@ public class DiagnosisTimerData {
 	 *
 	 * @return {@link #exclusiveDuration}
 	 */
-	public final double getExclusiveDuration() {
+	public double getExclusiveDuration() {
 		return this.exclusiveDuration;
 	}
 

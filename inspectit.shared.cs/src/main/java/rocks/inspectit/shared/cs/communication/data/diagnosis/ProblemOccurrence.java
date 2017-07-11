@@ -115,7 +115,7 @@ public class ProblemOccurrence {
 	 *
 	 * @return {@link #requestRoot}
 	 */
-	public final InvocationIdentifier getRequestRoot() {
+	public InvocationIdentifier getRequestRoot() {
 		return this.requestRoot;
 	}
 
@@ -134,7 +134,7 @@ public class ProblemOccurrence {
 	 *
 	 * @return {@link #businessTransactionNameIdent}
 	 */
-	public final int getBusinessTransactionNameIdent() {
+	public int getBusinessTransactionNameIdent() {
 		return this.businessTransactionNameIdent;
 	}
 
@@ -153,7 +153,7 @@ public class ProblemOccurrence {
 	 *
 	 * @return {@link #applicationNameIdent}
 	 */
-	public final int getApplicationNameIdent() {
+	public int getApplicationNameIdent() {
 		return this.applicationNameIdent;
 	}
 
@@ -172,7 +172,7 @@ public class ProblemOccurrence {
 	 *
 	 * @return {@link #globalContext}
 	 */
-	public final InvocationIdentifier getGlobalContext() {
+	public InvocationIdentifier getGlobalContext() {
 		return this.globalContext;
 	}
 
@@ -191,7 +191,7 @@ public class ProblemOccurrence {
 	 *
 	 * @return {@link #problemContext}
 	 */
-	public final InvocationIdentifier getProblemContext() {
+	public InvocationIdentifier getProblemContext() {
 		return this.problemContext;
 	}
 
@@ -210,7 +210,7 @@ public class ProblemOccurrence {
 	 *
 	 * @return {@link #rootCause}
 	 */
-	public final RootCause getRootCause() {
+	public RootCause getRootCause() {
 		return this.rootCause;
 	}
 
@@ -229,7 +229,7 @@ public class ProblemOccurrence {
 	 *
 	 * @return {@link #causeType}
 	 */
-	public final CauseType getCauseType() {
+	public CauseType getCauseType() {
 		return this.causeType;
 	}
 
@@ -248,7 +248,7 @@ public class ProblemOccurrence {
 	 *
 	 * @return {@link #sourceType}
 	 */
-	public final SourceType getSourceType() {
+	public SourceType getSourceType() {
 		return this.sourceType;
 	}
 
