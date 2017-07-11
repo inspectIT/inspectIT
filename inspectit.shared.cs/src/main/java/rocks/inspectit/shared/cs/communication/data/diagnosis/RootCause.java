@@ -60,7 +60,7 @@ public class RootCause {
 	 *
 	 * @return {@link #aggregatedDiagnosisTimerData}
 	 */
-	public final AggregatedDiagnosisTimerData getAggregatedDiagnosisTimerData() {
+	public AggregatedDiagnosisTimerData getAggregatedDiagnosisTimerData() {
 		return this.aggregatedDiagnosisTimerData;
 	}
 

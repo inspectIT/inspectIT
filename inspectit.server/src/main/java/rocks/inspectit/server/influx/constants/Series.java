@@ -226,6 +226,67 @@ public interface Series {
 	}
 
 	/**
+	 * Series for the
+	 * {@link rocks.inspectit.shared.cs.communication.data.diagnosis.ProblemOccurrence}.
+	 *
+	 * @author Christian Voegele
+	 *
+	 */
+	interface ProblemOccurrenceInformation extends Series {
+
+		/**
+		 * Series name.
+		 */
+		String NAME = "problemOccurrence";
+
+		/**
+		 * Duration of InvocationSequenceRoot.
+		 */
+		String FIELD_INVOCATION_ROOT_DURATION = "invocationSequenceRootDuration";
+
+		/**
+		 * GlobalContext exclusiveTime.
+		 */
+		String FIELD_GLOBAL_CONTEXT_METHOD_EXCLUSIVE_TIME = "globalContextMethodExclusiveTime";
+
+		/**
+		 * RootCause exclusiveTime.
+		 */
+		String FIELD_ROOTCAUSE_METHOD_EXCLUSIVE_TIME = "rootCauseMethodExclusiveTime";
+
+		/**
+		 * ApplicationName of ProblemOccurrence.
+		 */
+		String TAG_APPLICATION_NAME = "applicationName";
+
+		/**
+		 * BusinessContext of ProblemOccurrence.
+		 */
+		String TAG_BUSINESS_TRANSACTION_NAME = "businessTxName";
+
+		/**
+		 * Name of ProblemContext method.
+		 */
+		String TAG_PROBLEM_CONTEXT_METHOD_NAME = "ProblemContext";
+
+		/**
+		 * Name of RootCause method.
+		 */
+		String TAG_ROOTCAUSE_METHOD_NAME = "RootCause";
+
+		/**
+		 * CauseType of ProblemOccurrence.
+		 */
+		String TAG_CAUSESTRUCTURE_CAUSE_TYPE = "CauseType";
+
+		/**
+		 * SourceType of ProblemOccurrence.
+		 */
+		String TAG_CAUSESTRUCTURE_SOURCE_TYPE = "SourceType";
+
+	}
+
+	/**
 	 * Series for the {@link rocks.inspectit.shared.all.communication.data.JmxSensorValueData}.
 	 *
 	 * @author Ivan Senic

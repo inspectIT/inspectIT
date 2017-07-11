@@ -87,5 +87,4 @@
 		<property name="scheduledExecutor" value="false" />
 		<property name="beanSingleton" value="true" />
 	</bean>
-	
 </beans>
