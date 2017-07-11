@@ -395,10 +395,21 @@
 	</section>
 	<section name="Alerting">
 		<properties>
-			<boolean-property name="Alerting enabled" default-value="false" server-restart-required="false" logical-name="alerting.active" advanced="false" description="If activated, the alerting functionallity is active and executes the specified alerting definitions." />
+			<boolean-property name="Alerting enabled" default-value="false" server-restart-required="false" logical-name="alerting.active" advanced="false" description="If activated, the alerting functionality is active and executes the specified alerting definitions." />
 			<long-property name="Alert Resolution Delay" default-value="3" server-restart-required="false" logical-name="alerting.resolutionDelay" advanced="true" description="If an alert has been opened, this value specifies the amount of checking intervals (as configured for the individual alerting definition) which must not contain a threshold violation for the laert to be closed.">
 				<validators>
 					<isPositive />
+				</validators>
+			</long-property>
+		</properties>
+	</section>
+	<section name="Diagnosis">
+		<properties>
+			<boolean-property name="Diagnosis enabled" default-value="false" server-restart-required="true" logical-name="diagnosis.enabled" advanced="false" description="If activated, the diagnosis functionality is active and executes the diagnosis service. If influx is active it will store the data as well." />
+			<long-property name="Baseline" default-value="1000" server-restart-required="true" logical-name="diagnosis.baseline" advanced="false" description="Baseline of the diagnosis service.">
+				<validators>
+					<isPositive />
+					<isGreaterOrEqual than="1000"/>
 				</validators>
 			</long-property>
 		</properties>

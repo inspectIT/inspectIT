@@ -1,7 +1,8 @@
 package rocks.inspectit.server.diagnosis.service;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -123,7 +124,7 @@ public class ProblemOccurrenceResultCollectorTest extends TestBase {
 
 			List<ProblemOccurrence> problemOccurrence = problemInstanceResultCollector.collect(sessionContext);
 
-			assertEquals(problemOccurrence.size(), 1);
+			assertThat(problemOccurrence, hasSize(1));
 		}
 
 
@@ -146,7 +147,7 @@ public class ProblemOccurrenceResultCollectorTest extends TestBase {
 
 			List<ProblemOccurrence> problemOccurrence = problemInstanceResultCollector.collect(sessionContext);
 
-			assertEquals(problemOccurrence.size(), 0);
+			assertThat(problemOccurrence, hasSize(0));
 		}
 
 		@Test(expectedExceptions = RuntimeException.class)
@@ -168,7 +169,7 @@ public class ProblemOccurrenceResultCollectorTest extends TestBase {
 
 			List<ProblemOccurrence> problemOccurrence = problemInstanceResultCollector.collect(sessionContext);
 
-			assertEquals(problemOccurrence.size(), 0);
+			assertThat(problemOccurrence, hasSize(0));
 		}
 
 		@Test(expectedExceptions = RuntimeException.class)
@@ -190,7 +191,7 @@ public class ProblemOccurrenceResultCollectorTest extends TestBase {
 
 			List<ProblemOccurrence> problemOccurrence = problemInstanceResultCollector.collect(sessionContext);
 
-			assertEquals(problemOccurrence.size(), 0);
+			assertThat(problemOccurrence, hasSize(0));
 		}
 
 		@Test(expectedExceptions = RuntimeException.class)
@@ -212,7 +213,7 @@ public class ProblemOccurrenceResultCollectorTest extends TestBase {
 
 			List<ProblemOccurrence> problemOccurrence = problemInstanceResultCollector.collect(sessionContext);
 
-			assertEquals(problemOccurrence.size(), 0);
+			assertThat(problemOccurrence, hasSize(0));
 		}
 
 		@Test(expectedExceptions = RuntimeException.class)
@@ -234,7 +235,7 @@ public class ProblemOccurrenceResultCollectorTest extends TestBase {
 
 			List<ProblemOccurrence> problemOccurrence = problemInstanceResultCollector.collect(sessionContext);
 
-			assertEquals(problemOccurrence.size(), 0);
+			assertThat(problemOccurrence, hasSize(0));
 		}
 
 		@Test(expectedExceptions = RuntimeException.class)
@@ -256,7 +257,7 @@ public class ProblemOccurrenceResultCollectorTest extends TestBase {
 
 			List<ProblemOccurrence> problemOccurrence = problemInstanceResultCollector.collect(sessionContext);
 
-			assertEquals(problemOccurrence.size(), 0);
+			assertThat(problemOccurrence, hasSize(0));
 		}
 
 		@Test(expectedExceptions = RuntimeException.class)
@@ -277,7 +278,7 @@ public class ProblemOccurrenceResultCollectorTest extends TestBase {
 
 			List<ProblemOccurrence> problemOccurrence = problemInstanceResultCollector.collect(sessionContext);
 
-			assertEquals(problemOccurrence.size(), 0);
+			assertThat(problemOccurrence, hasSize(0));
 		}
 
 		@Test(expectedExceptions = RuntimeException.class)
@@ -299,7 +300,7 @@ public class ProblemOccurrenceResultCollectorTest extends TestBase {
 
 			List<ProblemOccurrence> problemOccurrence = problemInstanceResultCollector.collect(sessionContext);
 
-			assertEquals(problemOccurrence.size(), 0);
+			assertThat(problemOccurrence, hasSize(0));
 		}
 	}
 }

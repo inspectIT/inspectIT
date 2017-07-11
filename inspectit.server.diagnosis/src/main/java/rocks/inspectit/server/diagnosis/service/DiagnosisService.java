@@ -10,12 +10,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -80,11 +80,9 @@ public class DiagnosisService implements IDiagnosisService, Runnable {
 	private int numberOfSessionWorker;
 
 	/**
-	 * The Interface of the DiagnosisResultNotificationService that takes the resulting diagnosis
-	 * results and creates ProblemOccurrences.
+	 * Consumer interface to perform the save in influx.
 	 */
-	@Autowired
-	private IDiagnosisResultNotificationService diagnosisResultService;
+	Consumer<ProblemOccurrence> problemOccurrenceConsumer;
 
 	/**
 	 * The DiagnosisEngine interface.
@@ -110,6 +108,8 @@ public class DiagnosisService implements IDiagnosisService, Runnable {
 	/**
 	 * Constructor for DiagnosisService.
 	 *
+	 * @param consumer
+	 *            Consumer interface in order to accept the data after successfully diagnose.
 	 * @param rulesPackages
 	 *            List of PackageNames
 	 * @param numberOfSessionWorker
@@ -119,13 +119,14 @@ public class DiagnosisService implements IDiagnosisService, Runnable {
 	 * @param queueCapacity
 	 *            Capacity of the queue
 	 */
-	public DiagnosisService(List<String> rulesPackages, int numberOfSessionWorker, long timeOut, int queueCapacity) {
+	public DiagnosisService(Consumer<ProblemOccurrence> consumer, List<String> rulesPackages, int numberOfSessionWorker, long timeOut, int queueCapacity) {
 		this.rulesPackages = rulesPackages;
 		this.numberOfSessionWorker = numberOfSessionWorker;
 		this.timeOut = timeOut;
 		this.queue = new ArrayBlockingQueue<>(queueCapacity);
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat(THREAD_NAME_PREFIX).setDaemon(THREAD_DEAMON).build();
 		this.diagnosisServiceExecutor = Executors.newFixedThreadPool(NR_OF_EXECUTOR_THREADS, threadFactory);
+		this.problemOccurrenceConsumer = consumer;
 	}
 
 	/**
@@ -304,7 +305,9 @@ public class DiagnosisService implements IDiagnosisService, Runnable {
 		 */
 		@Override
 		public void onSuccess(List<ProblemOccurrence> result) {
-			diagnosisResultService.onNewDiagnosisResult(result);
+			for (ProblemOccurrence problemOccurrence : result) {
+				problemOccurrenceConsumer.accept(problemOccurrence);
+			}
 		}
 
 		/**
@@ -315,5 +318,4 @@ public class DiagnosisService implements IDiagnosisService, Runnable {
 			LOG.warn("Failed conducting diagnosis!", t);
 		}
 	}
-
 }
