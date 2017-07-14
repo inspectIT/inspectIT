@@ -373,7 +373,7 @@ subprojects {
 }
 
 // JMH tests only to projects that do have them
-["inspectit.agent.java","inspectit.server"].each { n ->
+["inspectit.agent.java","inspectit.server", "inspectit.server.diagnosis"].each { n ->
 	project(":$n") {
 		apply plugin: 'me.champeau.gradle.jmh'
 

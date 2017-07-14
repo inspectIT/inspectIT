@@ -21,7 +21,7 @@ public class CauseCluster {
 	/**
 	 * Saves the distance to the next cluster.
 	 */
-	private int distanceToNextCluster = Integer.MAX_VALUE;
+	private int distanceToNextCluster = Short.MAX_VALUE;
 
 	/**
 	 * The depth of commonContext within the invocationSequence.
@@ -58,32 +58,19 @@ public class CauseCluster {
 	 *
 	 * @param clustersToMerge
 	 *            List with clusters this cluster is merged with.
-	 * @param globalContext
-	 *            The globalContext to check that the new commonContext is not higher than the
-	 *            globalContext.
+	 *
 	 */
-	public CauseCluster(List<CauseCluster> clustersToMerge, InvocationSequenceData globalContext) {
+	public CauseCluster(List<CauseCluster> clustersToMerge) {
 		if ((clustersToMerge == null) || (clustersToMerge.isEmpty())) {
 			throw new IllegalArgumentException("Clusters are not allowed to be null or empty!");
 		}
 
-		// determines the cluster with the lowest depths in InvocationSequence. Takes the parent of
-		// this sequence as common context.
-		int minCommonContextDepth = Integer.MAX_VALUE;
-		InvocationSequenceData minCommonContext = clustersToMerge.get(0).getCommonContext();
-		for (CauseCluster causeCluster : clustersToMerge) {
-			if (causeCluster.getDepthOfCommonContext() < minCommonContextDepth) {
-				minCommonContextDepth = causeCluster.getDepthOfCommonContext();
-				minCommonContext = causeCluster.getCommonContext();
-			}
+		int distanceToParent = clustersToMerge.get(0).getDistanceToNextCluster();
+		InvocationSequenceData parent = clustersToMerge.get(0).getCommonContext();
+		for (int i = 0; (i < distanceToParent) && (parent.getParentSequence() != null); i++) {
+			parent = parent.getParentSequence();
 		}
-
-		// check that the commonContext is not above the commonContext
-		if (minCommonContext == globalContext) { // NOPMD no equals on purpose
-			commonContext = minCommonContext;
-		} else {
-			commonContext = minCommonContext.getParentSequence();
-		}
+		commonContext = parent;
 
 		for (CauseCluster cluster : clustersToMerge) {
 			causeInvocations.addAll(cluster.getCauseInvocations());
