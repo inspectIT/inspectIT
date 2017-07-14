@@ -11,6 +11,7 @@ import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.shared.cs.cmr.service.ISpanService;
 
@@ -96,6 +97,22 @@ public final class InvocationSequenceDataHelper {
 	}
 
 	/**
+	 * Returns the {@link SqlStatementData} or the {@link TimerData} of the InvocationSequenceData.
+	 *
+	 * @param data
+	 *            the <code>InvocationSequenceData</code> object.
+	 * @return the timerData of this object.
+	 */
+	public static TimerData getTimerDataOrSQLData(final InvocationSequenceData data) {
+		if (hasSQLData(data)) {
+			return data.getSqlStatementData();
+		} else if (hasTimerData(data)) {
+			return data.getTimerData();
+		}
+		return null;
+	}
+
+	/**
 	 * Checks whether this data object contains a timer data object of some sort.
 	 *
 	 * @param data
@@ -147,7 +164,7 @@ public final class InvocationSequenceDataHelper {
 	 * @return whether this data object contains SQL data.
 	 */
 	public static boolean hasSQLData(InvocationSequenceData data) {
-		return (null != data.getSqlStatementData()) && (1 == data.getSqlStatementData().getCount());
+		return null != data.getSqlStatementData();
 	}
 
 	/**
@@ -255,6 +272,30 @@ public final class InvocationSequenceDataHelper {
 			return span.getDuration();
 		}
 		return duration;
+	}
+
+	/**
+	 * Calculates the exclusive time of this invocation sequence data element.
+	 *
+	 * @param data
+	 *            the <code>InvocationSequenceData</code> object.
+	 * @return the exclusive time of this invocation sequence data element.
+	 */
+	public static double getExclusiveDuration(InvocationSequenceData data) {
+		TimerData timerData;
+		if (InvocationSequenceDataHelper.hasSQLData(data)) {
+			timerData = data.getSqlStatementData();
+		} else if (InvocationSequenceDataHelper.hasTimerData(data)) {
+			timerData = data.getTimerData();
+		} else {
+			return 0.0;
+		}
+
+		if (timerData.isExclusiveTimeDataAvailable()) {
+			return timerData.getExclusiveDuration();
+		} else {
+			return 0.0;
+		}
 	}
 
 	/**
