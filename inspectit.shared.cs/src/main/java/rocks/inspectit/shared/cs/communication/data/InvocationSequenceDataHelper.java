@@ -11,6 +11,7 @@ import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.shared.cs.cmr.service.ISpanService;
 
@@ -93,6 +94,22 @@ public final class InvocationSequenceDataHelper {
 		}
 
 		return parameterContents;
+	}
+
+	/**
+	 * Returns the {@link SqlStatementData} or the {@link TimerData} of the InvocationSequenceData.
+	 *
+	 * @param data
+	 *            the <code>InvocationSequenceData</code> object.
+	 * @return the timerData of this object.
+	 */
+	public static TimerData getTimerDataOrSQLData(final InvocationSequenceData data) {
+		if (hasSQLData(data)) {
+			return data.getSqlStatementData();
+		} else if (hasTimerData(data)) {
+			return data.getTimerData();
+		}
+		return null;
 	}
 
 	/**
