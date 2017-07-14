@@ -21,7 +21,7 @@ public class CauseCluster {
 	/**
 	 * Saves the distance to the next cluster.
 	 */
-	private int distanceToNextCluster = Integer.MAX_VALUE;
+	private int distanceToNextCluster = Short.MAX_VALUE;
 
 	/**
 	 * The depth of commonContext within the invocationSequence.
@@ -69,7 +69,7 @@ public class CauseCluster {
 
 		// determines the cluster with the lowest depths in InvocationSequence. Takes the parent of
 		// this sequence as common context.
-		int minCommonContextDepth = Integer.MAX_VALUE;
+		int minCommonContextDepth = Short.MAX_VALUE;
 		InvocationSequenceData minCommonContext = clustersToMerge.get(0).getCommonContext();
 		for (CauseCluster causeCluster : clustersToMerge) {
 			if (causeCluster.getDepthOfCommonContext() < minCommonContextDepth) {
