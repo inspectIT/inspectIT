@@ -226,6 +226,18 @@ def releaseSingle(os, distName) {
 			from zipTree(jreFile)
 		}
 		if ('macosx'.equals(os)) {
+			def runFile = File.createTempFile('run', '.sh')
+			fileMode = 0755
+			runFile.write "xattr -r -d com.apple.quarantine inspectIT.app\n./inspectIT.app/Contents/MacOS/inspectIT"
+			runFile.deleteOnExit()
+
+			into('inspectit'){
+				from(runFile) {
+					rename {
+						'run.sh'
+					}
+				}
+			}
 			filesMatching('**/*Info.plist') {
 				filter { line -> line.replaceAll('org.eclipse.eclipse', 'rocks.inspectit.ui.rcp') }
 			}
