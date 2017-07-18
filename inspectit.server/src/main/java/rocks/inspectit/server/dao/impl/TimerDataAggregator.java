@@ -181,8 +181,7 @@ public class TimerDataAggregator extends AbstractJpaDao<TimerData> {
 				protected void doInTransactionWithoutResult(TransactionStatus status) {
 					TimerData last = persistList.poll();
 					while (last != null) {
-						TimerData data = (TimerData) last.finalizeData();
-						TimerDataAggregator.super.create(data);
+						TimerDataAggregator.super.create(last);
 						last = persistList.poll();
 					}
 				}

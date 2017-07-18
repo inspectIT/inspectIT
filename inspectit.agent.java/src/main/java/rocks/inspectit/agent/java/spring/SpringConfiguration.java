@@ -31,7 +31,6 @@ import rocks.inspectit.agent.java.sdk.opentracing.util.SystemTimer;
 import rocks.inspectit.agent.java.util.AgentAwareThread;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AbstractSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
-import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.kryonet.Client;
 import rocks.inspectit.shared.all.kryonet.ExtendedSerializationImpl;
 import rocks.inspectit.shared.all.kryonet.IExtendedSerialization;
@@ -167,15 +166,9 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	 *             If exception occurs during the registration.
 	 */
 	public void registerComponents(IConfigurationStorage configurationStorage) throws Exception {
-		// buffer strategy
-		String className = configurationStorage.getBufferStrategyConfig().getClazzName();
-		String beanName = "bufferStrategy[" + className + "]";
-		registerBeanDefinitionAndInitialize(beanName, className);
-
-		// sending strategies
-		StrategyConfig sendingStrategyConfig = configurationStorage.getSendingStrategyConfig();
-		className = sendingStrategyConfig.getClazzName();
-		beanName = "sendingStrategy[" + className + "]";
+		// disruptor strategy
+		String className = configurationStorage.getDisruptorStrategyConfig().getClassName();
+		String beanName = "disruptorStrategy[" + className + "]";
 		registerBeanDefinitionAndInitialize(beanName, className);
 
 		// platform sensor types

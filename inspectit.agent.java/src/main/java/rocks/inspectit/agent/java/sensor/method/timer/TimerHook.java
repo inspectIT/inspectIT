@@ -14,11 +14,11 @@ import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.hooking.IConstructorHook;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
-import rocks.inspectit.agent.java.sensor.method.averagetimer.AverageTimerHook;
 import rocks.inspectit.agent.java.util.StringConstraint;
 import rocks.inspectit.agent.java.util.ThreadLocalStack;
 import rocks.inspectit.agent.java.util.Timer;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 
 /**
  * The hook implementation for the timer sensor. It uses the {@link ThreadLocalStack} class to save
@@ -57,12 +57,6 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 	 * The property accessor.
 	 */
 	private final IPropertyAccessor propertyAccessor;
-
-	/**
-	 * The timer storage factory which returns a new {@link ITimerStorage} object every time we
-	 * request one. The returned storage depends on the settings in the configuration file.
-	 */
-	private final TimerStorageFactory timerStorageFactory = TimerStorageFactory.getFactory();
 
 	/**
 	 * The StringConstraint to ensure a maximum length of strings.
@@ -130,7 +124,6 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 			LOG.warn("Exception in the TimerHook.", e);
 		}
 
-		timerStorageFactory.setParameters(param);
 		this.strConstraint = new StringConstraint(param);
 	}
 
@@ -174,11 +167,9 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 		}
 
 		List<ParameterContentData> parameterContentData = null;
-		String prefix = null;
 		// check if some properties need to be accessed and saved
 		if (rsc.isPropertyAccess()) {
 			parameterContentData = propertyAccessor.getParameterContentData(rsc.getPropertyAccessorList(), object, parameters, result, exception);
-			prefix = parameterContentData.toString();
 
 			// crop the content strings of all ParameterContentData but leave the prefix as it is
 			for (ParameterContentData contentData : parameterContentData) {
@@ -186,22 +177,24 @@ public class TimerHook implements IMethodHook, IConstructorHook {
 			}
 		}
 
-		ITimerStorage storage = (ITimerStorage) coreService.getObjectStorage(sensorTypeId, methodId, prefix);
+		long platformId = platformManager.getPlatformId();
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
 
-		if (null == storage) {
-			long platformId = platformManager.getPlatformId();
-
-			Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
-
-			boolean charting = Boolean.TRUE.equals(rsc.getSettings().get("charting"));
-
-			storage = timerStorageFactory.newStorage(timestamp, platformId, sensorTypeId, methodId, parameterContentData, charting);
-			storage.addData(duration, cpuDuration);
-
-			coreService.addObjectStorage(sensorTypeId, methodId, prefix, storage);
-		} else {
-			storage.addData(duration, cpuDuration);
+		TimerData timerData = new TimerData(timestamp, platformId, sensorTypeId, methodId, parameterContentData);
+		timerData.increaseCount();
+		timerData.addDuration(duration);
+		timerData.calculateMax(duration);
+		timerData.calculateMin(duration);
+		// only add the cpu time if its greater than zero
+		if (cpuDuration >= 0) {
+			timerData.addCpuDuration(cpuDuration);
+			timerData.calculateCpuMax(cpuDuration);
+			timerData.calculateCpuMin(cpuDuration);
 		}
+		boolean charting = Boolean.TRUE.equals(rsc.getSettings().get("charting"));
+		timerData.setCharting(charting);
+
+		coreService.addDefaultData(timerData);
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package rocks.inspectit.agent.java.sensor.method.invocationsequence;
 
-import java.net.ConnectException;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,18 +12,14 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import rocks.inspectit.agent.java.buffer.IBufferStrategy;
 import rocks.inspectit.agent.java.config.IPropertyAccessor;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
-import rocks.inspectit.agent.java.core.IObjectStorage;
 import rocks.inspectit.agent.java.core.IPlatformManager;
-import rocks.inspectit.agent.java.core.ListListener;
 import rocks.inspectit.agent.java.hooking.IConstructorHook;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
 import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.SpanContextImpl;
 import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerImpl;
-import rocks.inspectit.agent.java.sending.ISendingStrategy;
 import rocks.inspectit.agent.java.sensor.exception.ExceptionSensor;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
 import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionSensor;
@@ -45,19 +40,14 @@ import rocks.inspectit.agent.java.util.StringConstraint;
 import rocks.inspectit.agent.java.util.ThreadLocalStack;
 import rocks.inspectit.agent.java.util.Timer;
 import rocks.inspectit.shared.all.communication.DefaultData;
-import rocks.inspectit.shared.all.communication.MethodSensorData;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
 import rocks.inspectit.shared.all.communication.data.LoggingData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
-import rocks.inspectit.shared.all.communication.data.eum.AbstractEUMData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
-import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
 import rocks.inspectit.shared.all.tracing.data.SpanIdent;
 
@@ -286,18 +276,18 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 				// just need an arbitrary prefix so that this sequence will
 				// never be overwritten in the core service!
 				if (minDurationMap.containsKey(invocationStartId.get())) {
-					checkForSavingOrNot(coreService, methodId, sensorTypeId, rsc, invocationSequenceData, startTime, endTime, duration);
+					checkForSavingOrNot(coreService, rsc, invocationSequenceData, startTime, endTime, duration);
 				} else {
 					// maybe not saved yet in the map
 					if (rsc.getSettings().containsKey("minduration")) {
 						Long minDuration = (Long) rsc.getSettings().get("minduration");
 						minDurationMap.put(invocationStartId.get(), minDuration.doubleValue());
-						checkForSavingOrNot(coreService, methodId, sensorTypeId, rsc, invocationSequenceData, startTime, endTime, duration);
+						checkForSavingOrNot(coreService, rsc, invocationSequenceData, startTime, endTime, duration);
 					} else {
 						invocationSequenceData.setDuration(duration);
 						invocationSequenceData.setStart(startTime);
 						invocationSequenceData.setEnd(endTime);
-						coreService.addMethodSensorData(sensorTypeId, methodId, String.valueOf(startTime), invocationSequenceData);
+						coreService.addDefaultData(invocationSequenceData);
 					}
 				}
 
@@ -441,10 +431,6 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 *
 	 * @param coreService
 	 *            The reference to the core service which holds the data objects etc.
-	 * @param methodId
-	 *            The unique method id.
-	 * @param sensorTypeId
-	 *            The unique sensor type id.
 	 * @param rsc
 	 *            The {@link RegisteredSensorConfig} object which holds all the information of the
 	 *            executed method.
@@ -457,8 +443,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 * @param duration
 	 *            The actual duration.
 	 */
-	private void checkForSavingOrNot(ICoreService coreService, long methodId, long sensorTypeId, RegisteredSensorConfig rsc, InvocationSequenceData invocationSequenceData, double startTime, // NOCHK
-			double endTime, double duration) {
+	private void checkForSavingOrNot(ICoreService coreService, RegisteredSensorConfig rsc, InvocationSequenceData invocationSequenceData, double startTime, double endTime, double duration) {
 		double minduration = minDurationMap.get(invocationStartId.get()).doubleValue();
 		if (duration >= minduration) {
 			if (LOG.isDebugEnabled()) {
@@ -467,7 +452,7 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 			invocationSequenceData.setDuration(duration);
 			invocationSequenceData.setStart(startTime);
 			invocationSequenceData.setEnd(endTime);
-			coreService.addMethodSensorData(sensorTypeId, methodId, String.valueOf(startTime), invocationSequenceData);
+			coreService.addDefaultData(invocationSequenceData);
 		} else {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Not saving invocation. " + duration + " < " + minduration + " ID(local): " + rsc.getId());
@@ -548,50 +533,17 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addMethodSensorData(long sensorTypeId, long methodId, String prefix, MethodSensorData methodSensorData) {
+	public void addDefaultData(DefaultData defaultData) {
 		if (null == threadLocalInvocationData.get()) {
 			LOG.error("thread data NULL!!!!");
 			return;
 		}
-		saveDataObject(methodSensorData.finalizeData());
+		saveDataObject(defaultData);
 
 		// delegate to real core service in case of the span
-		if (AbstractSpan.class.isAssignableFrom(methodSensorData.getClass())) {
-			realCoreService.addMethodSensorData(sensorTypeId, methodId, prefix, methodSensorData);
+		if (AbstractSpan.class.isAssignableFrom(defaultData.getClass())) {
+			realCoreService.addDefaultData(defaultData);
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void addObjectStorage(long sensorTypeId, long methodId, String prefix, IObjectStorage objectStorage) {
-		if (null == threadLocalInvocationData.get()) {
-			LOG.error("thread data NULL!!!!");
-			return;
-		}
-		DefaultData defaultData = objectStorage.finalizeDataObject();
-		saveDataObject(defaultData.finalizeData());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void addPlatformSensorData(long sensorTypeIdent, SystemSensorData systemSensorData) {
-		saveDataObject(systemSensorData.finalizeData());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void addExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode, ExceptionSensorData exceptionSensorData) {
-		if (null == threadLocalInvocationData.get()) {
-			LOG.info("thread data NULL!!!!");
-			return;
-		}
-		saveDataObject(exceptionSensorData.finalizeData());
 	}
 
 	/**
@@ -606,129 +558,6 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 				invocationSequenceData.setSpanIdent(spanIdent);
 			}
 		}
-	}
-
-	// ///////////////////////////////////////////////// //
-	// Return NULL because no saved data can be returned //
-	// ///////////////////////////////////////////////// //
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ExceptionSensorData getExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode) {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public MethodSensorData getMethodSensorData(long sensorTypeIdent, long methodIdent, String prefix) {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IObjectStorage getObjectStorage(long sensorTypeIdent, long methodIdent, String prefix) {
-		return null;
-	}
-
-	// //////////////////////////////////////////////
-	// All unsupported methods are below from here //
-	// //////////////////////////////////////////////
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void addListListener(ListListener<?> listener) {
-		throw new UnsupportedMethodException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addSendStrategy(ISendingStrategy strategy) {
-		throw new UnsupportedMethodException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void connect() throws ConnectException {
-		throw new UnsupportedMethodException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void removeListListener(ListListener<?> listener) {
-		throw new UnsupportedMethodException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void sendData() {
-		throw new UnsupportedMethodException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setBufferStrategy(IBufferStrategy<DefaultData> bufferStrategy) {
-		throw new UnsupportedMethodException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void startSendingStrategies() {
-		throw new UnsupportedMethodException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addPlatformSensorType(PlatformSensorTypeConfig platformSensorTypeConfig) {
-		throw new UnsupportedMethodException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void start() {
-		throw new UnsupportedMethodException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void stop() {
-		throw new UnsupportedMethodException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void addJmxSensorValueData(long sensorTypeIdent, String objectName, String attributeName, JmxSensorValueData jmxSensorValueData) {
-		throw new UnsupportedMethodException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void addEUMData(AbstractEUMData eumData) {
-		throw new UnsupportedMethodException();
 	}
 
 }

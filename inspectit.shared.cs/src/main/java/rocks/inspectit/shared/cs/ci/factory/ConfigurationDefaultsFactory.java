@@ -37,8 +37,7 @@ import rocks.inspectit.shared.cs.ci.sensor.platform.impl.RuntimeSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.SystemSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ThreadSensorConfig;
 import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
-import rocks.inspectit.shared.cs.ci.strategy.impl.SimpleBufferStrategyConfig;
-import rocks.inspectit.shared.cs.ci.strategy.impl.TimeSendingStrategyConfig;
+import rocks.inspectit.shared.cs.ci.strategy.impl.DisruptorStrategyConfig;
 
 /**
  * Defaults factory defines what is default for our configuration.
@@ -53,24 +52,6 @@ public final class ConfigurationDefaultsFactory {
 	 * Private factory.
 	 */
 	private ConfigurationDefaultsFactory() {
-	}
-
-	/**
-	 * Returns default sending strategy, that's {@link TimeSendingStrategyConfig}.
-	 *
-	 * @return Returns default sending strategy.
-	 */
-	public static IStrategyConfig getDefaultSendingStrategy() {
-		return new TimeSendingStrategyConfig();
-	}
-
-	/**
-	 * Returns default buffer strategy. That's {@link SimpleBufferStrategyConfig}.
-	 *
-	 * @return Returns default buffer strategy.
-	 */
-	public static IStrategyConfig getDefaultBufferStrategy() {
-		return new SimpleBufferStrategyConfig();
 	}
 
 	/**
@@ -151,4 +132,14 @@ public final class ConfigurationDefaultsFactory {
 	public static RetransformationStrategy getDefaultRetransformationStrategy() {
 		return RetransformationStrategy.DISABLE_ON_IBM_JVM;
 	}
+
+	/**
+	 * Returns default disruptor strategy config.
+	 *
+	 * @return Returns default disruptor strategy config.
+	 */
+	public static IStrategyConfig getDefaultDisruptorStrategy() {
+		return new DisruptorStrategyConfig();
+	}
+
 }

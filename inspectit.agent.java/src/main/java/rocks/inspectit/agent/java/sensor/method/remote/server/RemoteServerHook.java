@@ -142,7 +142,7 @@ public class RemoteServerHook implements IMethodHook {
 				transformedSpan.setSensorTypeIdent(sensorTypeId);
 
 				// add to core service (use span id as prefix)
-				coreService.addMethodSensorData(sensorTypeId, methodId, String.valueOf(transformedSpan.getSpanIdent().getId()), transformedSpan);
+				coreService.addDefaultData(transformedSpan);
 			}
 		}
 	}
