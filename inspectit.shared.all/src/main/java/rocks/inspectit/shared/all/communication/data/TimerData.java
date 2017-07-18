@@ -13,7 +13,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 import rocks.inspectit.shared.all.cmr.cache.IObjectSizes;
-import rocks.inspectit.shared.all.communication.DefaultData;
 
 /**
  * The timer data class stores information about the execution time of a java method.
@@ -525,15 +524,6 @@ public class TimerData extends InvocationAwareData {
 	 */
 	public void setCharting(boolean charting) {
 		this.charting = charting;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public DefaultData finalizeData() {
-		// no need
-		return this;
 	}
 
 	/**

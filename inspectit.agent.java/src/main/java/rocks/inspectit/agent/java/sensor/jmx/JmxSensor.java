@@ -266,7 +266,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean {
 				long platformid = platformManager.getPlatformId();
 				JmxSensorValueData jsvd = new JmxSensorValueData(descriptor.getId(), value, timestamp, platformid, sensorTypeIdent);
 
-				coreService.addJmxSensorValueData(sensorTypeIdent, descriptor.getmBeanObjectName(), descriptor.getAttributeName(), jsvd);
+				coreService.addDefaultData(jsvd);
 			} catch (AttributeNotFoundException e) {
 				iterator.remove();
 				log.warn("JMX::AttributeNotFound. Attribute was not found. Maybe currently not available on the server. Attribute removed from the actively read list.", e);

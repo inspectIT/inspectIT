@@ -29,6 +29,11 @@ public class AgentConfig {
 	private boolean classCacheExistsOnCmr;
 
 	/**
+	 * Disruptor strategy config.
+	 */
+	private StrategyConfig disruptorStrategyConfig;
+
+	/**
 	 * Collection of the platform sensor types that should be active.
 	 */
 	private Collection<PlatformSensorTypeConfig> platformSensorTypeConfigs;
@@ -52,16 +57,6 @@ public class AgentConfig {
 	 * Special method sensor configurations.
 	 */
 	private Collection<MethodSensorTypeConfig> specialMethodSensorTypeConfigs;
-
-	/**
-	 * Buffer strategy.
-	 */
-	private StrategyConfig bufferStrategyConfig;
-
-	/**
-	 * Sending strategy.
-	 */
-	private StrategyConfig sendingStrategyConfig;
 
 	/**
 	 * EUM config.
@@ -127,6 +122,25 @@ public class AgentConfig {
 	 */
 	public void setClassCacheExistsOnCmr(boolean classCacheExistsOnCmr) {
 		this.classCacheExistsOnCmr = classCacheExistsOnCmr;
+	}
+
+	/**
+	 * Gets {@link #disruptorStrategyConfig}.
+	 *
+	 * @return {@link #disruptorStrategyConfig}
+	 */
+	public StrategyConfig getDisruptorStrategyConfig() {
+		return this.disruptorStrategyConfig;
+	}
+
+	/**
+	 * Sets {@link #disruptorStrategyConfig}.
+	 *
+	 * @param disruptorStrategyConfig
+	 *            New value for {@link #disruptorStrategyConfig}
+	 */
+	public void setDisruptorStrategyConfig(StrategyConfig disruptorStrategyConfig) {
+		this.disruptorStrategyConfig = disruptorStrategyConfig;
 	}
 
 	/**
@@ -265,44 +279,6 @@ public class AgentConfig {
 	}
 
 	/**
-	 * Gets {@link #bufferStrategyConfig}.
-	 *
-	 * @return {@link #bufferStrategyConfig}
-	 */
-	public StrategyConfig getBufferStrategyConfig() {
-		return bufferStrategyConfig;
-	}
-
-	/**
-	 * Sets {@link #bufferStrategyConfig}.
-	 *
-	 * @param bufferStrategyConfig
-	 *            New value for {@link #bufferStrategyConfig}
-	 */
-	public void setBufferStrategyConfig(StrategyConfig bufferStrategyConfig) {
-		this.bufferStrategyConfig = bufferStrategyConfig;
-	}
-
-	/**
-	 * Gets {@link #sendingStrategyConfig}.
-	 *
-	 * @return {@link #sendingStrategyConfig}
-	 */
-	public StrategyConfig getSendingStrategyConfig() {
-		return sendingStrategyConfig;
-	}
-
-	/**
-	 * Sets {@link #sendingStrategyConfig}.
-	 *
-	 * @param sendingStrategyConfig
-	 *            New value for {@link #sendingStrategyConfig}
-	 */
-	public void setSendingStrategyConfig(StrategyConfig sendingStrategyConfig) {
-		this.sendingStrategyConfig = sendingStrategyConfig;
-	}
-
-	/**
 	 * Gets {@link #excludeClassesPatterns}.
 	 *
 	 * @return {@link #excludeClassesPatterns}
@@ -358,10 +334,10 @@ public class AgentConfig {
 	public void setConfigurationInfo(String configurationInfo) {
 		this.configurationInfo = configurationInfo;
 	}
-	
+
 	/**
 	 * Gets {@link #eumConfig}.
-	 * 
+	 *
 	 * @return {@link #eumConfig}
 	 */
 	public AgentEndUserMonitoringConfig getEumConfig() {
@@ -370,7 +346,7 @@ public class AgentConfig {
 
 	/**
 	 * Sets {@link #eumConfig}.
-	 * 
+	 *
 	 * @param eumConfig
 	 *            New value for {@link #eumConfig}
 	 */
@@ -404,10 +380,10 @@ public class AgentConfig {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((this.bufferStrategyConfig == null) ? 0 : this.bufferStrategyConfig.hashCode());
 		result = (prime * result) + (this.classCacheExistsOnCmr ? 1231 : 1237);
-		result = (prime * result) + ((eumConfig == null) ? 0 : eumConfig.hashCode());
 		result = (prime * result) + ((this.configurationInfo == null) ? 0 : this.configurationInfo.hashCode());
+		result = (prime * result) + ((this.disruptorStrategyConfig == null) ? 0 : this.disruptorStrategyConfig.hashCode());
+		result = (prime * result) + ((this.eumConfig == null) ? 0 : this.eumConfig.hashCode());
 		result = (prime * result) + ((this.exceptionSensorTypeConfig == null) ? 0 : this.exceptionSensorTypeConfig.hashCode());
 		result = (prime * result) + ((this.excludeClassesPatterns == null) ? 0 : this.excludeClassesPatterns.hashCode());
 		result = (prime * result) + ((this.initialInstrumentationResults == null) ? 0 : this.initialInstrumentationResults.hashCode());
@@ -416,7 +392,6 @@ public class AgentConfig {
 		result = (prime * result) + (int) (this.platformId ^ (this.platformId >>> 32));
 		result = (prime * result) + ((this.platformSensorTypeConfigs == null) ? 0 : this.platformSensorTypeConfigs.hashCode());
 		result = (prime * result) + ((this.retransformationStrategy == null) ? 0 : this.retransformationStrategy.hashCode());
-		result = (prime * result) + ((this.sendingStrategyConfig == null) ? 0 : this.sendingStrategyConfig.hashCode());
 		result = (prime * result) + ((this.specialMethodSensorTypeConfigs == null) ? 0 : this.specialMethodSensorTypeConfigs.hashCode());
 		return result;
 	}
@@ -436,29 +411,28 @@ public class AgentConfig {
 			return false;
 		}
 		AgentConfig other = (AgentConfig) obj;
-		if (this.bufferStrategyConfig == null) {
-			if (other.bufferStrategyConfig != null) {
-				return false;
-			}
-		} else if (!this.bufferStrategyConfig.equals(other.bufferStrategyConfig)) {
-			return false;
-		}
 		if (this.classCacheExistsOnCmr != other.classCacheExistsOnCmr) {
 			return false;
-		}
-		if (eumConfig == null) {
-			if (other.eumConfig != null) {
-				return false;
-			}
-		} else if (!eumConfig.equals(other.eumConfig)) {
-			return false;
-
 		}
 		if (this.configurationInfo == null) {
 			if (other.configurationInfo != null) {
 				return false;
 			}
 		} else if (!this.configurationInfo.equals(other.configurationInfo)) {
+			return false;
+		}
+		if (this.disruptorStrategyConfig == null) {
+			if (other.disruptorStrategyConfig != null) {
+				return false;
+			}
+		} else if (!this.disruptorStrategyConfig.equals(other.disruptorStrategyConfig)) {
+			return false;
+		}
+		if (this.eumConfig == null) {
+			if (other.eumConfig != null) {
+				return false;
+			}
+		} else if (!this.eumConfig.equals(other.eumConfig)) {
 			return false;
 		}
 		if (this.exceptionSensorTypeConfig == null) {
@@ -507,13 +481,6 @@ public class AgentConfig {
 			return false;
 		}
 		if (this.retransformationStrategy != other.retransformationStrategy) {
-			return false;
-		}
-		if (this.sendingStrategyConfig == null) {
-			if (other.sendingStrategyConfig != null) {
-				return false;
-			}
-		} else if (!this.sendingStrategyConfig.equals(other.sendingStrategyConfig)) {
 			return false;
 		}
 		if (this.specialMethodSensorTypeConfigs == null) {
