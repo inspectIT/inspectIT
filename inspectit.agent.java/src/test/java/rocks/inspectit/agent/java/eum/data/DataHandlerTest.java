@@ -50,7 +50,7 @@ public class DataHandlerTest extends TestBase {
 	public void initMocks() {
 		when(platformManager.getPlatformId()).thenReturn(PLATFORM_ID);
 		sentElements = ArgumentCaptor.forClass(AbstractEUMData.class);
-		doNothing().when(coreService).addEUMData(sentElements.capture());
+		doNothing().when(coreService).addDefaultData(sentElements.capture());
 	}
 
 	public String buildBeaconJson(String typeName, AbstractEUMData data) {
@@ -76,7 +76,7 @@ public class DataHandlerTest extends TestBase {
 
 			String beacon = buildBeaconJson("userSession", r);
 			dataHandler.insertBeacon(beacon);
-			Mockito.verify(coreService, Mockito.times(1)).addEUMData(any(UserSessionInfo.class));
+			Mockito.verify(coreService, Mockito.times(1)).addDefaultData(any(UserSessionInfo.class));
 			UserSessionInfo sent = (UserSessionInfo) sentElements.getValue();
 
 			assertThat(sent.getBrowser(), equalTo(r.getBrowser()));
@@ -89,14 +89,14 @@ public class DataHandlerTest extends TestBase {
 		@Test
 		public void testInvalidBeaconSyntax() {
 			dataHandler.insertBeacon("a{\"type\":\"userSession\",\"device\":\"Windows\",\"browser\":\"Firefox\",\"language\":\"en-US\",\"sessionId\":\"eum_agent2_1476445972407_2\"}");
-			Mockito.verify(coreService, Mockito.times(0)).addEUMData(any(AbstractEUMData.class));
+			Mockito.verify(coreService, Mockito.times(0)).addDefaultData(any(AbstractEUMData.class));
 
 		}
 
 		@Test
 		public void testInvalidBeaconContent() {
 			dataHandler.insertBeacon("{\"type\":\"nothing\",\"desdfdsfice\":\"sdfsdf\"}");
-			Mockito.verify(coreService, Mockito.times(0)).addEUMData(any(AbstractEUMData.class));
+			Mockito.verify(coreService, Mockito.times(0)).addDefaultData(any(AbstractEUMData.class));
 
 		}
 	}

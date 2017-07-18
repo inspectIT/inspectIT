@@ -91,7 +91,7 @@ public class Log4JLoggingHook implements IMethodHook {
 			data.setMethodIdent(methodId);
 			data.setTimeStamp(new Timestamp(System.currentTimeMillis()));
 
-			coreService.addMethodSensorData(sensorTypeId, methodId, String.valueOf(data.getTimeStamp().getTime()), data);
+			coreService.addDefaultData(data);
 		}
 	}
 }

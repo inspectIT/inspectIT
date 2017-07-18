@@ -115,30 +115,21 @@ public class StatementHook implements IMethodHook {
 
 			double duration = endTime - startTime;
 			String sql = parameters[0].toString();
-			SqlStatementData sqlData = (SqlStatementData) coreService.getMethodSensorData(sensorTypeId, methodId, sql);
 
-			if (null == sqlData) {
-				Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
-				long platformId = platformManager.getPlatformId();
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
+			long platformId = platformManager.getPlatformId();
 
-				sqlData = new SqlStatementData(timestamp, platformId, sensorTypeId, methodId);
-				sqlData.setPreparedStatement(false);
-				sqlData.setSql(strConstraint.crop(sql));
-				sqlData.setDuration(duration);
-				sqlData.calculateMin(duration);
-				sqlData.calculateMax(duration);
-				sqlData.setCount(1L);
+			SqlStatementData sqlData = new SqlStatementData(timestamp, platformId, sensorTypeId, methodId);
+			sqlData.setPreparedStatement(false);
+			sqlData.setSql(strConstraint.crop(sql));
+			sqlData.setDuration(duration);
+			sqlData.calculateMin(duration);
+			sqlData.calculateMax(duration);
+			sqlData.setCount(1L);
 
-				// populate the connection meta data.
-				connectionMetaDataStorage.populate(sqlData, statementReflectionCache.getConnection(object.getClass(), object));
-				coreService.addMethodSensorData(sensorTypeId, methodId, sql, sqlData);
-			} else {
-				sqlData.increaseCount();
-				sqlData.addDuration(duration);
-
-				sqlData.calculateMin(duration);
-				sqlData.calculateMax(duration);
-			}
+			// populate the connection meta data.
+			connectionMetaDataStorage.populate(sqlData, statementReflectionCache.getConnection(object.getClass(), object));
+			coreService.addDefaultData(sqlData);
 		}
 	}
 

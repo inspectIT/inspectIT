@@ -46,7 +46,7 @@ public class CoreServiceReporter implements Reporter {
 	public void report(SpanImpl span) {
 		AbstractSpan transformed = SpanTransformer.transformSpan(span);
 		transformed.setPlatformIdent(platformManager.getPlatformId());
-		coreService.addMethodSensorData(0, 0, String.valueOf(transformed.getSpanIdent().getId()), transformed);
+		coreService.addDefaultData(transformed);
 	}
 
 }

@@ -439,7 +439,6 @@ public class MethodInvocInputController extends AbstractTableInputController {
 			timerData.calculateExclusiveMax(exclusiveTime);
 			timerData.calculateExclusiveMin(exclusiveTime);
 			timerData.increaseExclusiveCount();
-			timerData.finalizeData();
 			return timerData;
 		}
 

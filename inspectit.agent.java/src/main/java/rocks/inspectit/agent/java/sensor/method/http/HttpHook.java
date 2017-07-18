@@ -313,7 +313,7 @@ public class HttpHook implements IMethodHook {
 					data.setCharting(charting);
 
 					// returning gathered information
-					coreService.addMethodSensorData(sensorTypeId, methodId, String.valueOf(startTime), data);
+					coreService.addDefaultData(data);
 				}
 			}
 		}

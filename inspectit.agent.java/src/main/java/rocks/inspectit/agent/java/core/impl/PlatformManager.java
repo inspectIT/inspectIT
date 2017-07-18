@@ -2,9 +2,11 @@ package rocks.inspectit.agent.java.core.impl;
 
 import java.net.ConnectException;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.BeanInitializationException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +32,7 @@ import rocks.inspectit.shared.all.version.VersionService;
  *
  */
 @Component("platformManager")
-public class PlatformManager implements IPlatformManager, InitializingBean {
+public class PlatformManager implements IPlatformManager {
 
 	/**
 	 * The logger of the class.
@@ -89,6 +91,7 @@ public class PlatformManager implements IPlatformManager, InitializingBean {
 	 * {@inheritDoc}
 	 */
 	@Override
+	@PreDestroy
 	public void unregisterPlatform() {
 		if (connection.isConnected() && isPlatformRegistered()) {
 			try {
@@ -180,7 +183,7 @@ public class PlatformManager implements IPlatformManager, InitializingBean {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
 		doRegistration();
 	}

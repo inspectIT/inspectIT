@@ -142,32 +142,24 @@ public class PreparedStatementHook implements IMethodHook, IConstructorHook {
 			String sql = statementStorage.getPreparedStatement(object);
 			if (null != sql) {
 				double duration = endTime - startTime;
-				SqlStatementData sqlData = (SqlStatementData) coreService.getMethodSensorData(sensorTypeId, methodId, sql);
-				if (null == sqlData) {
-					Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
-					List<String> params = statementStorage.getParameters(object);
-					long platformId = platformManager.getPlatformId();
 
-					sqlData = new SqlStatementData(timestamp, platformId, sensorTypeId, methodId);
-					sqlData.setPreparedStatement(true);
-					sqlData.setSql(strConstraint.crop(sql));
-					sqlData.setDuration(duration);
-					sqlData.calculateMin(duration);
-					sqlData.calculateMax(duration);
-					sqlData.setCount(1L);
-					sqlData.setParameterValues(params);
+				Timestamp timestamp = new Timestamp(System.currentTimeMillis() - Math.round(duration));
+				List<String> params = statementStorage.getParameters(object);
+				long platformId = platformManager.getPlatformId();
 
-					// populate the connection meta data.
-					connectionMetaDataStorage.populate(sqlData, statementReflectionCache.getConnection(object.getClass(), object));
+				SqlStatementData sqlData = new SqlStatementData(timestamp, platformId, sensorTypeId, methodId);
+				sqlData.setPreparedStatement(true);
+				sqlData.setSql(strConstraint.crop(sql));
+				sqlData.setDuration(duration);
+				sqlData.calculateMin(duration);
+				sqlData.calculateMax(duration);
+				sqlData.setCount(1L);
+				sqlData.setParameterValues(params);
 
-					coreService.addMethodSensorData(sensorTypeId, methodId, sql, sqlData);
-				} else {
-					sqlData.increaseCount();
-					sqlData.addDuration(duration);
+				// populate the connection meta data.
+				connectionMetaDataStorage.populate(sqlData, statementReflectionCache.getConnection(object.getClass(), object));
 
-					sqlData.calculateMin(duration);
-					sqlData.calculateMax(duration);
-				}
+				coreService.addDefaultData(sqlData);
 			} else {
 				// the sql was not found, we'll try again
 				threadLast.set(Boolean.TRUE);

@@ -16,11 +16,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.server.cache.IBuffer;
-import rocks.inspectit.server.service.AgentStorageService;
 import rocks.inspectit.server.storage.CmrStorageManager;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.all.storage.nio.ByteBufferProvider;
-import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
 import rocks.inspectit.shared.cs.storage.StorageData;
 import rocks.inspectit.shared.cs.storage.nio.write.WritingChannelManager;
 import rocks.inspectit.shared.cs.storage.recording.RecordingState;
@@ -87,12 +85,6 @@ public class HealthStatus {
 	private IBuffer<?> buffer;
 
 	/**
-	 * {@link AgentStorageService} for reporting the amount of dropped data on the CMR.
-	 */
-	@Autowired
-	private ICmrManagementService cmrManagementService;
-
-	/**
 	 * {@link WritingChannelManager} for status of IO tasks.
 	 */
 	@Autowired
@@ -125,7 +117,6 @@ public class HealthStatus {
 			}
 		}
 		if (log.isInfoEnabled()) {
-			logDroppedData();
 			logBufferStatistics();
 			logStorageStatistics();
 		}
@@ -437,13 +428,6 @@ public class HealthStatus {
 
 		log.info("Byte buffer provider has " + byteBufferProvider.getBufferPoolSize() + " available buffers in the pool with total capacity of " + byteBufferProvider.getAvailableCapacity()
 				+ " bytes. Total created capacity of the pool is " + byteBufferProvider.getCreatedCapacity() + " bytes.");
-	}
-
-	/**
-	 * Logs the amount of dropped data on CMR.
-	 */
-	private void logDroppedData() {
-		log.info("Dropped elements due to the high load on the CMR (total count): " + cmrManagementService.getDroppedDataCount());
 	}
 
 	/**

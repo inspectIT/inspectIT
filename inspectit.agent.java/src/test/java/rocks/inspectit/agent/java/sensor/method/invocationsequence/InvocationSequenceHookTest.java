@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -62,7 +61,7 @@ import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
 import rocks.inspectit.shared.all.tracing.data.ClientSpan;
 import rocks.inspectit.shared.all.tracing.data.SpanIdent;
 
-/**
+/***
  * Testing the {@link InvocationSequenceHook}.
  *
  * @author Ivan Senic
@@ -138,14 +137,14 @@ public class InvocationSequenceHookTest extends TestBase {
 		// save two objects
 		TimerData timerData = new TimerData();
 		SqlStatementData sqlStatementData = new SqlStatementData();
-		invocationSequenceHook.addMethodSensorData(0, 0, "", timerData);
-		invocationSequenceHook.addMethodSensorData(0, 0, "", sqlStatementData);
+		invocationSequenceHook.addDefaultData(timerData);
+		invocationSequenceHook.addDefaultData(sqlStatementData);
 		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, rsc);
 		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(2)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -188,16 +187,16 @@ public class InvocationSequenceHookTest extends TestBase {
 		SpanIdent spanIdent = new SpanIdent(0, 0);
 		ClientSpan clientSpan = new ClientSpan();
 		clientSpan.setSpanIdent(spanIdent);
-		invocationSequenceHook.addMethodSensorData(0, 0, "", clientSpan);
+		invocationSequenceHook.addDefaultData(clientSpan);
 		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, rsc);
 		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(2)).getCurrentTime();
-		verify(realCoreService, times(1)).addMethodSensorData(0, 0, "", clientSpan);
+		verify(realCoreService, times(1)).addDefaultData(clientSpan);
 		verifyNoMoreInteractions(realCoreService);
 
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -238,7 +237,7 @@ public class InvocationSequenceHookTest extends TestBase {
 		verifyZeroInteractions(realCoreService);
 
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -281,7 +280,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(2)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -329,7 +328,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -385,7 +384,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -448,7 +447,7 @@ public class InvocationSequenceHookTest extends TestBase {
 		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, rsc);
 
 		verify(timer, times(4)).getCurrentTime();
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Matchers.<String> anyObject(), Matchers.<InvocationSequenceData> anyObject());
+		verify(coreService, times(1)).addDefaultData(Matchers.<InvocationSequenceData> anyObject());
 
 		verifyZeroInteractions(realCoreService);
 	}
@@ -496,7 +495,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(5)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -554,7 +553,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(3)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -600,7 +599,7 @@ public class InvocationSequenceHookTest extends TestBase {
 		invocationSequenceHook.beforeBody(methodId2, sensorTypeId, object, parameters, removingRsc);
 
 		ExceptionSensorData exceptionData = new ExceptionSensorData();
-		invocationSequenceHook.addExceptionSensorData(0, 0, exceptionData);
+		invocationSequenceHook.addDefaultData(exceptionData);
 
 		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
 		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
@@ -609,7 +608,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -668,7 +667,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(3)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -715,7 +714,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		SqlStatementData sqlStatementData = new SqlStatementData();
 		sqlStatementData.setCount(1L);
-		invocationSequenceHook.addMethodSensorData(0, 0, "", sqlStatementData);
+		invocationSequenceHook.addDefaultData(sqlStatementData);
 
 		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
 		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
@@ -724,7 +723,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -783,7 +782,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(3)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -829,7 +828,7 @@ public class InvocationSequenceHookTest extends TestBase {
 		invocationSequenceHook.beforeBody(methodId2, sensorTypeId, object, parameters, removingRsc);
 
 		LoggingData loggingData = new LoggingData();
-		invocationSequenceHook.addMethodSensorData(0, 0, "", loggingData);
+		invocationSequenceHook.addDefaultData(loggingData);
 
 		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
 		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
@@ -838,7 +837,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -947,7 +946,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(3)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -957,7 +956,6 @@ public class InvocationSequenceHookTest extends TestBase {
 		assertThat(invocation.getNestedSequences(), hasSize(0));
 		assertThat(invocation.getChildCount(), is(0L));
 		assertThat(invocation.getSpanIdent(), is(nullValue()));
-
 
 		verifyZeroInteractions(realCoreService);
 	}
@@ -995,7 +993,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		AbstractSpan span = new ClientSpan();
 		span.setSpanIdent(new SpanIdent(1, 2));
-		invocationSequenceHook.addMethodSensorData(0, 0, null, span);
+		invocationSequenceHook.addDefaultData(span);
 
 		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
 		invocationSequenceHook.secondAfterBody(coreService, methodId2, sensorTypeId, object, parameters, result, false, removingRsc);
@@ -1004,7 +1002,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		verify(timer, times(4)).getCurrentTime();
 		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
-		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId1), Matchers.<String> anyObject(), captor.capture());
+		verify(coreService, times(1)).addDefaultData(captor.capture());
 
 		InvocationSequenceData invocation = captor.getValue();
 		assertThat(invocation.getPlatformIdent(), is(platformId));
@@ -1024,7 +1022,7 @@ public class InvocationSequenceHookTest extends TestBase {
 		assertThat(child.getChildCount(), is(0L));
 		assertThat(child.getSpanIdent(), is(not(nullValue())));
 
-		verify(realCoreService).addMethodSensorData(0, 0, null, span);
+		verify(realCoreService).addDefaultData(span);
 		verifyNoMoreInteractions(realCoreService);
 	}
 

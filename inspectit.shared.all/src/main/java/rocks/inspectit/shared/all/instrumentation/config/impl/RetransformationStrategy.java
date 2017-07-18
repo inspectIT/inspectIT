@@ -1,11 +1,14 @@
 package rocks.inspectit.shared.all.instrumentation.config.impl;
 
+import javax.xml.bind.annotation.XmlEnum;
+
 /**
  * Enumeration of the retransformation strategies that the agent can use to modify classes.
  *
  * @author Marius Oehler
  *
  */
+@XmlEnum
 public enum RetransformationStrategy {
 
 	/**

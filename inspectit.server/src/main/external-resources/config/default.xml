@@ -123,7 +123,7 @@
 			</long-property>
 			<boolean-property name="IP Based Registration" default-value="true" server-restart-required="false" logical-name="cmr.ipBasedAgentRegistration" advanced="false"
 				description="Defines if the agents should be differently registered if they have different IP adresses."></boolean-property>
-			<long-property name="Data Processing Threads" default-value="2" server-restart-required="false" logical-name="cmr.agentStorageServiceThreadCount" advanced="false"
+			<long-property name="Data Processing Threads" default-value="3" server-restart-required="true" logical-name="cmr.kryonetExecutorThreads" advanced="true"
 				description="Number of threads that will process incoming data from the agent.">
 				<validators>
 					<isPositive />

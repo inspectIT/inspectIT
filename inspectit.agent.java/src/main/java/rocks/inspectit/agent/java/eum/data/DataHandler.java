@@ -154,7 +154,7 @@ public class DataHandler implements IDataHandler {
 		try {
 			UserSessionInfo newSession = jsonMapper.readValue(obj, UserSessionInfo.class);
 			newSession.setPlatformIdent(getPlatformId());
-			coreService.addEUMData(newSession);
+			coreService.addDefaultData(newSession);
 		} catch (IOException e) {
 			log.warn("Received unparseable EUM beacon!", e);
 		}
@@ -188,7 +188,7 @@ public class DataHandler implements IDataHandler {
 						req.setPlatformIdent(getPlatformId());
 					}
 					parsedAction.setBaseUrl(baseUrl);
-					coreService.addEUMData(parsedAction);
+					coreService.addDefaultData(parsedAction);
 				}
 			}
 		}
