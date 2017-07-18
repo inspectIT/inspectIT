@@ -2,15 +2,15 @@ package rocks.inspectit.ui.rcp.repository.service.cmr.proxy;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.concurrent.Callable;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Display;
 
 import rocks.inspectit.ui.rcp.InspectIT;
-import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
+import rocks.inspectit.ui.rcp.job.BlockingJob;
 import rocks.inspectit.ui.rcp.repository.service.cmr.ICmrService;
 
 /**
@@ -54,21 +54,16 @@ public class ServiceInterfaceDelegateInterceptor implements MethodInterceptor {
 		final Object concreteService = cmrService.getService();
 
 		if (checkUiThreadIsUsed(methodInvocation)) {
-			// do the call asynchronous by wrapping it in the progress dialog
-			ProgressDialog<Object> dialog = new ProgressDialog<Object>("Waiting for repository response..", IProgressMonitor.UNKNOWN) {
+			BlockingJob<Object> job = new BlockingJob<>("Fetching data from repository..", new Callable<Object>() {
 				@Override
-				public Object execute(IProgressMonitor monitor) throws Exception {
+				public Object call() throws Exception {
 					return invokeUsingReflection(concreteService, methodInvocation.getMethod(), methodInvocation.getArguments());
 				}
-			};
+			});
 
-			dialog.start(true, false);
+			Object result = job.scheduleAndJoin();
 
-			if (!dialog.wasSuccessful()) {
-				throw dialog.getThrownException();
-			}
-
-			return dialog.getResult();
+			return result;
 		} else {
 			// otherwise just execute the call
 			Object returnVal = invokeUsingReflection(concreteService, methodInvocation.getMethod(), methodInvocation.getArguments());
