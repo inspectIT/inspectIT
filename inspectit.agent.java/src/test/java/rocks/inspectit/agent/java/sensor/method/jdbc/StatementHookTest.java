@@ -1,19 +1,20 @@
 package rocks.inspectit.agent.java.sensor.method.jdbc;
 
-import static org.mockito.Matchers.eq;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import org.mockito.Matchers;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -23,7 +24,6 @@ import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.impl.PlatformManager;
 import rocks.inspectit.agent.java.util.Timer;
-import rocks.inspectit.shared.all.communication.MethodSensorData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 
 @SuppressWarnings("PMD")
@@ -90,13 +90,21 @@ public class StatementHookTest extends AbstractLogSupport {
 		statementHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(platformManager).getPlatformId();
 
-		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
-		SqlStatementData bsqld = new SqlStatementData(timestamp, platformId, sensorTypeId, methodId);
-		bsqld.setSql((String) parameters[0]);
-
-		verify(coreService).addMethodSensorData(eq(sensorTypeId), eq(methodId), (String) Matchers.anyObject(), (MethodSensorData) Matchers.anyObject());
-		verify(coreService).getMethodSensorData(eq(sensorTypeId), eq(methodId), (String) Matchers.anyObject());
+		ArgumentCaptor<SqlStatementData> captor = ArgumentCaptor.forClass(SqlStatementData.class);
+		verify(coreService).addDefaultData(captor.capture());
 		verifyNoMoreInteractions(timer, platformManager, coreService, registeredSensorConfig);
+
+		SqlStatementData sqlData = captor.getValue();
+		assertThat(sqlData.getPlatformIdent(), is(platformId));
+		assertThat(sqlData.getMethodIdent(), is(methodId));
+		assertThat(sqlData.getSensorTypeIdent(), is(sensorTypeId));
+		assertThat(sqlData.getTimeStamp(), is(not(nullValue())));
+		assertThat(sqlData.getCount(), is(1L));
+		assertThat(sqlData.getDuration(), is(secondTimerValue - firstTimerValue));
+		assertThat(sqlData.getMin(), is(secondTimerValue - firstTimerValue));
+		assertThat(sqlData.getMax(), is(secondTimerValue - firstTimerValue));
+		assertThat(sqlData.getSql(), is((String) parameters[0]));
+		assertThat(sqlData.isCharting(), is(false));
 	}
 
 	@Test
@@ -121,24 +129,33 @@ public class StatementHookTest extends AbstractLogSupport {
 
 		statementHook2.beforeBody(methodId, sensorTypeId, object, parameters, registeredSensorConfig);
 		verify(timer, times(2)).getCurrentTime();
+
 		statementHook2.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(timer, times(3)).getCurrentTime();
 		statementHook2.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
+		verify(platformManager).getPlatformId();
 
 		statementHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
 		verify(timer, times(4)).getCurrentTime();
 
 		statementHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, registeredSensorConfig);
-
 		verify(platformManager, times(2)).getPlatformId();
 
-		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
-		SqlStatementData bsqld = new SqlStatementData(timestamp, platformId, sensorTypeId, methodId);
-		bsqld.setSql((String) parameters[0]);
-
-		verify(coreService, times(2)).addMethodSensorData(eq(sensorTypeId), eq(methodId), (String) Matchers.anyObject(), (MethodSensorData) Matchers.anyObject());
-		verify(coreService, times(2)).getMethodSensorData(eq(sensorTypeId), eq(methodId), (String) Matchers.anyObject());
+		ArgumentCaptor<SqlStatementData> captor = ArgumentCaptor.forClass(SqlStatementData.class);
+		verify(coreService, times(2)).addDefaultData(captor.capture());
 		verifyNoMoreInteractions(timer, platformManager, coreService, registeredSensorConfig);
+
+		SqlStatementData sqlData = captor.getValue();
+		assertThat(sqlData.getPlatformIdent(), is(platformId));
+		assertThat(sqlData.getMethodIdent(), is(methodId));
+		assertThat(sqlData.getSensorTypeIdent(), is(sensorTypeId));
+		assertThat(sqlData.getTimeStamp(), is(not(nullValue())));
+		assertThat(sqlData.getCount(), is(1L));
+		assertThat(sqlData.getDuration(), is(secondTimerValue - firstTimerValue));
+		assertThat(sqlData.getMin(), is(secondTimerValue - firstTimerValue));
+		assertThat(sqlData.getMax(), is(secondTimerValue - firstTimerValue));
+		assertThat(sqlData.getSql(), is((String) parameters[0]));
+		assertThat(sqlData.isCharting(), is(false));
 	}
 
 }

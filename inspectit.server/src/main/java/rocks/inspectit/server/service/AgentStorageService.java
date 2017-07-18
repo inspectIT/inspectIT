@@ -1,27 +1,21 @@
 package rocks.inspectit.server.service;
 
-import java.lang.ref.SoftReference;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import rocks.inspectit.server.dao.DefaultDataDao;
 import rocks.inspectit.server.spring.aop.MethodLog;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
 import rocks.inspectit.server.util.Converter;
-import rocks.inspectit.shared.all.cmr.property.spring.PropertyUpdate;
 import rocks.inspectit.shared.all.cmr.service.IAgentStorageService;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.spring.logger.Log;
-import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
 
 /**
  * The default implementation of the {@link IAgentStorageService} interface. Uses an implementation
@@ -38,16 +32,6 @@ public class AgentStorageService implements IAgentStorageService {
 	Logger log;
 
 	/**
-	 * Queue capacity for incoming data.
-	 */
-	private static final int QUEUE_CAPACITY = 50;
-
-	/**
-	 * Amount of milliseconds after which the data is thrown away if queue is full.
-	 */
-	private static final long DATA_THROW_TIMEOUT_MILLIS = 10;
-
-	/**
 	 * The default data DAO.
 	 */
 	@Autowired
@@ -57,45 +41,7 @@ public class AgentStorageService implements IAgentStorageService {
 	 * {@link AgentStatusDataProvider}.
 	 */
 	@Autowired
-	AgentStatusDataProvider platformIdentDateSaver;
-
-	/**
-	 * {@link CmrManagementService}.
-	 */
-	@Autowired
-	ICmrManagementService cmrManagementService;
-
-	/**
-	 * Queue to store and remove list of data that has to be processed.
-	 */
-	private ArrayBlockingQueue<SoftReference<List<? extends DefaultData>>> dataObjectsBlockingQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
-
-	/**
-	 * Count of thread to process data.
-	 */
-	@Value("${cmr.agentStorageServiceThreadCount}")
-	private int threadCount;
-
-	/**
-	 * List of currently active threads that process the data.
-	 */
-	private List<Thread> threadList = new ArrayList<>();
-
-	/**
-	 * Default constructor.
-	 */
-	public AgentStorageService() {
-	}
-
-	/**
-	 * Constructor that can be used in testing for suppling the queue.
-	 *
-	 * @param dataObjectsBlockingQueue
-	 *            Queue.
-	 */
-	AgentStorageService(ArrayBlockingQueue<SoftReference<List<? extends DefaultData>>> dataObjectsBlockingQueue) {
-		this.dataObjectsBlockingQueue = dataObjectsBlockingQueue;
-	}
+	AgentStatusDataProvider agentStatusDataProvider;
 
 	/**
 	 * {@inheritDoc}
@@ -103,56 +49,19 @@ public class AgentStorageService implements IAgentStorageService {
 	@Override
 	@MethodLog
 	public void addDataObjects(final List<? extends DefaultData> dataObjects) {
-		SoftReference<List<? extends DefaultData>> softReference = new SoftReference<List<? extends DefaultData>>(dataObjects);
-		if (!dataObjects.isEmpty()) {
-			platformIdentDateSaver.registerDataSent(dataObjects.get(0).getPlatformIdent());
-		}
-		try {
-			boolean added = dataObjectsBlockingQueue.offer(softReference, DATA_THROW_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-			if (!added) {
-				int droppedSize = dataObjects.size();
-				if (log.isTraceEnabled()) {
-					log.trace("Data dropped on the CMR due to the high volume of incoming data from Agent(s). Dropped data objects count: " + droppedSize);
-				}
-				cmrManagementService.addDroppedDataCount(droppedSize);
-			}
-		} catch (InterruptedException e) {
-			return;
-		}
-	}
+		if (CollectionUtils.isNotEmpty(dataObjects)) {
+			agentStatusDataProvider.registerDataSent(dataObjects.get(0).getPlatformIdent());
 
-	/**
-	 * Updates the number of data processing threads. The new number of threads should be defined in
-	 * {@link #threadCount} before calling this method.
-	 * <p>
-	 * This is an automated properties update execution method.
-	 */
-	@PropertyUpdate(properties = { "cmr.agentStorageServiceThreadCount" })
-	public synchronized void updateThreadCount() {
-		if (threadCount <= 0) {
-			threadCount = 1;
-		}
-
-		int threadListSize = threadList.size();
-		if (threadCount < threadListSize) {
-			// remove threads
-			for (int i = 0; i < (threadListSize - threadCount); i++) {
-				Thread thread = threadList.remove(i);
-				thread.interrupt();
-				try {
-					thread.join();
-				} catch (InterruptedException e) {
-					Thread.interrupted();
-				}
-			}
-		} else if (threadCount > threadListSize) {
-			// add new threads
-			for (int i = threadListSize; i < threadCount; i++) {
-				ProcessDataThread processDataThread = new ProcessDataThread(i);
-				processDataThread.start();
-				threadList.add(processDataThread);
+			long time = 0;
+			if (log.isDebugEnabled()) {
+				time = System.nanoTime();
 			}
 
+			defaultDataDao.saveAll(dataObjects);
+
+			if (log.isDebugEnabled()) {
+				log.debug("Data Objects count: " + dataObjects.size() + " Save duration: " + Converter.nanoToMilliseconds(System.nanoTime() - time));
+			}
 		}
 	}
 
@@ -164,66 +73,10 @@ public class AgentStorageService implements IAgentStorageService {
 	 */
 	@PostConstruct
 	public void postConstruct() throws Exception {
-		updateThreadCount();
-
 		if (log.isInfoEnabled()) {
 			log.info("|-Agent Storage Service active...");
 		}
 
 	}
 
-	/**
-	 * Thread class that is processing the data coming to the Agent service and invoking the
-	 * {@link DefaultDataDao}.
-	 *
-	 * @author Ivan Senic
-	 *
-	 */
-	private class ProcessDataThread extends Thread {
-
-		/**
-		 * Default constructor.
-		 *
-		 * @param threadId
-		 *            Id of the thread that will be added to the thread name.
-		 */
-		public ProcessDataThread(int threadId) {
-			setName("agent-storage-service-process-data-thread-" + threadId);
-			setDaemon(true);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void run() {
-			while (true) {
-				if (isInterrupted()) {
-					break;
-				}
-
-				SoftReference<List<? extends DefaultData>> softReference = null;
-				try {
-					softReference = dataObjectsBlockingQueue.take();
-				} catch (InterruptedException e) {
-					this.interrupt();
-					return;
-				}
-
-				List<? extends DefaultData> defaultDataList = softReference.get();
-				if (defaultDataList != null) {
-					long time = 0;
-					if (log.isDebugEnabled()) {
-						time = System.nanoTime();
-					}
-
-					defaultDataDao.saveAll(defaultDataList);
-
-					if (log.isDebugEnabled()) {
-						log.debug("Data Objects count: " + defaultDataList.size() + " Save duration: " + Converter.nanoToMilliseconds(System.nanoTime() - time));
-					}
-				}
-			}
-		}
-	}
 }

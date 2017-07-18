@@ -2,7 +2,6 @@ package rocks.inspectit.agent.java.sensor.method.remote.client;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -95,7 +94,7 @@ public class RemoteClientHookTest extends TestBase {
 		hook.secondAfterBody(coreService, methodId, sensorId, object, parameters, result, exception, rsc);
 
 		ArgumentCaptor<ClientSpan> captor = ArgumentCaptor.forClass(ClientSpan.class);
-		verify(coreService).addMethodSensorData(eq(sensorId), eq(methodId), eq(String.valueOf(spanId)), captor.capture());
+		verify(coreService).addDefaultData(captor.capture());
 		assertThat(captor.getValue().getPlatformIdent(), is(platformId));
 		assertThat(captor.getValue().getSensorTypeIdent(), is(sensorId));
 		assertThat(captor.getValue().getMethodIdent(), is(methodId));
@@ -224,7 +223,7 @@ public class RemoteClientHookTest extends TestBase {
 		hook.secondAfterBody(coreService, methodId, sensorId, object, parameters, result, false, rsc);
 
 		ArgumentCaptor<ClientSpan> captor = ArgumentCaptor.forClass(ClientSpan.class);
-		verify(coreService).addMethodSensorData(eq(sensorId), eq(methodId), eq(String.valueOf(spanId)), captor.capture());
+		verify(coreService).addDefaultData(captor.capture());
 		assertThat(captor.getValue().getPlatformIdent(), is(platformId));
 		assertThat(captor.getValue().getSensorTypeIdent(), is(sensorId));
 		assertThat(captor.getValue().getMethodIdent(), is(methodId));
@@ -274,7 +273,7 @@ public class RemoteClientHookTest extends TestBase {
 		hook.secondAfterBody(coreService, methodId, sensorId, object, parameters, result, false, rsc);
 
 		ArgumentCaptor<ClientSpan> captor = ArgumentCaptor.forClass(ClientSpan.class);
-		verify(coreService).addMethodSensorData(eq(sensorId), eq(methodId), eq(String.valueOf(spanId)), captor.capture());
+		verify(coreService).addDefaultData(captor.capture());
 		assertThat(captor.getValue().getPlatformIdent(), is(platformId));
 		assertThat(captor.getValue().getSensorTypeIdent(), is(sensorId));
 		assertThat(captor.getValue().getMethodIdent(), is(methodId));

@@ -14,7 +14,7 @@ public class StrategyConfig {
 	/**
 	 * The fully qualified class name.
 	 */
-	private String clazzName;
+	private String className;
 
 	/**
 	 * Additional settings stored in a map.
@@ -30,13 +30,13 @@ public class StrategyConfig {
 	/**
 	 * Default constructor accepting 2 parameters.
 	 *
-	 * @param clazzName
+	 * @param className
 	 *            The fully qualified class name.
 	 * @param settings
 	 *            Additional settings stored in a map.
 	 */
-	public StrategyConfig(String clazzName, Map<String, String> settings) {
-		this.clazzName = clazzName;
+	public StrategyConfig(String className, Map<String, String> settings) {
+		this.className = className;
 		this.settings = settings;
 	}
 
@@ -45,8 +45,8 @@ public class StrategyConfig {
 	 *
 	 * @return The fully qualified class name of this configuration.
 	 */
-	public String getClazzName() {
-		return clazzName;
+	public String getClassName() {
+		return className;
 	}
 
 	/**

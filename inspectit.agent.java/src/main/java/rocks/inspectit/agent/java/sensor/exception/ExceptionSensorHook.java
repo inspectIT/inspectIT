@@ -105,7 +105,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 			exceptionDataHolder.set(new IdentityHashToDataObject(identityHash, data));
 
 			// adding the data object to the core service
-			coreService.addExceptionSensorData(sensorTypeId, data.getThrowableIdentityHashCode(), data);
+			coreService.addDefaultData(data);
 		}
 	}
 
@@ -160,7 +160,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 			}
 
 			// adding the data object to the core service
-			coreService.addExceptionSensorData(sensorTypeId, data.getThrowableIdentityHashCode(), data);
+			coreService.addDefaultData(data);
 		}
 	}
 
@@ -208,7 +208,7 @@ public class ExceptionSensorHook implements IExceptionSensorHook {
 			}
 
 			// adding the data object to the core service
-			coreService.addExceptionSensorData(sensorTypeId, data.getThrowableIdentityHashCode(), data);
+			coreService.addDefaultData(data);
 		}
 	}
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<profile schemaVersion="4" id="webservice" name="WebService" common="true" created-on="2015-02-24T12:00:00" description="Profile for the WebService calls."
+<profile schemaVersion="5" id="webservice" name="WebService" common="true" created-on="2015-02-24T12:00:00" description="Profile for the WebService calls."
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
 
 	<sensor-assignment-profile-data>

@@ -403,7 +403,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(SpanIdent.class, new CustomCompatibleFieldSerializer<SpanIdent>(kryo, SpanIdent.class, schemaManager), nextRegistrationId++);
 		kryo.register(ClientSpan.class, new CustomCompatibleFieldSerializer<ClientSpan>(kryo, ClientSpan.class, schemaManager, true), nextRegistrationId++);
 		kryo.register(ServerSpan.class, new CustomCompatibleFieldSerializer<ServerSpan>(kryo, ServerSpan.class, schemaManager, true), nextRegistrationId++);
-	
+
 		// ADDED with INSPECT-1959
 		// TODO: Use the CustomCompatibleFieldSerializer as soon as the data is stable
 		kryo.register(AgentEndUserMonitoringConfig.class, new FieldSerializer<AgentEndUserMonitoringConfig>(kryo, AgentEndUserMonitoringConfig.class), nextRegistrationId++);
@@ -413,7 +413,7 @@ public class SerializationManager implements ISerializer, IKryoProvider, Initial
 		kryo.register(PageLoadRequest.class, new FieldSerializer<PageLoadRequest>(kryo, PageLoadRequest.class), nextRegistrationId++);
 		kryo.register(ResourceLoadRequest.class, new FieldSerializer<ResourceLoadRequest>(kryo, ResourceLoadRequest.class), nextRegistrationId++);
 		kryo.register(UserAction.class, new FieldSerializer<UserAction>(kryo, UserAction.class), nextRegistrationId++);
-		kryo.register(UserSessionInfo.class, new FieldSerializer<UserSessionInfo>(kryo, UserSessionInfo.class), nextRegistrationId++);	
+		kryo.register(UserSessionInfo.class, new FieldSerializer<UserSessionInfo>(kryo, UserSessionInfo.class), nextRegistrationId++);
 	}
 
 	/**

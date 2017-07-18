@@ -269,6 +269,10 @@ public class ConfigurationResolver {
 			}
 		}
 
+		// strategies
+		stringBuilder.append("Strategies:\n"); // NOPMD
+		stringBuilder.append("|-" + environment.getDisruptorStrategyConfig().toString() + "\n"); // NOPMD
+
 		// some options
 		stringBuilder.append("Options:\n"); // NOPMD
 		stringBuilder.append("|-class loading delegation: " + environment.isClassLoadingDelegation() + "\n"); // NOPMD
@@ -282,7 +286,7 @@ public class ConfigurationResolver {
 			stringBuilder.append(
 					"\n||-EUM JS agent URL: " + eumConfig.getScriptBaseUrl() + JSAgentModule.JAVASCRIPT_URL_PREFIX + JSAgentModule.JS_AGENT_REVISION + "_" + eumConfig.getActiveModules() + ".js"); // NOPMD
 		}
-		
+
 		return stringBuilder.toString();
 	}
 

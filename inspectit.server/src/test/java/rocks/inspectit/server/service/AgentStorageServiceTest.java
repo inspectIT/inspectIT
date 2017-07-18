@@ -1,22 +1,25 @@
 package rocks.inspectit.server.service;
 
-import java.lang.ref.SoftReference;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.slf4j.LoggerFactory;
-import org.testng.annotations.BeforeMethod;
+import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
-import rocks.inspectit.server.test.AbstractTestNGLogSupport;
+import rocks.inspectit.server.dao.DefaultDataDao;
 import rocks.inspectit.server.util.AgentStatusDataProvider;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
-import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
+import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
  * Tests the agent storage service.
@@ -25,65 +28,67 @@ import rocks.inspectit.shared.cs.cmr.service.ICmrManagementService;
  *
  */
 @SuppressWarnings("PMD")
-public class AgentStorageServiceTest extends AbstractTestNGLogSupport {
+public class AgentStorageServiceTest extends TestBase {
 
 	/**
 	 * Service to be tested.
 	 */
-	private AgentStorageService agentStorageService;
-
-	/**
-	 * {@link AgentStatusDataProvider}.
-	 */
-	@Mock
-	private AgentStatusDataProvider agentStatusDataProvider;
+	@InjectMocks
+	AgentStorageService agentStorageService;
 
 	@Mock
-	private ICmrManagementService cmrManagementService;
+	AgentStatusDataProvider agentStatusDataProvider;
 
-	/**
-	 * Initializes the mocks.
-	 */
-	@BeforeMethod
-	public void init() {
-		MockitoAnnotations.initMocks(this);
-		agentStorageService = new AgentStorageService(new ArrayBlockingQueue<SoftReference<List<? extends DefaultData>>>(1));
-		agentStorageService.platformIdentDateSaver = agentStatusDataProvider;
-		agentStorageService.cmrManagementService = cmrManagementService;
-		agentStorageService.log = LoggerFactory.getLogger(AgentStorageService.class);
+	@Mock
+	Logger log;
+
+	@Mock
+	DefaultDataDao defaultDataDao;
+
+	public class AddDataObjects extends AgentStorageServiceTest {
+
+		/**
+		 * Provides that data will be processed always.
+		 */
+		@Test
+		public void acceptData() {
+			List<DefaultData> dataList = new ArrayList<>();
+			TimerData timerData = new TimerData();
+			timerData.setPlatformIdent(1L);
+			dataList.add(timerData);
+
+			agentStorageService.addDataObjects(dataList);
+
+			verify(agentStatusDataProvider).registerDataSent(1L);
+			verify(defaultDataDao).saveAll(dataList);
+			verifyNoMoreInteractions(defaultDataDao);
+		}
+
+		/**
+		 * Provides that no exception occurs when data is null.
+		 */
+		@Test
+		public void nullData() {
+			agentStorageService.addDataObjects(null);
+
+			verifyZeroInteractions(agentStatusDataProvider, defaultDataDao);
+		}
+
+		@Test
+		public void debugLog() {
+			List<DefaultData> dataList = new ArrayList<>();
+			TimerData timerData = new TimerData();
+			timerData.setPlatformIdent(1L);
+			dataList.add(timerData);
+			when(log.isDebugEnabled()).thenReturn(true);
+
+			agentStorageService.addDataObjects(dataList);
+
+			verify(log, times(2)).isDebugEnabled();
+			verify(log).debug(anyString());
+			verifyNoMoreInteractions(log);
+		}
+
 	}
 
-	/**
-	 * Proves that the data will be dropped after the timeout if there is no place in the queue and
-	 * amount of dropped data be remembered.
-	 */
-	@Test
-	public void dropDataAfterTimeout() {
-		List<DefaultData> dataList = new ArrayList<>();
-		TimerData timerData = new TimerData();
-		timerData.setPlatformIdent(1L);
-		dataList.add(timerData);
-
-		agentStorageService.addDataObjects(dataList);
-		agentStorageService.addDataObjects(dataList);
-
-		Mockito.verify(agentStatusDataProvider, Mockito.times(2)).registerDataSent(1L);
-		Mockito.verify(cmrManagementService, Mockito.times(1)).addDroppedDataCount(dataList.size());
-	}
-
-	/**
-	 * Provides that data will be processed if there is place in the queue.
-	 */
-	@Test
-	public void acceptData() {
-		List<DefaultData> dataList = new ArrayList<>();
-		TimerData timerData = new TimerData();
-		timerData.setPlatformIdent(1L);
-		dataList.add(timerData);
-
-		agentStorageService.addDataObjects(dataList);
-
-		Mockito.verify(agentStatusDataProvider, Mockito.times(1)).registerDataSent(1L);
-		Mockito.verifyZeroInteractions(cmrManagementService);
-	}
 }

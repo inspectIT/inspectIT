@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<profile schemaVersion="4" id="websockets" name="WebSocket" common="true" created-on="2016-09-02T21:25:23.839+02:00" description="Profile for the WebSocket calls." xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<profile schemaVersion="5" id="websockets" name="WebSocket" common="true" created-on="2016-09-02T21:25:23.839+02:00" description="Profile for the WebSocket calls." xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
 
 	<!-- Configuration for WebSeockets --> 

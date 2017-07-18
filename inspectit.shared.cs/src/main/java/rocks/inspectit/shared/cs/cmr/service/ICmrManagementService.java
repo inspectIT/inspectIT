@@ -40,23 +40,6 @@ public interface ICmrManagementService {
 	CmrStatusData getCmrStatusData();
 
 	/**
-	 * Reports that an amount of data has been dropped.
-	 *
-	 * @param count
-	 *            Dropped amount.
-	 */
-	void addDroppedDataCount(int count);
-
-	/**
-	 * Returns the number of data objects that have been dropped on the CMR, due to the high
-	 * incoming load.
-	 *
-	 * @return Returns the number of data objects that have been dropped on the CMR, due to the high
-	 *         incoming load.
-	 */
-	int getDroppedDataCount();
-
-	/**
 	 * Returns the currently existing {@link PropertySection} in the CMR configuration.
 	 *
 	 * @return Returns the currently existing {@link PropertySection} in the CMR configuration.

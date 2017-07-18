@@ -269,43 +269,23 @@ public class ConfigurationStorageTest extends TestBase {
 		}
 	}
 
-	public class GetSendingStrategyConfig extends ConfigurationStorageTest {
+	public class GetDisruptorStrategyConfig extends ConfigurationStorageTest {
 
 		@Test
 		public void strategyCheck() throws StorageException {
 			StrategyConfig strategyConfig = mock(StrategyConfig.class);
-			when(agentConfiguration.getSendingStrategyConfig()).thenReturn(strategyConfig);
+			when(agentConfiguration.getDisruptorStrategyConfig()).thenReturn(strategyConfig);
 
-			StrategyConfig config = configurationStorage.getSendingStrategyConfig();
+			StrategyConfig config = configurationStorage.getDisruptorStrategyConfig();
 
 			assertThat(config, is(strategyConfig));
 		}
 
 		@Test(expectedExceptions = { StorageException.class })
 		public void strategyNotDefined() throws StorageException {
-			when(agentConfiguration.getSendingStrategyConfig()).thenReturn(null);
+			when(agentConfiguration.getDisruptorStrategyConfig()).thenReturn(null);
 
-			configurationStorage.getSendingStrategyConfig();
-		}
-	}
-
-	public class GetBufferStrategyConfig extends ConfigurationStorageTest {
-
-		@Test
-		public void strategyCheck() throws StorageException {
-			StrategyConfig strategyConfig = mock(StrategyConfig.class);
-			when(agentConfiguration.getBufferStrategyConfig()).thenReturn(strategyConfig);
-
-			StrategyConfig config = configurationStorage.getBufferStrategyConfig();
-
-			assertThat(config, is(strategyConfig));
-		}
-
-		@Test(expectedExceptions = { StorageException.class })
-		public void strategyNotDefined() throws StorageException {
-			when(agentConfiguration.getBufferStrategyConfig()).thenReturn(null);
-
-			configurationStorage.getBufferStrategyConfig();
+			configurationStorage.getDisruptorStrategyConfig();
 		}
 	}
 
