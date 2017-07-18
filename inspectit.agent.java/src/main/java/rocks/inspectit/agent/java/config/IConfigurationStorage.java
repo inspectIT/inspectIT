@@ -77,22 +77,13 @@ public interface IConfigurationStorage {
 	String getAgentName();
 
 	/**
-	 * Returns a {@link StrategyConfig} instance containing the buffer strategy information.
+	 * Returns the configuration for the disruptor.
 	 *
-	 * @return An instance of {@link StrategyConfig}.
+	 * @return Returns the configuration for the disruptor.
 	 * @throws StorageException
 	 *             If agent configuration is not set.
 	 */
-	StrategyConfig getBufferStrategyConfig() throws StorageException;
-
-	/**
-	 * Returns a {@link StrategyConfig} instance containing the sending strategy information.
-	 *
-	 * @return Used {@link StrategyConfig} instances.
-	 * @throws StorageException
-	 *             If agent configuration is not set.
-	 */
-	StrategyConfig getSendingStrategyConfig() throws StorageException;
+	StrategyConfig getDisruptorStrategyConfig() throws StorageException;
 
 	/**
 	 * Returns a {@link List} of the {@link MethodSensorTypeConfig} classes.
@@ -184,13 +175,13 @@ public interface IConfigurationStorage {
 
 	/**
 	 * Returns the {@link RetransformationStrategy} specified by the current environment.
-	 * 
+	 *
 	 * @return The {@link RetransformationStrategy}
 	 * @throws StorageException
 	 *             If agent configuration is not set.
 	 */
 	RetransformationStrategy getRetransformStrategy() throws StorageException;
-	
+
 	/**
 	 * Returns the configuration for the end user monitoring.
 	 *

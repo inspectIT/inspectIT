@@ -193,30 +193,15 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 	 * {@inheritDoc}
 	 */
 	@Override
-	public StrategyConfig getBufferStrategyConfig() throws StorageException {
+	public StrategyConfig getDisruptorStrategyConfig() throws StorageException {
 		ensureConfigurationExists();
 
-		StrategyConfig bufferStrategy = agentConfiguration.getBufferStrategyConfig();
-		if (null == bufferStrategy) {
-			throw new StorageException("Buffer strategy not defined in the agent configuration.");
+		StrategyConfig disruptorStrategy = agentConfiguration.getDisruptorStrategyConfig();
+		if (null == disruptorStrategy) {
+			throw new StorageException("Disruptor strategy not defined in the agent configuration.");
 		}
-		return bufferStrategy;
+		return disruptorStrategy;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public StrategyConfig getSendingStrategyConfig() throws StorageException {
-		ensureConfigurationExists();
-
-		StrategyConfig sendingStrategy = agentConfiguration.getSendingStrategyConfig();
-		if (null == sendingStrategy) {
-			throw new StorageException("Sending strategy not defined in the agent configuration.");
-		}
-		return sendingStrategy;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */

@@ -123,13 +123,6 @@
 			</long-property>
 			<boolean-property name="IP Based Registration" default-value="true" server-restart-required="false" logical-name="cmr.ipBasedAgentRegistration" advanced="false"
 				description="Defines if the agents should be differently registered if they have different IP adresses."></boolean-property>
-			<long-property name="Data Processing Threads" default-value="2" server-restart-required="false" logical-name="cmr.agentStorageServiceThreadCount" advanced="false"
-				description="Number of threads that will process incoming data from the agent.">
-				<validators>
-					<isPositive />
-					<isLessOrEqual than="10" />
-				</validators>
-			</long-property>
 			<group-property name="Timer Data Aggregation" description="Defines properties for Timer data aggregation before saveing to the database.">
 				<properties>
 					<long-property name="Aggregation Period" default-value="10000" server-restart-required="false" logical-name="cmr.aggregationPeriod" advanced="true"

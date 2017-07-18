@@ -168,16 +168,6 @@ public abstract class DefaultData implements Serializable, Sizeable {
 	}
 
 	/**
-	 * This method has to be overridden by every implementation of a value object to return a
-	 * {@link DefaultData} object which can be persisted.
-	 *
-	 * @return Returns a {@link DefaultData} object which can be persisted.
-	 */
-	public DefaultData finalizeData() {
-		return this;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override

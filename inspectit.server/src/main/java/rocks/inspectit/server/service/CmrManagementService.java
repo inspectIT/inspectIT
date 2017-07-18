@@ -68,11 +68,6 @@ public class CmrManagementService implements ICmrManagementService {
 	private PropertyManager propertyManager;
 
 	/**
-	 * Count of dropped data due to high volume of incoming data objects.
-	 */
-	private int droppedDataCount = 0;
-
-	/**
 	 * {@link ShutdownService}.
 	 */
 	@Autowired
@@ -144,25 +139,6 @@ public class CmrManagementService implements ICmrManagementService {
 		}
 
 		return cmrStatusData;
-	}
-
-	/**
-	 * Reports that an amount of data has been dropped.
-	 *
-	 * @param count
-	 *            Dropped amount.
-	 */
-	@Override
-	public void addDroppedDataCount(int count) {
-		droppedDataCount += count;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getDroppedDataCount() {
-		return droppedDataCount;
 	}
 
 	/**

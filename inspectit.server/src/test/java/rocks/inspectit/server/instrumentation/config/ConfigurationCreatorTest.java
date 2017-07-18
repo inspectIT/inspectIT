@@ -69,8 +69,7 @@ public class ConfigurationCreatorTest extends TestBase {
 	@BeforeMethod
 	public void setup() {
 		// mock strategies
-		when(environment.getSendingStrategyConfig()).thenReturn(mock(IStrategyConfig.class));
-		when(environment.getBufferStrategyConfig()).thenReturn(mock(IStrategyConfig.class));
+		when(environment.getDisruptorStrategyConfig()).thenReturn(mock(IStrategyConfig.class));
 		when(environment.getEumConfig()).thenReturn(mock(EndUserMonitoringConfig.class));
 	}
 
@@ -242,38 +241,6 @@ public class ConfigurationCreatorTest extends TestBase {
 		}
 
 		@Test
-		public void sendingStrategy() throws Exception {
-			String className = "className";
-			Map<String, String> settings = Collections.singletonMap("key", "value");
-			IStrategyConfig config = mock(IStrategyConfig.class);
-			when(config.getClassName()).thenReturn(className);
-			when(config.getSettings()).thenReturn(settings);
-			when(environment.getSendingStrategyConfig()).thenReturn(config);
-
-			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, 0);
-
-			StrategyConfig strategyConfig = agentConfiguration.getSendingStrategyConfig();
-			assertThat(strategyConfig.getClazzName(), is(className));
-			assertThat(strategyConfig.getSettings(), is(settings));
-		}
-
-		@Test
-		public void bufferStrategy() throws Exception {
-			String className = "className";
-			Map<String, String> settings = Collections.singletonMap("key", "value");
-			IStrategyConfig config = mock(IStrategyConfig.class);
-			when(config.getClassName()).thenReturn(className);
-			when(config.getSettings()).thenReturn(settings);
-			when(environment.getBufferStrategyConfig()).thenReturn(config);
-
-			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, 0);
-
-			StrategyConfig strategyConfig = agentConfiguration.getBufferStrategyConfig();
-			assertThat(strategyConfig.getClazzName(), is(className));
-			assertThat(strategyConfig.getSettings(), is(settings));
-		}
-
-		@Test
 		public void retransformationStrategy() throws Exception {
 			RetransformationStrategy retransformationStrategy = RetransformationStrategy.ALWAYS;
 			when(environment.getRetransformationStrategy()).thenReturn(retransformationStrategy);
@@ -319,7 +286,23 @@ public class ConfigurationCreatorTest extends TestBase {
 			verify(registrationService, times(1)).registerMethodSensorTypeIdent(agentId, cldConfig.getClassName(), cldConfig.getParameters());
 			verifyNoMoreInteractions(registrationService);
 		}
-		
+
+		@Test
+		public void disruptorStrategy() throws Exception {
+			String className = "className";
+			Map<String, String> settings = Collections.singletonMap("key", "value");
+			IStrategyConfig config = mock(IStrategyConfig.class);
+			when(config.getClassName()).thenReturn(className);
+			when(config.getSettings()).thenReturn(settings);
+			when(environment.getDisruptorStrategyConfig()).thenReturn(config);
+
+			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, 0);
+
+			StrategyConfig strategyConfig = agentConfiguration.getDisruptorStrategyConfig();
+			assertThat(strategyConfig.getClazzName(), is(className));
+			assertThat(strategyConfig.getSettings(), is(settings));
+		}
+
 		@Test
 		public void eumConfig() throws Exception {
 

@@ -1,9 +1,6 @@
 package rocks.inspectit.agent.java.core;
 
-import rocks.inspectit.shared.all.communication.MethodSensorData;
-import rocks.inspectit.shared.all.communication.SystemSensorData;
-import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
-import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.eum.AbstractEUMData;
 
 /**
@@ -28,134 +25,20 @@ public interface ICoreService {
 	void stop();
 
 	/**
-	 * Adds a new data object from the jmx sensor to the value storage.
+	 * Adds the default data to the core service. Depending on the core service implementation this
+	 * default data would either be sent to the CMR or further processed.
 	 *
-	 * @param sensorTypeIdent
-	 *            The id of the sensor type.
-	 * @param objectName
-	 *            The name of the mBean
-	 * @param attributeName
-	 *            The attributeName of the Attribute.
-	 * @param jmxSensorValueData
-	 *            Part of the jmx sensor data.
+	 * @param defaultData
+	 *            Default data to add. Must not be <code>null</code>.
 	 */
-	void addJmxSensorValueData(long sensorTypeIdent, String objectName, String attributeName, JmxSensorValueData jmxSensorValueData);
+	void addDefaultData(DefaultData defaultData);
 
 	/**
-	 * Adds a new measurement from a method sensor to the value storage.
-	 *
-	 * @param sensorTypeId
-	 *            The id of the sensor type.
-	 * @param methodId
-	 *            The id of the method.
-	 * @param prefix
-	 *            An arbitrary prefix {@link String}.
-	 * @param methodSensorData
-	 *            The method sensor data.
-	 */
-	void addMethodSensorData(long sensorTypeId, long methodId, String prefix, MethodSensorData methodSensorData);
-
-	/**
-	 * Adds a new data object from the platform sensor to the value storage.
-	 *
-	 * @param sensorTypeIdent
-	 *            The id of the sensor type.
-	 * @param systemSensorData
-	 *            The system sensor data.
-	 */
-	void addPlatformSensorData(long sensorTypeIdent, SystemSensorData systemSensorData);
-
-	/**
-	 * Adds a new data object from the exception sensor to the value storage.
-	 *
-	 * @param sensorTypeIdent
-	 *            The id of the sensor type.
-	 * @param throwableIdentityHashCode
-	 *            The identityHashCode of the {@link ExceptionSensorData} object.
-	 * @param exceptionSensorData
-	 *            The exception sensor data.
-	 */
-	void addExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode, ExceptionSensorData exceptionSensorData);
-
-	/**
-	 * Adds a new object storage to the value storage. An object storage contains an instance of
-	 * {@link IObjectStorage} which serves as a wrapper around a value object.
-	 *
-	 * @param sensorTypeId
-	 *            The id of the sensor type.
-	 * @param methodId
-	 *            The id of the method.
-	 * @param prefix
-	 *            An arbitrary prefix {@link String}.
-	 * @param objectStorage
-	 *            The object storage.
-	 */
-	void addObjectStorage(long sensorTypeId, long methodId, String prefix, IObjectStorage objectStorage);
-
-	/**
-	 * Adds a new EUm Record to the value storage to be sent.
+	 * Adds a new end user monitoring record to the value storage to be sent.
 	 *
 	 * @param eumData
-	 *            the data t osend, must have a valid session id and element ID!
+	 *            the data to send, must have a valid session id and element ID!
 	 */
 	void addEUMData(AbstractEUMData eumData);
-
-	/**
-	 * Triggers sending the buffered data.
-	 */
-	void sendData();
-
-	/**
-	 * Returns a saved measurement ({@link MethodSensorData}) for further processing.
-	 *
-	 * @param sensorTypeIdent
-	 *            The id of the sensor type to retrieve the measurement.
-	 * @param methodIdent
-	 *            The id of the method sensor to retrieve the measurement.
-	 * @param prefix
-	 *            An arbitrary prefix {@link String}.
-	 * @return Returns a {@link MethodSensorData}.
-	 */
-	MethodSensorData getMethodSensorData(long sensorTypeIdent, long methodIdent, String prefix);
-
-	/**
-	 * Returns a saved data object for further processing.
-	 *
-	 * @param sensorTypeIdent
-	 *            The id of the sensor type to retrieve the data object.
-	 * @param throwableIdentityHashCode
-	 *            The identityHashCode of the data object to retrieve.
-	 * @return Returns a {@link ExceptionSensorData}
-	 */
-	ExceptionSensorData getExceptionSensorData(long sensorTypeIdent, long throwableIdentityHashCode);
-
-	/**
-	 * Returns a saved object storage for further processing.
-	 *
-	 * @param sensorTypeIdent
-	 *            The id of the sensor type to retrieve the measurement.
-	 * @param methodIdent
-	 *            The id of the method sensor to retrieve the measurement.
-	 * @param prefix
-	 *            An arbitrary prefix {@link String}.
-	 * @return Returns an {@link IObjectStorage}.
-	 */
-	IObjectStorage getObjectStorage(long sensorTypeIdent, long methodIdent, String prefix);
-
-	/**
-	 * Adds a new list listener.
-	 *
-	 * @param listener
-	 *            The listener to add.
-	 */
-	void addListListener(ListListener<?> listener);
-
-	/**
-	 * Removes a list listener.
-	 *
-	 * @param listener
-	 *            The listener to remove.
-	 */
-	void removeListListener(ListListener<?> listener);
 
 }
