@@ -218,6 +218,10 @@ public class TraceInvocDetailsInputController extends SteppingInvocDetailInputCo
 			if (element instanceof Span) {
 				Span span = (Span) element;
 				TraceTreeData traceData = TraceTreeData.getForSpanIdent(currentInput, span.getSpanIdent());
+				if (traceData == null) {
+					return null;
+				}
+
 				if (!span.isCaller()) {
 					TraceTreeData parent = traceData.getParent();
 					if (null != parent) {
