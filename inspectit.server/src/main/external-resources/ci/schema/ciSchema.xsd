@@ -43,6 +43,8 @@
 
   <xs:element name="exclude-rules-profile-data" type="excludeRulesProfileData"/>
 
+  <xs:element name="executor-client-sensor-config" type="executorClientSensorConfig"/>
+
   <xs:element name="field-capture" type="fieldContextCapture"/>
 
   <xs:element name="host" type="hostValueSource"/>
@@ -510,6 +512,7 @@
                   <xs:element ref="statement-sensor-config"/>
                   <xs:element ref="timer-sensor-config"/>
                   <xs:element ref="log4j-logging-sensor-config"/>
+                  <xs:element ref="executor-client-sensor-config"/>
                   <xs:element ref="remote-http-server-sensor-config"/>
                   <xs:element ref="remote-jms-listener-server-sensor-config"/>
                   <xs:element ref="remote-apache-httpclientV40-client-sensor-config"/>
@@ -685,11 +688,10 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="log4JLoggingSensorConfig">
+  <xs:complexType name="executorClientSensorConfig">
     <xs:complexContent>
-      <xs:extension base="abstractMethodSensorConfig">
+      <xs:extension base="abstractRemoteSensorConfig">
         <xs:sequence/>
-        <xs:attribute name="minLevel" type="xs:string" use="required"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -758,6 +760,15 @@
     <xs:complexContent>
       <xs:extension base="abstractRemoteSensorConfig">
         <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="log4JLoggingSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractMethodSensorConfig">
+        <xs:sequence/>
+        <xs:attribute name="minLevel" type="xs:string" use="required"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

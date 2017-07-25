@@ -128,7 +128,7 @@ public class ConfigurationHolder {
 
 	/**
 	 * Gets {@link #jmxMonitoringAppliers}.
-	 * 
+	 *
 	 * @return {@link #jmxMonitoringAppliers}
 	 */
 	public Collection<JmxMonitoringApplier> getJmxMonitoringAppliers() {

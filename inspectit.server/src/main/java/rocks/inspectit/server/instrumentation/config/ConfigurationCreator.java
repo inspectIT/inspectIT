@@ -26,6 +26,7 @@ import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.EUMInstrumentationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ExecutorIntercepterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
 import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
@@ -115,6 +116,9 @@ public class ConfigurationCreator {
 		if (eumConf.isEumEnabled()) {
 			specialMethodSensorTypeConfigs.add(getMethodSensorTypeConfig(platformId, EUMInstrumentationSensorConfig.INSTANCE));
 		}
+
+		specialMethodSensorTypeConfigs.add(getMethodSensorTypeConfig(platformId, ExecutorIntercepterSensorConfig.INSTANCE));
+
 		agentConfiguration.setSpecialMethodSensorTypeConfigs(specialMethodSensorTypeConfigs);
 
 		// distruptor strategy
