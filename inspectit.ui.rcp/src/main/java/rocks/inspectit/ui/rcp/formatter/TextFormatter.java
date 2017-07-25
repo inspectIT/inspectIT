@@ -931,6 +931,13 @@ public final class TextFormatter {
 			return styledString;
 		}
 
+		// then by runnable type
+		String runnableType = tags.get(ExtraTags.RUNNABLE_TYPE);
+		if (StringUtils.isNotEmpty(runnableType)) {
+			styledString.append(getFqnAbbreviated(runnableType));
+			return styledString;
+		}
+
 		// then by method id
 		MethodIdent methodIdent = cachedDataService.getMethodIdentForId(methodId);
 		if (null != methodIdent) {
@@ -1012,6 +1019,13 @@ public final class TextFormatter {
 		String op = tags.get(ExtraTags.OPERATION_NAME);
 		if (StringUtils.isNotEmpty(op)) {
 			styledString.append(op);
+			return styledString;
+		}
+
+		// then by runnable type
+		String runnableType = tags.get(ExtraTags.RUNNABLE_TYPE);
+		if (StringUtils.isNotEmpty(runnableType)) {
+			styledString.append(getFqnAbbreviated(runnableType));
 			return styledString;
 		}
 
