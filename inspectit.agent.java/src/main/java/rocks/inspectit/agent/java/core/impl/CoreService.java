@@ -797,5 +797,4 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	public void destroy() throws Exception {
 		stop();
 	}
-
 }

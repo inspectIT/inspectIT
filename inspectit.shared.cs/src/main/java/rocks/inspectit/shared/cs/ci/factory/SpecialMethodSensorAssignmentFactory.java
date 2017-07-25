@@ -4,17 +4,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.Profile;
+import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.profile.data.AbstractProfileData;
+import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.ExecutorClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.EUMInstrumentationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ExecutorIntercepterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
+import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
 
 /**
  * Factory that can return appropriate {@link SpecialMethodSensorAssignment}s based on the
@@ -26,6 +37,18 @@ import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterc
 @Component
 @XmlTransient
 public class SpecialMethodSensorAssignmentFactory {
+
+	/**
+	 * The logger.
+	 */
+	@Log
+	private Logger log;
+
+	/**
+	 * The configuration interface service.
+	 */
+	@Autowired
+	private IConfigurationInterfaceService ciService;
 
 	/**
 	 * Assignments for the class loading delegation.
@@ -41,6 +64,11 @@ public class SpecialMethodSensorAssignmentFactory {
 	 * Assignments for the end user monitoring.
 	 */
 	private Collection<SpecialMethodSensorAssignment> endUserMonitoringAssignments;
+
+	/**
+	 * Assignments for the executor correlation.
+	 */
+	private Collection<SpecialMethodSensorAssignment> executorInterceptorAssignments;
 
 	/**
 	 * Private as factory.
@@ -66,12 +94,53 @@ public class SpecialMethodSensorAssignmentFactory {
 			assignments.addAll(mbeanServerFactoryAssignments);
 		}
 
-
 		if ((environment.getEumConfig() != null) && environment.getEumConfig().isEumEnabled()) {
 			assignments.addAll(endUserMonitoringAssignments);
 		}
 
+		if (hasExecutorClientSensor(environment)) {
+			assignments.addAll(executorInterceptorAssignments);
+		}
+
 		return assignments;
+	}
+
+	/**
+	 * Returns whether the given environment contains an {@link ExecutorClientSensorConfig}.
+	 *
+	 * @param environment
+	 *            the environment to check
+	 * @return returns <code>true</code> if an {@link ExecutorClientSensorConfig} exists
+	 */
+	private boolean hasExecutorClientSensor(Environment environment) {
+		for (String profileId : environment.getProfileIds()) {
+			try {
+				Profile profile = ciService.getProfile(profileId);
+
+				if (!profile.isActive()) {
+					continue;
+				}
+
+				// all assignments
+				AbstractProfileData<?> profileData = profile.getProfileData();
+				if (SensorAssignmentProfileData.class.isInstance(profileData)) {
+					SensorAssignmentProfileData sapData = (SensorAssignmentProfileData) profileData;
+
+					List<MethodSensorAssignment> sensorAssignments = sapData.getMethodSensorAssignments();
+
+					for (MethodSensorAssignment assignment : sensorAssignments) {
+						if (assignment.getSensorConfigClass().isAssignableFrom(ExecutorClientSensorConfig.class)) {
+							return true;
+						}
+					}
+				}
+			} catch (Exception x) {
+				if (log.isDebugEnabled()) {
+					log.debug("Profile with id '{}' could not be loaded.", profileId);
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -123,6 +192,7 @@ public class SpecialMethodSensorAssignmentFactory {
 
 		mbeanServerFactoryAssignments = Arrays.asList(msbAdd, msbRemove);
 
+		// EUM
 		SpecialMethodSensorAssignment eumFilterInstr = new SpecialMethodSensorAssignment(EUMInstrumentationSensorConfig.INSTANCE);
 		eumFilterInstr.setClassName("javax.servlet.Filter");
 		eumFilterInstr.setInterf(true);
@@ -136,6 +206,15 @@ public class SpecialMethodSensorAssignmentFactory {
 		eumServletInstr.setParameters(Arrays.asList("javax.servlet.ServletRequest", "javax.servlet.ServletResponse"));
 
 		endUserMonitoringAssignments = Arrays.asList(eumFilterInstr, eumServletInstr);
+
+		// executor clients
+		SpecialMethodSensorAssignment execSubmitRunnableInstr = new SpecialMethodSensorAssignment(ExecutorIntercepterSensorConfig.INSTANCE);
+		execSubmitRunnableInstr.setClassName("java.util.concurrent.Executor");
+		execSubmitRunnableInstr.setInterf(true);
+		execSubmitRunnableInstr.setMethodName("execute");
+		execSubmitRunnableInstr.setParameters(Arrays.asList("java.lang.Runnable"));
+
+		executorInterceptorAssignments = Arrays.asList(execSubmitRunnableInstr);
 	}
 
 }

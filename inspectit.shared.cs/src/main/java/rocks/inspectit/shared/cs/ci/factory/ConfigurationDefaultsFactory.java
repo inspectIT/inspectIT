@@ -13,6 +13,7 @@ import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.ExecutorClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
@@ -113,6 +114,7 @@ public final class ConfigurationDefaultsFactory {
 		methodSensorConfigs.add(new RemoteJmsClientSensorConfig());
 		methodSensorConfigs.add(new RemoteJmsListenerServerSensorConfig());
 		methodSensorConfigs.add(new RemoteManualServerSensorConfig());
+		methodSensorConfigs.add(new ExecutorClientSensorConfig());
 		return methodSensorConfigs;
 	}
 

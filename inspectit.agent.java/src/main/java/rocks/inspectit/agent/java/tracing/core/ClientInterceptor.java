@@ -95,9 +95,15 @@ public class ClientInterceptor {
 
 		// just build the span and store it for later start
 		SpanImpl span = builder.build();
-		SpanStore spanStore = new SpanStore();
-		spanStore.storeSpan(span);
-		requestAdapter.getSpanStoreAdapter().setSpanStore(spanStore);
+
+		SpanStore spanStore = requestAdapter.getSpanStoreAdapter().getSpanStore();
+		if (spanStore == null) {
+			spanStore = new SpanStore();
+			spanStore.storeSpan(span);
+			requestAdapter.getSpanStoreAdapter().setSpanStore(spanStore);
+		} else {
+			spanStore.storeSpan(span);
+		}
 
 		// inject here as the context is created when span is started
 		tracer.inject(span.context(), requestAdapter.getFormat(), requestAdapter.getCarrier());

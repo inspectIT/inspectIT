@@ -57,6 +57,7 @@ import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.ExecutorClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
@@ -72,6 +73,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteSpringRestTemplateC
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteUrlConnectionClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ExecutorIntercepterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.ClassLoadingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CompilationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.impl.CpuSensorConfig;
@@ -442,9 +444,13 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(InvocationSequenceDataComparatorEnum.class, new EnumSerializer(InvocationSequenceDataComparatorEnum.class), nextRegistrationId++);
 		kryo.register(ResultComparator.class, new FieldSerializer<ResultComparator<?>>(kryo, ResultComparator.class), nextRegistrationId++);
 		kryo.register(SpanComparator.class, new EnumSerializer(SpanComparator.class), nextRegistrationId++);
-		
+
 		// INSPECTIT-1959
-		kryo.register(EndUserMonitoringConfig.class, new FieldSerializer<EndUserMonitoringConfig>(kryo, EndUserMonitoringConfig.class), nextRegistrationId++);
+		kryo.register(EndUserMonitoringConfig.class, new FieldSerializer<>(kryo, EndUserMonitoringConfig.class), nextRegistrationId++);
+
+		// INSPECTIT-2432
+		kryo.register(ExecutorIntercepterSensorConfig.class, new FieldSerializer<>(kryo, ExecutorIntercepterSensorConfig.class), nextRegistrationId++);
+		kryo.register(ExecutorClientSensorConfig.class, new FieldSerializer<>(kryo, ExecutorClientSensorConfig.class), nextRegistrationId++);
 	}
 
 }

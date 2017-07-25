@@ -108,8 +108,8 @@ public class SpanImplTest extends TestBase {
 			assertThat(span.isFinished(), is(false));
 			verify(tracer).spanStarted(span);
 			verify(tracer, atLeastOnce()).getTimer();
-			verify(timer, times(2)).getCurrentNanoTime();
-			verify(timer, times(2)).getCurrentTimeMicroseconds();
+			verify(timer).getCurrentNanoTime();
+			verify(timer).getCurrentTimeMicroseconds();
 			verifyZeroInteractions(timer, tracer);
 		}
 

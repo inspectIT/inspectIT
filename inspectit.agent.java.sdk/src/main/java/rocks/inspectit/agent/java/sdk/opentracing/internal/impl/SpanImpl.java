@@ -88,6 +88,10 @@ public class SpanImpl implements Span {
 	 * Starts the span and sets the start time to the current time provided by the set tracer.
 	 */
 	public void start() {
+		if (isStarted()) {
+			return;
+		}
+
 		start(tracer.getTimer().getCurrentTimeMicroseconds(), tracer.getTimer().getCurrentNanoTime());
 	}
 

@@ -41,6 +41,8 @@
 
   <xs:element name="exclude-rules-profile-data" type="excludeRulesProfileData"/>
 
+  <xs:element name="executor-client-sensor-config" type="executorClientSensorConfig"/>
+
   <xs:element name="field-capture" type="fieldContextCapture"/>
 
   <xs:element name="host" type="hostValueSource"/>
@@ -530,6 +532,7 @@
                   <xs:element ref="remote-spring-resttemplate-client-sensor-config"/>
                   <xs:element ref="remote-jms-client-sensor-config"/>
                   <xs:element ref="remote-manual-server-sensor-config"/>
+                  <xs:element ref="executor-client-sensor-config"/>
                 </xs:choice>
               </xs:sequence>
             </xs:complexType>
@@ -707,6 +710,14 @@
   <xs:complexType name="timerSensorConfig">
     <xs:complexContent>
       <xs:extension base="stringConstraintSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="executorClientSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractMethodSensorConfig">
         <xs:sequence/>
       </xs:extension>
     </xs:complexContent>

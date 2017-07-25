@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -195,6 +196,22 @@ public class ClientInterceptorTest extends TestBase {
 			assertThat(spanStoreCaptor.getValue().getSpan(), is(span));
 			verifyNoMoreInteractions(tracer, spanBuilder, span);
 			verifyZeroInteractions(context);
+		}
+
+		@Test
+		public void spanStoreIsNotNull() {
+			when(requestAdapter.startClientSpan()).thenReturn(true);
+			when(requestAdapter.getTags()).thenReturn(Collections.<String, String> singletonMap(Tags.HTTP_URL.getKey(), "value"));
+			when(requestAdapter.getPropagationType()).thenReturn(PropagationType.HTTP);
+			when(requestAdapter.getReferenceType()).thenReturn(References.FOLLOWS_FROM);
+			SpanStore spanStore = mock(SpanStore.class);
+			when(spanStoreAdapter.getSpanStore()).thenReturn(spanStore);
+
+			SpanImpl result = interceptor.handleAsyncRequest(requestAdapter);
+
+			assertThat(result, is(span));
+			verify(spanStore).storeSpan(span);
+			verifyNoMoreInteractions(spanStore);
 		}
 
 		@Test

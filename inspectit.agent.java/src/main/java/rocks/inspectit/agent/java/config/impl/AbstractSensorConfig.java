@@ -1,6 +1,9 @@
 package rocks.inspectit.agent.java.config.impl;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  * Abstract class for both our normal and special sensor configs.
@@ -90,6 +93,40 @@ public class AbstractSensorConfig {
 	 */
 	public void setTargetMethodName(String targetMethodName) {
 		this.targetMethodName = targetMethodName;
+	}
+
+	/**
+	 * Returns the target method name including its parameters. Example: the method
+	 * {@link Executor#execute(Runnable)} would result in the following return value:
+	 * execute(Runnable)
+	 *
+	 * @return the full target method name including parameters
+	 */
+	public String getFullTargetMethodName() {
+		if (targetMethodName == null) {
+			return null;
+		}
+
+		StringBuilder builder = new StringBuilder(targetMethodName);
+		builder.append('(');
+
+		if (CollectionUtils.isNotEmpty(parameterTypes)) {
+			boolean isFirst = true;
+			for (String parameter : parameterTypes) {
+				if (!isFirst) {
+					builder.append(", ");
+				}
+
+				// append simple name of parameter type
+				String[] split = parameter.split("\\.");
+				builder.append(split[split.length - 1]);
+
+				isFirst = false;
+			}
+		}
+
+		builder.append(')');
+		return builder.toString();
 	}
 
 	/**

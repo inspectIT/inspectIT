@@ -130,7 +130,9 @@ public class JettyHttpClientV61HttpClientRequest implements HttpRequest, SpanSto
 	 */
 	@Override
 	public SpanStore getSpanStore() {
-		throw new UnsupportedOperationException("Jetty request does not support span store retrieving as it uses proxied listener for interception.");
+		// Jetty request does not support span store retrieving as it uses proxied listener for
+		// interception
+		return null;
 	}
 
 	/**

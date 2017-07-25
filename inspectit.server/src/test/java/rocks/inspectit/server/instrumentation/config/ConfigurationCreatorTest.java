@@ -2,6 +2,7 @@ package rocks.inspectit.server.instrumentation.config;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -9,11 +10,11 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -46,6 +47,7 @@ import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ExecutorIntercepterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
 import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
@@ -66,6 +68,8 @@ public class ConfigurationCreatorTest extends TestBase {
 	@Mock
 	ConfigurationResolver configurationResolver;
 
+	public ExecutorIntercepterSensorConfig eisc = ExecutorIntercepterSensorConfig.INSTANCE;
+
 	@BeforeMethod
 	public void setup() {
 		// mock strategies
@@ -83,7 +87,7 @@ public class ConfigurationCreatorTest extends TestBase {
 			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
 
 			assertThat(agentConfiguration.getPlatformId(), is(agentId));
-
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -109,7 +113,8 @@ public class ConfigurationCreatorTest extends TestBase {
 			assertThat(sensorTypeConfig.getClassName(), is(className));
 			assertThat(sensorTypeConfig.getParameters(), is(parameters));
 
-			verify(registrationService, times(1)).registerPlatformSensorTypeIdent(agentId, className);
+			verify(registrationService).registerPlatformSensorTypeIdent(agentId, className);
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -125,7 +130,8 @@ public class ConfigurationCreatorTest extends TestBase {
 			Collection<PlatformSensorTypeConfig> sensorTypeConfigs = agentConfiguration.getPlatformSensorTypeConfigs();
 			assertThat(sensorTypeConfigs, is(empty()));
 
-			verifyZeroInteractions(registrationService);
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
+			verifyNoMoreInteractions(registrationService);
 		}
 
 		@Test
@@ -155,6 +161,7 @@ public class ConfigurationCreatorTest extends TestBase {
 			assertThat(sensorTypeConfig.getPriority(), is(PriorityEnum.MAX));
 
 			verify(registrationService, times(1)).registerMethodSensorTypeIdent(agentId, className, parameters);
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -182,6 +189,7 @@ public class ConfigurationCreatorTest extends TestBase {
 			assertThat(sensorTypeConfig.getPriority(), is(PriorityEnum.NORMAL)); // default priority
 
 			verify(registrationService, times(1)).registerMethodSensorTypeIdent(agentId, className, parameters);
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -208,7 +216,7 @@ public class ConfigurationCreatorTest extends TestBase {
 
 			verify(registrationService, times(1)).registerJmxSensorTypeIdent(agentId, className);
 			// needed because of the intercepting server sensor
-			verify(registrationService, times(1)).registerMethodSensorTypeIdent(anyLong(), anyString(), anyMap());
+			verify(registrationService, times(2)).registerMethodSensorTypeIdent(anyLong(), anyString(), anyMap());
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -224,7 +232,8 @@ public class ConfigurationCreatorTest extends TestBase {
 			JmxSensorTypeConfig sensorTypeConfig = agentConfiguration.getJmxSensorTypeConfig();
 			assertThat(sensorTypeConfig, is(nullValue()));
 
-			verifyZeroInteractions(registrationService);
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
+			verifyNoMoreInteractions(registrationService);
 		}
 
 		@Test
@@ -294,7 +303,8 @@ public class ConfigurationCreatorTest extends TestBase {
 			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
 
 			Collection<MethodSensorTypeConfig> sensorTypeConfigs = agentConfiguration.getSpecialMethodSensorTypeConfigs();
-			assertThat(sensorTypeConfigs, is(empty()));
+			assertThat(sensorTypeConfigs, hasSize(1));
+			assertThat(sensorTypeConfigs.iterator().next().getClassName(), is(equalTo(eisc.getClassName())));
 		}
 
 		@Test
@@ -308,7 +318,8 @@ public class ConfigurationCreatorTest extends TestBase {
 			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
 
 			Collection<MethodSensorTypeConfig> sensorTypeConfigs = agentConfiguration.getSpecialMethodSensorTypeConfigs();
-			assertThat(sensorTypeConfigs, hasSize(1));
+			assertThat(sensorTypeConfigs, hasSize(2));
+			// first element will be class loading config
 			MethodSensorTypeConfig sensorTypeConfig = sensorTypeConfigs.iterator().next();
 			assertThat(sensorTypeConfig.getId(), is(sensorId));
 			assertThat(sensorTypeConfig.getName(), is(cldConfig.getName()));
@@ -317,9 +328,10 @@ public class ConfigurationCreatorTest extends TestBase {
 			assertThat(sensorTypeConfig.getPriority(), is(cldConfig.getPriority()));
 
 			verify(registrationService, times(1)).registerMethodSensorTypeIdent(agentId, cldConfig.getClassName(), cldConfig.getParameters());
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
-		
+
 		@Test
 		public void eumConfig() throws Exception {
 
@@ -352,7 +364,8 @@ public class ConfigurationCreatorTest extends TestBase {
 			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
 
 			Collection<MethodSensorTypeConfig> sensorTypeConfigs = agentConfiguration.getSpecialMethodSensorTypeConfigs();
-			assertThat(sensorTypeConfigs, hasSize(1));
+			assertThat(sensorTypeConfigs, hasSize(2));
+			// first element will be mbean server interceptor config
 			MethodSensorTypeConfig sensorTypeConfig = sensorTypeConfigs.iterator().next();
 			assertThat(sensorTypeConfig.getId(), is(sensorId));
 			assertThat(sensorTypeConfig.getName(), is(msiConfig.getName()));
@@ -363,6 +376,7 @@ public class ConfigurationCreatorTest extends TestBase {
 			verify(registrationService, times(1)).registerMethodSensorTypeIdent(agentId, msiConfig.getClassName(), msiConfig.getParameters());
 			// needed because jmx sensor will be also registered
 			verify(registrationService, times(1)).registerJmxSensorTypeIdent(anyLong(), anyString());
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -376,9 +390,11 @@ public class ConfigurationCreatorTest extends TestBase {
 			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
 
 			Collection<MethodSensorTypeConfig> sensorTypeConfigs = agentConfiguration.getSpecialMethodSensorTypeConfigs();
-			assertThat(sensorTypeConfigs, is(empty()));
+			assertThat(sensorTypeConfigs, hasSize(1));
+			assertThat(sensorTypeConfigs.iterator().next().getClassName(), is(equalTo(eisc.getClassName())));
 
-			verifyZeroInteractions(registrationService);
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
+			verifyNoMoreInteractions(registrationService);
 		}
 
 	}

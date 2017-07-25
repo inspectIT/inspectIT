@@ -41,6 +41,7 @@ import rocks.inspectit.shared.cs.ci.sensor.exception.impl.ExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.AbstractRemoteSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.ExecutorClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
@@ -443,6 +444,8 @@ public final class ImageFormatter {
 		} else if (ObjectUtils.equals(sensorClass, JmxSensorConfig.class)) {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_BEAN);
 		} else if (AbstractRemoteSensorConfig.class.isAssignableFrom(sensorClass)) {
+			return InspectIT.getDefault().getImage(InspectITImages.IMG_REMOTE);
+		} else if (ObjectUtils.equals(sensorClass, ExecutorClientSensorConfig.class)) {
 			return InspectIT.getDefault().getImage(InspectITImages.IMG_REMOTE);
 		}
 		return null;

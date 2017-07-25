@@ -89,11 +89,11 @@ public class MethodInstrumentationConfig implements IMethodInstrumentationConfig
 		}
 
 		List<IMethodInstrumentationPoint> instrumentationPoints = new ArrayList<IMethodInstrumentationPoint>(1);
-		if (null != sensorInstrumentationPoint) {
-			instrumentationPoints.add(sensorInstrumentationPoint);
-		}
 		if (null != specialInstrumentationPoint) {
 			instrumentationPoints.add(specialInstrumentationPoint);
+		}
+		if (null != sensorInstrumentationPoint) {
+			instrumentationPoints.add(sensorInstrumentationPoint);
 		}
 
 		return instrumentationPoints;
