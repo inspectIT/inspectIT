@@ -22,6 +22,7 @@ import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.SpanContextImpl;
 import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerImpl;
 import rocks.inspectit.agent.java.sensor.exception.ExceptionSensor;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
+import rocks.inspectit.agent.java.sensor.method.async.executor.ExecutorClientSensor;
 import rocks.inspectit.agent.java.sensor.method.jdbc.ConnectionSensor;
 import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementParameterSensor;
 import rocks.inspectit.agent.java.sensor.method.jdbc.PreparedStatementSensor;
@@ -71,12 +72,12 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 	private static final Logger LOG = LoggerFactory.getLogger(InvocationSequenceHook.class);
 
 	/**
-	 * List of remote sensor names needed for
+	 * List of sensor names needed for
 	 * {@link #removeDueToNoData(RegisteredSensorConfig, InvocationSequenceData)}.
 	 */
-	private static final Set<String> REMOVE_SENSOR_CLASS_NAMES = new HashSet<String>(
-			Arrays.asList(ApacheHttpClientV40Sensor.class.getName(), JettyHttpClientV61Sensor.class.getName(), SpringRestTemplateClientSensor.class.getName(), UrlConnectionSensor.class.getName(),
-					JavaHttpRemoteServerSensor.class.getName(), JmsRemoteClientSensor.class.getName(), JmsListenerRemoteServerSensor.class.getName(), ManualRemoteServerSensor.class.getName()));
+	private static final Set<String> REMOVE_SENSOR_CLASS_NAMES = new HashSet<String>(Arrays.asList(ApacheHttpClientV40Sensor.class.getName(), JettyHttpClientV61Sensor.class.getName(),
+			SpringRestTemplateClientSensor.class.getName(), UrlConnectionSensor.class.getName(), JavaHttpRemoteServerSensor.class.getName(), JmsRemoteClientSensor.class.getName(),
+			JmsListenerRemoteServerSensor.class.getName(), ManualRemoteServerSensor.class.getName(), ExecutorClientSensor.class.getName()));
 
 	/**
 	 * The Platform manager.

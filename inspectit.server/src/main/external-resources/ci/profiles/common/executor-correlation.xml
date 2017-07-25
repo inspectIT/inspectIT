@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile schemaVersion="7" id="executor-correlation" name="Executor Correlation" common="true" default="true" created-on="2017-08-11T12:00:00" description="Profile for the correlation of Executors"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
+	
+    <!-- executor correlation -->
+    <sensor-assignment-profile-data>
+        <timer-method-sensor-assignment starts-invocation="false" min-invocation-duration="0" charting="false" sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig" method-name="execute" parameters="java.lang.Runnable" constructor="false" public-mod="true" protected-mod="false" private-mod="false" default-mod="false" class-name="java.util.concurrent.Executor" superclass="false" interface="true"/>
+        <method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.ExecutorClientSensorConfig" method-name="execute" parameters="java.lang.Runnable" constructor="false" public-mod="true" protected-mod="false" private-mod="false" default-mod="false" class-name="java.util.concurrent.Executor" superclass="false" interface="true"/>
+    </sensor-assignment-profile-data>
+    
+</profile>

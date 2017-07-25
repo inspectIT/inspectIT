@@ -3,6 +3,7 @@ package rocks.inspectit.ui.rcp.editor.tree.input;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -93,7 +94,7 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 	 * @author Patrice Bouillet
 	 *
 	 */
-	private static enum Column {
+	private enum Column {
 		/** The element column. */
 		ELEMENT("Element", 700, InspectITImages.IMG_CALL_HIERARCHY),
 		/** The duration column. */
@@ -126,7 +127,7 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 		 * @param imageName
 		 *            The name of the image. Names are defined in {@link InspectITImages}.
 		 */
-		private Column(String name, int width, String imageName) {
+		Column(String name, int width, String imageName) {
 			this.name = name;
 			this.width = width;
 			this.image = InspectIT.getDefault().getImage(imageName);
@@ -542,6 +543,11 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 		private DeferredTreeContentManager manager;
 
 		/**
+		 * Set for storing the span which have been added to the tree.
+		 */
+		protected Set<Span> setServerSpans = new HashSet<>();
+
+		/**
 		 * {@inheritDoc}
 		 */
 		@Override
@@ -576,14 +582,15 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 			// first any client span
 			if (null != invoc.getSpanIdent()) {
 				Span span = spanService.get(invoc.getSpanIdent());
-				if ((null != span) && span.isCaller()) {
+				if ((null != span) && !span.isRoot() && !setServerSpans.contains(span)) {
 					objects.add(span);
+					setServerSpans.add(span);
 				}
 			}
 
-			// then children - all invocations or their server spans
+			// then children
 			for (InvocationSequenceData child : invoc.getNestedSequences()) {
-				addSpanOrInvoc(objects, child);
+				objects.add(child);
 			}
 
 			return objects.toArray();
@@ -598,7 +605,7 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 		 * @return children
 		 */
 		protected Object[] getChildren(Span span) {
-			if (!span.isCaller()) {
+			if (span.isRoot() || ((resolveSpans() || (setServerSpans.size() <= 1)) && !span.isCaller())) {
 				InvocationSequenceData invoc = getForSpanIdent(input, span.getSpanIdent());
 				return new Object[] { invoc };
 			}
@@ -612,11 +619,9 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 		public boolean hasChildren(Object parent) {
 			if (parent instanceof InvocationSequenceData) {
 				return hasChildren((InvocationSequenceData) parent);
-
 			} else if (parent instanceof Span) {
 				return hasChildren((Span) parent);
 			}
-
 			return false;
 		}
 
@@ -635,7 +640,7 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 
 			if (InvocationSequenceDataHelper.hasSpanIdent(invoc)) {
 				Span span = spanService.get(invoc.getSpanIdent());
-				return (null != span) && span.isCaller();
+				return (null != span) && !span.isRoot();
 			}
 
 			return false;
@@ -650,6 +655,10 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 		 * @return if span has children in the tree
 		 */
 		protected boolean hasChildren(Span span) {
+			if (span.isRoot()) {
+				return true;
+			}
+
 			InvocationSequenceData invoc = getForSpanIdent(input, span.getSpanIdent());
 			return (null != invoc) && !span.isCaller();
 		}
@@ -681,7 +690,7 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 			// try span first
 			if (InvocationSequenceDataHelper.hasSpanIdent(invoc)) {
 				Span span = spanService.get(invoc.getSpanIdent());
-				if ((null != span) && !span.isCaller()) {
+				if ((null != span) && span.isRoot()) {
 					return span;
 				}
 			}
@@ -719,6 +728,13 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 			for (InvocationSequenceData data : invocationSequenceData) {
 				addSpanOrInvoc(objects, data);
 			}
+
+			for (Object object : objects) {
+				if (object instanceof Span) {
+					setServerSpans.add((Span) object);
+				}
+			}
+
 			return objects.toArray();
 		}
 
@@ -730,6 +746,8 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			manager = new DeferredTreeContentManager((AbstractTreeViewer) viewer);
 			input = (List<InvocationSequenceData>) newInput;
+
+			setServerSpans.clear();
 		}
 
 		/**
@@ -739,6 +757,14 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 		public void dispose() {
 		}
 
+		/**
+		 * Specifies whether spans should be resolved or not.
+		 *
+		 * @return returns whether spans should be resolved
+		 */
+		protected boolean resolveSpans() {
+			return false;
+		}
 	}
 
 	/**
