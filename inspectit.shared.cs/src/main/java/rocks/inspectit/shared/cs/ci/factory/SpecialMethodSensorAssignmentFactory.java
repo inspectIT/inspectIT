@@ -14,6 +14,7 @@ import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.EUMInstrumentationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ExecutorIntercepterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
 
 /**
@@ -43,6 +44,11 @@ public class SpecialMethodSensorAssignmentFactory {
 	private Collection<SpecialMethodSensorAssignment> endUserMonitoringAssignments;
 
 	/**
+	 * Assignments for the executor correlation.
+	 */
+	private Collection<SpecialMethodSensorAssignment> executorInterceptorAssignments;
+
+	/**
 	 * Private as factory.
 	 */
 	protected SpecialMethodSensorAssignmentFactory() {
@@ -66,10 +72,11 @@ public class SpecialMethodSensorAssignmentFactory {
 			assignments.addAll(mbeanServerFactoryAssignments);
 		}
 
-
 		if ((environment.getEumConfig() != null) && environment.getEumConfig().isEumEnabled()) {
 			assignments.addAll(endUserMonitoringAssignments);
 		}
+
+		assignments.addAll(executorInterceptorAssignments);
 
 		return assignments;
 	}
@@ -123,6 +130,7 @@ public class SpecialMethodSensorAssignmentFactory {
 
 		mbeanServerFactoryAssignments = Arrays.asList(msbAdd, msbRemove);
 
+		// EUM
 		SpecialMethodSensorAssignment eumFilterInstr = new SpecialMethodSensorAssignment(EUMInstrumentationSensorConfig.INSTANCE);
 		eumFilterInstr.setClassName("javax.servlet.Filter");
 		eumFilterInstr.setInterf(true);
@@ -136,6 +144,15 @@ public class SpecialMethodSensorAssignmentFactory {
 		eumServletInstr.setParameters(Arrays.asList("javax.servlet.ServletRequest", "javax.servlet.ServletResponse"));
 
 		endUserMonitoringAssignments = Arrays.asList(eumFilterInstr, eumServletInstr);
+
+		// executor clients
+		SpecialMethodSensorAssignment execSubmitRunnableInstr = new SpecialMethodSensorAssignment(ExecutorIntercepterSensorConfig.INSTANCE);
+		execSubmitRunnableInstr.setClassName("java.util.concurrent.Executor");
+		execSubmitRunnableInstr.setInterf(true);
+		execSubmitRunnableInstr.setMethodName("execute");
+		execSubmitRunnableInstr.setParameters(Arrays.asList("java.lang.Runnable"));
+
+		executorInterceptorAssignments = Arrays.asList(execSubmitRunnableInstr);
 	}
 
 }

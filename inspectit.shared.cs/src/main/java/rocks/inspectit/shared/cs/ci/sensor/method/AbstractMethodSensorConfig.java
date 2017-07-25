@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.ExecutorClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
@@ -20,7 +21,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
  *
  */
 @XmlSeeAlso({ ConnectionSensorConfig.class, HttpSensorConfig.class, InvocationSequenceSensorConfig.class, PreparedStatementParameterSensorConfig.class, PreparedStatementSensorConfig.class,
-		StatementSensorConfig.class, TimerSensorConfig.class })
+	StatementSensorConfig.class, TimerSensorConfig.class, ExecutorClientSensorConfig.class })
 public abstract class AbstractMethodSensorConfig implements IMethodSensorConfig {
 
 	/**

@@ -22,6 +22,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.TextStyle;
 
+import ch.qos.logback.classic.pattern.Abbreviator;
+import ch.qos.logback.classic.pattern.TargetLengthBasedClassNameAbbreviator;
 import io.opentracing.References;
 import io.opentracing.tag.Tags;
 import rocks.inspectit.shared.all.cmr.model.JmxDefinitionDataIdent;
@@ -35,8 +37,8 @@ import rocks.inspectit.shared.all.communication.data.InvocationAwareData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
-import rocks.inspectit.shared.all.communication.data.eum.EUMSpan;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.InstrumentationStatus;
+import rocks.inspectit.shared.all.communication.data.eum.EUMSpan;
 import rocks.inspectit.shared.all.tracing.constants.ExtraTags;
 import rocks.inspectit.shared.all.tracing.data.PropagationType;
 import rocks.inspectit.shared.all.tracing.data.Span;
@@ -79,6 +81,11 @@ import rocks.inspectit.ui.rcp.validation.ValidationState;
  */
 @SuppressWarnings("PMD.ExcessiveClassLength")
 public final class TextFormatter {
+
+	/**
+	 * Fqn abbreviator with target length of 15 chars.
+	 */
+	public static final Abbreviator FQN_ABBREVIATOR = new TargetLengthBasedClassNameAbbreviator(20);
 
 	/**
 	 * Error {@link Styler}.
@@ -924,10 +931,17 @@ public final class TextFormatter {
 			return styledString;
 		}
 
+		// then by runnable type
+		String runnableType = tags.get(ExtraTags.RUNNABLE_TYPE);
+		if (StringUtils.isNotEmpty(runnableType)) {
+			styledString.append(getFqnAbbreviated(runnableType));
+			return styledString;
+		}
+
 		// then by method id
 		MethodIdent methodIdent = cachedDataService.getMethodIdentForId(methodId);
 		if (null != methodIdent) {
-			styledString.append(getMethodWithParameters(methodIdent));
+			styledString.append(getMethodWithParameters(methodIdent) + " - " + methodIdent.getFQN());
 		}
 
 		return styledString;
@@ -1008,10 +1022,17 @@ public final class TextFormatter {
 			return styledString;
 		}
 
+		// then by runnable type
+		String runnableType = tags.get(ExtraTags.RUNNABLE_TYPE);
+		if (StringUtils.isNotEmpty(runnableType)) {
+			styledString.append(getFqnAbbreviated(runnableType));
+			return styledString;
+		}
+
 		// then by method id
 		MethodIdent methodIdent = cachedDataService.getMethodIdentForId(methodId);
 		if (null != methodIdent) {
-			styledString.append(getMethodWithParameters(methodIdent));
+			styledString.append(getFqnAbbreviated(methodIdent.getFQN() + '.' + methodIdent.getMethodName()) + "()");
 		}
 
 		return styledString;
@@ -1080,4 +1101,15 @@ public final class TextFormatter {
 		}
 	}
 
+	/**
+	 * Abbreviates fully qualified class name to 20 characters.
+	 *
+	 * @param fqn
+	 *            Full qualified class name.
+	 * @return Abbreviated class name with maximum 20 characters.
+	 * @see #FQN_ABBREVIATOR
+	 */
+	public static String getFqnAbbreviated(String fqn) {
+		return FQN_ABBREVIATOR.abbreviate(fqn);
+	}
 }

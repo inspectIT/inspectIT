@@ -28,6 +28,11 @@ public enum SpecialInstrumentationType {
 	/**
 	 * Functional instrumentation for allowing the agent to interact with the client.
 	 */
-	EUM_SERVLET_OR_FILTER_INSPECTION;
+	EUM_SERVLET_OR_FILTER_INSPECTION,
 
+	/**
+	 * Special instrumentation for substituting {@link java.lang.Runnable} in the
+	 * {@link java.util.concurrent.Executor#execute(Runnable)} calls.
+	 */
+	EXECUTOR_INTERCEPTOR;
 }

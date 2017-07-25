@@ -47,4 +47,8 @@ public interface ExtraTags {
 	 */
 	String INSPECTT_SENSOR_ID = "ext.inspectit.sensor";
 
+	/**
+	 * The class name of the traced runnable.
+	 */
+	String RUNNABLE_TYPE = "ext.runnable.type";
 }
