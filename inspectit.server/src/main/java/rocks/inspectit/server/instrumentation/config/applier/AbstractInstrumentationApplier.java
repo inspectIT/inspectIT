@@ -5,6 +5,7 @@ import rocks.inspectit.shared.all.instrumentation.classcache.MethodType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.instrumentation.config.applier.IInstrumentationApplier;
 
 /**
  * Base class for all instrumentation appliers.

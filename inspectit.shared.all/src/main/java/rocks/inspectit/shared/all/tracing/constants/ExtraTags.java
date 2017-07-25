@@ -47,4 +47,8 @@ public interface ExtraTags {
 	 */
 	String INSPECTT_SENSOR_ID = "ext.inspectit.sensor";
 
+	/**
+	 * The class name of the class where the span has been started.
+	 */
+	String CLASS_NAME = "ext.classname";
 }

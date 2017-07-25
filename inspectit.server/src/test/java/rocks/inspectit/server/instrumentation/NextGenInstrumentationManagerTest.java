@@ -42,7 +42,6 @@ import rocks.inspectit.server.instrumentation.classcache.ClassCacheModification;
 import rocks.inspectit.server.instrumentation.classcache.ClassCacheModificationException;
 import rocks.inspectit.server.instrumentation.config.ConfigurationHolder;
 import rocks.inspectit.server.instrumentation.config.ConfigurationResolver;
-import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.JmxMonitoringApplier;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
@@ -53,6 +52,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDef
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.instrumentation.config.applier.IInstrumentationApplier;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
 
 /**

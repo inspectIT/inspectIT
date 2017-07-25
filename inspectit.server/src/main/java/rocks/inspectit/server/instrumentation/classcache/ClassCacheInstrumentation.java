@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.server.instrumentation.config.ClassCacheSearchNarrower;
-import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.RemoveAllInstrumentationApplier;
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.classcache.ImmutableClassType;
@@ -25,6 +24,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 import rocks.inspectit.shared.all.spring.logger.Log;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.shared.cs.ci.instrumentation.config.applier.IInstrumentationApplier;
 
 /**
  * Instrumentation service for the {@link ClassCache}. This class is responsible for adding, getting

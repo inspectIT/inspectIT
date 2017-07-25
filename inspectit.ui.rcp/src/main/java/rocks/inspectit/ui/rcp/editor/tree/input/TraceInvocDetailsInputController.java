@@ -140,6 +140,14 @@ public class TraceInvocDetailsInputController extends SteppingInvocDetailInputCo
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
+		protected boolean resolveSpans() {
+			return true;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
 		@SuppressWarnings("unchecked")
 		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -197,11 +205,13 @@ public class TraceInvocDetailsInputController extends SteppingInvocDetailInputCo
 							// else add all children
 							for (TraceTreeData child : traceData.getChildren()) {
 								objects.add(child.getSpan());
+								setServerSpans.add(child.getSpan());
 							}
 						}
 					} else {
 						for (TraceTreeData child : traceData.getChildren()) {
 							objects.add(child.getSpan());
+							setServerSpans.add(child.getSpan());
 						}
 					}
 					return objects.toArray();

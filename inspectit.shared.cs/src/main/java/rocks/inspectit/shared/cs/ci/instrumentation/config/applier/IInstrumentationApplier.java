@@ -1,4 +1,4 @@
-package rocks.inspectit.server.instrumentation.config.applier;
+package rocks.inspectit.shared.cs.ci.instrumentation.config.applier;
 
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;

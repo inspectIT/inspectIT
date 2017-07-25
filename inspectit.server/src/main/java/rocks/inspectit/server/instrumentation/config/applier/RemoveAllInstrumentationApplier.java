@@ -4,6 +4,7 @@ import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.classcache.MethodType;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.shared.cs.ci.instrumentation.config.applier.IInstrumentationApplier;
 
 /**
  * Special {@link IInstrumentationApplier} that can remove instrumentation points from any class

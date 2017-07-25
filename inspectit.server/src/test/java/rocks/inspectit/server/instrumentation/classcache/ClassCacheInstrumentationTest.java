@@ -35,7 +35,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.server.instrumentation.config.ClassCacheSearchNarrower;
-import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
 import rocks.inspectit.shared.all.instrumentation.classcache.AnnotationType;
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.classcache.ImmutableClassType;
@@ -47,6 +46,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDef
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
 import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
+import rocks.inspectit.shared.cs.ci.instrumentation.config.applier.IInstrumentationApplier;
 
 @SuppressWarnings({ "all", "unchecked" })
 public class ClassCacheInstrumentationTest extends TestBase {

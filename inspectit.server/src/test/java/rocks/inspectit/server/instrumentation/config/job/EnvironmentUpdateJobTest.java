@@ -34,7 +34,6 @@ import rocks.inspectit.server.instrumentation.config.AgentCacheEntry;
 import rocks.inspectit.server.instrumentation.config.ClassCacheSearchNarrower;
 import rocks.inspectit.server.instrumentation.config.ConfigurationHolder;
 import rocks.inspectit.server.instrumentation.config.ConfigurationResolver;
-import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
 import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.classcache.ImmutableClassType;
@@ -44,6 +43,7 @@ import rocks.inspectit.shared.all.testbase.TestBase;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.factory.SpecialMethodSensorAssignmentFactory;
+import rocks.inspectit.shared.cs.ci.instrumentation.config.applier.IInstrumentationApplier;
 
 @SuppressWarnings({ "all", "unchecked" })
 public class EnvironmentUpdateJobTest extends TestBase {

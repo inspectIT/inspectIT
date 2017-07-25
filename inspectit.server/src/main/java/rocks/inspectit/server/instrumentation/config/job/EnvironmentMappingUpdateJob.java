@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import rocks.inspectit.server.instrumentation.config.ConfigurationHolder;
-import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
 import rocks.inspectit.shared.all.instrumentation.classcache.ImmutableClassType;
 import rocks.inspectit.shared.all.instrumentation.classcache.ImmutableType;
 import rocks.inspectit.shared.cs.ci.Environment;
+import rocks.inspectit.shared.cs.ci.instrumentation.config.applier.IInstrumentationApplier;
 
 /**
  * Job that is executed when a different environment is mapped to the agent as a result of the
