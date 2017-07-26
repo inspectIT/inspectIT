@@ -145,9 +145,12 @@ public class AgentStatusDataProviderTest extends TestBase {
 			long platformIdent = 10L;
 
 			agentStatusDataProvider.handleKeepAliveSignal(platformIdent);
+			long currentTimeMillis = System.currentTimeMillis();
 
 			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
-			assertThat(agentStatusData, is(nullValue()));
+			assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.CONNECTED));
+			assertThat(agentStatusData.getLastKeepAliveTimestamp(), is(greaterThanOrEqualTo(currentTimeMillis)));
+			assertThat(agentStatusData.getInstrumentationStatus(), is(InstrumentationStatus.NO_CLASS_CACHE_AVAILABLE));
 		}
 
 		@Test
