@@ -4,8 +4,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -47,7 +50,10 @@ import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.sensor.jmx.JmxSensor.MBeanServerHolder;
+import rocks.inspectit.agent.java.stats.AgentStatisticsLogger;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.testbase.TestBase;
@@ -87,6 +93,9 @@ public class JmxSensorTest extends TestBase {
 
 	@Mock
 	Logger logger;
+
+	@Mock
+	AgentStatisticsLogger agentStatisticsLogger;
 
 	public static class Init extends JmxSensorTest {
 
@@ -198,6 +207,17 @@ public class JmxSensorTest extends TestBase {
 			verify(mBeanServer).getMBeanInfo(objectName);
 			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), Matchers.<NotificationListener> any(), Matchers.<NotificationFilter> any(), eq(null));
 			verifyNoMoreInteractions(mBeanServer);
+		}
+		
+		@Test
+		public void noClassCacheWarningShouldBeLoggedOnce() throws Exception {
+			when(connection.isConnected()).thenReturn(true);
+			BusinessException businessException = new BusinessException(AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+			doThrow(businessException).when(connection).analyzeJmxAttributes(anyLong(), Matchers.anyList());
+
+			jmxSensor.mbeanServerAdded(mBeanServer);
+
+			verify(agentStatisticsLogger, times(1)).noClassCacheAvailable();
 		}
 	}
 

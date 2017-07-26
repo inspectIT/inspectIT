@@ -150,8 +150,10 @@ public interface IConnection {
 	 *         IDs.
 	 * @throws ServerUnavailableException
 	 *             If server to send the request to is unavailable.
+	 * @throws BusinessException
+	 *             If no class cache is available.
 	 */
-	Collection<JmxAttributeDescriptor> analyzeJmxAttributes(long platformIdent, Collection<JmxAttributeDescriptor> attributeDescriptors) throws ServerUnavailableException;
+	Collection<JmxAttributeDescriptor> analyzeJmxAttributes(long platformIdent, Collection<JmxAttributeDescriptor> attributeDescriptors) throws ServerUnavailableException, BusinessException;
 
 	/**
 	 * Fetches all {@link IAgentMessage} which are available at the CMR. The returned list is

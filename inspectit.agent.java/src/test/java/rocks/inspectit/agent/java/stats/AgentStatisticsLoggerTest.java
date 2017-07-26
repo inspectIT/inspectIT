@@ -3,6 +3,7 @@ package rocks.inspectit.agent.java.stats;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import org.mockito.InjectMocks;
@@ -94,4 +95,28 @@ public class AgentStatisticsLoggerTest extends TestBase {
 		}
 	}
 
+	public static class NoClassCacheAvailable extends AgentStatisticsLoggerTest {
+
+		@Test
+		public void onFirst() {
+			statsLogger.noClassCacheAvailable();
+			verify(log, times(1)).isWarnEnabled();
+			verify(log, times(1)).warn(anyString());
+			verifyNoMoreInteractions(log);
+		}
+
+		@Test
+		public void onSecondUntilInfinity() {
+			// log should be executed onces
+			statsLogger.noClassCacheAvailable();
+			verify(log, times(1)).isWarnEnabled();
+			verify(log, times(1)).warn(anyString());
+
+			// log shouldn't be executed twice
+			statsLogger.noClassCacheAvailable();
+			verify(log, times(2)).isWarnEnabled();
+			verify(log, times(1)).warn(anyString());
+			verifyNoMoreInteractions(log);
+		}
+	}
 }

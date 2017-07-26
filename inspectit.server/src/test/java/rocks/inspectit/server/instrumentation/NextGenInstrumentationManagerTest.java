@@ -388,6 +388,10 @@ public class NextGenInstrumentationManagerTest extends TestBase {
 			verifyZeroInteractions(modificationService);
 		}
 
+		@Test(expectedExceptions = { BusinessException.class })
+		public void businessTransactionShouldBeThrownIfNoClassCacheIsAvailable() throws BusinessException {
+			manager.analyze(ID, HASH, type);
+		}
 	}
 
 	public class AnalyzeJmxAttributes extends NextGenInstrumentationManagerTest {
@@ -523,6 +527,10 @@ public class NextGenInstrumentationManagerTest extends TestBase {
 			verify(applier).addMonitoringPoint(configuration, descriptor);
 		}
 
+		@Test(expectedExceptions = { BusinessException.class })
+		public void businessTransactionShouldBeThrownIfNoClassCacheIsAvailable() throws BusinessException {
+			manager.analyzeJmxAttributes(ID, Collections.singleton(descriptor));
+		}
 	}
 
 }
