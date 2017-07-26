@@ -36,6 +36,7 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData;
 import rocks.inspectit.shared.all.communication.data.eum.EUMSpan;
+import rocks.inspectit.shared.all.communication.data.cmr.AgentStatusData.InstrumentationStatus;
 import rocks.inspectit.shared.all.tracing.constants.ExtraTags;
 import rocks.inspectit.shared.all.tracing.data.PropagationType;
 import rocks.inspectit.shared.all.tracing.data.Span;
@@ -389,6 +390,8 @@ public final class TextFormatter {
 					// at last one minute of not sending data to display as the non active
 					if (millis > 60000) {
 						styledString.append("Connected :: Last data sent " + NumberFormatter.humanReadableMillisCount(millis, true) + " ago", StyledString.DECORATIONS_STYLER);
+					} else if (agentStatusData.getInstrumentationStatus() == InstrumentationStatus.NO_CLASS_CACHE_AVAILABLE) {
+						styledString.append("Connected :: Sending data :: No class cache available", StyledString.DECORATIONS_STYLER);
 					} else {
 						styledString.append("Connected :: Sending data", StyledString.DECORATIONS_STYLER);
 					}
