@@ -454,7 +454,13 @@ public class KryoNetConnection implements IConnection {
 		FailFastRemoteMethodCall<IAgentService, Collection<JmxAttributeDescriptor>> call = new FailFastRemoteMethodCall<IAgentService, Collection<JmxAttributeDescriptor>>(agentService) {
 			@Override
 			protected Collection<JmxAttributeDescriptor> performRemoteCall(IAgentService service) throws Exception {
-				return agentService.analyzeJmxAttributes(platformIdent, descriptors);
+				try {
+					Collection<JmxAttributeDescriptor> jmxAttributesDescriptors = agentService.analyzeJmxAttributes(platformIdent, descriptors);
+					return jmxAttributesDescriptors;
+				} catch (BusinessException e) {
+					log.warn("No class cache available. Please reconnect the agent, to reload the class cache. This exception will be thrown only ones per agent.", e);
+				}
+				return Collections.emptyList();
 			}
 		};
 

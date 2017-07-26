@@ -31,6 +31,7 @@ import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -196,6 +197,30 @@ public class NextGenInstrumentationManagerTest extends TestBase {
 			verify(classCache).getInstrumentationService();
 			verify(instrumentationService).getInstrumentationResultsWithHashes();
 			verifyNoMoreInteractions(configurationResolver, registrationService, configurationHolder, instrumentationService, classCache);
+		}
+
+		@Test
+		public void platformIdentWithNoClassCacheShouldBeRemovedWhileRegisteringTheAgent() throws BusinessException {
+			long id = 10;
+			List<String> definedIPs = mock(List.class);
+			String agentName = "agentName";
+			String version = "v1";
+			final AgentConfig configuration = mock(AgentConfig.class);
+			Environment environment = mock(Environment.class);
+
+			manager.getPlatformIdentsWithNoClassCache().add(id);
+
+			when(configurationResolver.getEnvironmentForAgent(definedIPs, agentName)).thenReturn(environment);
+			when(registrationService.registerPlatformIdent(definedIPs, agentName, version)).thenReturn(id);
+			when(configurationHolder.isInitialized()).thenReturn(true);
+			when(configurationHolder.getEnvironment()).thenReturn(environment);
+			when(configurationHolder.getAgentConfiguration()).thenReturn(configuration);
+			Map<Collection<String>, InstrumentationDefinition> initialInstrumentations = mock(Map.class);
+			when(instrumentationService.getInstrumentationResultsWithHashes()).thenReturn(initialInstrumentations);
+
+			manager.register(definedIPs, agentName, version);
+
+			assertThat(manager.getPlatformIdentsWithNoClassCache().isEmpty(), is(true));
 		}
 
 		@Test
@@ -388,6 +413,26 @@ public class NextGenInstrumentationManagerTest extends TestBase {
 			verifyZeroInteractions(modificationService);
 		}
 
+		@Test(expectedExceptions = { BusinessException.class })
+		public void businessTransactionShouldBeThrownOnceIfNoClassCacheIsAvailable() throws BusinessException {
+			manager.analyze(ID, HASH, type);
+		}
+
+		@Test
+		public void businessTransactionShouldBeNotThrownTwiceIfNoClassCacheIsAvailable() throws BusinessException {
+			try {
+				manager.analyze(ID, HASH, type);
+			} catch (BusinessException e) {
+
+			}
+
+			try {
+				manager.analyze(ID, HASH, type);
+			} catch (BusinessException e) {
+				Assert.fail("BusinessException was thrown twice!!");
+			}
+		}
+
 	}
 
 	public class AnalyzeJmxAttributes extends NextGenInstrumentationManagerTest {
@@ -521,6 +566,26 @@ public class NextGenInstrumentationManagerTest extends TestBase {
 			assertThat(toMonitor, hasItem(descriptor));
 
 			verify(applier).addMonitoringPoint(configuration, descriptor);
+		}
+
+		@Test(expectedExceptions = { BusinessException.class })
+		public void businessTransactionShouldBeThrownOnceIfNoClassCacheIsAvailable() throws BusinessException {
+			manager.analyzeJmxAttributes(ID, Collections.singleton(descriptor));
+		}
+
+		@Test
+		public void businessTransactionShouldBeNotThrownTwiceIfNoClassCacheIsAvailable() {
+			try {
+				manager.analyzeJmxAttributes(ID, Collections.singleton(descriptor));
+			} catch (BusinessException e) {
+
+			}
+
+			try {
+				manager.analyzeJmxAttributes(ID, Collections.singleton(descriptor));
+			} catch (BusinessException e) {
+				Assert.fail("BusinessException was thrown twice!!");
+			}
 		}
 
 	}

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
@@ -93,6 +94,12 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 	private ApplicationEventPublisher eventPublisher;
 
 	/**
+	 * platformIdents with thrown {@link BusinessException}. If no class cache is available, the
+	 * platformIdent of a connected agent is added to the list.
+	 */
+	private Set<Long> platformIdentsWithNoClassCache = Collections.newSetFromMap(new ConcurrentHashMap<Long, Boolean>());
+
+	/**
 	 * Cache for the agents and it's used class cache, environments and configurations.
 	 */
 	private final ConcurrentHashMap<Long, AgentCacheEntry> agentCacheMap = new ConcurrentHashMap<>();
@@ -114,6 +121,9 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 
 		// check if this agent was already registered and we have environment
 		Environment cachedEnvironment = configurationHolder.getEnvironment();
+
+		// remove platformIdent from platformIdentsWithNoClassCache
+		platformIdentsWithNoClassCache.remove(id);
 
 		// if we have same environment and configuration return configuration
 		if (configurationHolder.isInitialized() && Objects.equals(environment, cachedEnvironment)) {
@@ -153,7 +163,13 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 	public InstrumentationDefinition analyze(long platformIdent, String hash, Type sentType) throws BusinessException {
 		AgentCacheEntry agentCacheEntry = agentCacheMap.get(Long.valueOf(platformIdent));
 		if (null == agentCacheEntry) {
-			throw new BusinessException("Instrumenting class with hash '" + hash + "' for the agent with id=" + platformIdent, AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+			if (platformIdentsWithNoClassCache.add(platformIdent)) {
+				throw new BusinessException(
+						"Instrumenting class with hash '" + hash + "' for the agent with id=" + platformIdent
+								+ ". No class cache is available. This exception will only be thrown onces per agent.  Please restart your agent to update the class cache of the CMR",
+						AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+			}
+			return null;
 		}
 
 		ClassCache classCache = agentCacheEntry.getClassCache();
@@ -230,7 +246,13 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 	public Collection<JmxAttributeDescriptor> analyzeJmxAttributes(long platformIdent, Collection<JmxAttributeDescriptor> attributeDescriptors) throws BusinessException {
 		AgentCacheEntry agentCacheEntry = agentCacheMap.get(Long.valueOf(platformIdent));
 		if (null == agentCacheEntry) {
-			throw new BusinessException("Analyzing the JMX attributes for the agent with id=" + platformIdent, AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+			if (platformIdentsWithNoClassCache.add(platformIdent)) {
+				throw new BusinessException(
+						"Analyzing the JMX attributes for the agent with id=" + platformIdent
+								+ ". No class cache is available. This exception will only be thrown onces per agent.  Please restart your agent to update the class cache of the CMR",
+						AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+			}
+			return Collections.emptyList();
 		}
 
 		// if nothing sent do nothing
@@ -302,4 +324,12 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 		return Collections.unmodifiableMap(agentCacheMap);
 	}
 
+	/**
+	 * Gets {@link #platformIdentsWithNoClassCache}.
+	 *
+	 * @return {@link #platformIdentsWithNoClassCache}
+	 */
+	public Set<Long> getPlatformIdentsWithNoClassCache() {
+		return platformIdentsWithNoClassCache;
+	}
 }

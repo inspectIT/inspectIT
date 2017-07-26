@@ -43,6 +43,7 @@ import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.communication.message.IAgentMessage;
 import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
@@ -612,147 +613,160 @@ public class KryoNetConnectionTest extends TestBase {
 				verifyZeroInteractions(agentService);
 			}
 		}
-	}
-
-	public static class InstrumentationApplied extends KryoNetConnectionTest {
 
 		@Test
-		public void instrumentationApplied() throws Exception {
+		public void noClassCacheIsAvailable() throws Exception {
 			when(client.isConnected()).thenReturn(true);
-			Map<Long, long[]> methodToSensorMap = mock(Map.class);
-			when(methodToSensorMap.isEmpty()).thenReturn(false);
+			BusinessException exception = new BusinessException(AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+			doThrow(exception).when(agentService).analyzeJmxAttributes(anyLong(), Matchers.<Collection<JmxAttributeDescriptor>> any());
 			long id = 7;
+			Collection<JmxAttributeDescriptor> descriptors = Collections.emptyList();
 
-			connection.instrumentationApplied(id, methodToSensorMap);
+			connection.analyzeJmxAttributes(id, descriptors);
+			verify(log).warn("No class cache available. Please reconnect the agent, to reload the class cache. This exception will be thrown only ones per agent.", exception);
 
-			verify(agentService, times(1)).instrumentationApplied(id, methodToSensorMap);
-			verifyNoMoreInteractions(agentService);
 		}
 
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void timeout() throws Exception {
-			when(client.isConnected()).thenReturn(true);
-			doThrow(TimeoutException.class).when(agentService).instrumentationApplied(anyLong(), Matchers.<Map<Long, long[]>> any());
-			Map<Long, long[]> methodToSensorMap = mock(Map.class);
-			when(methodToSensorMap.isEmpty()).thenReturn(false);
-			long id = 7;
+		public static class InstrumentationApplied extends KryoNetConnectionTest {
 
-			try {
+			@Test
+			public void instrumentationApplied() throws Exception {
+				when(client.isConnected()).thenReturn(true);
+				Map<Long, long[]> methodToSensorMap = mock(Map.class);
+				when(methodToSensorMap.isEmpty()).thenReturn(false);
+				long id = 7;
+
 				connection.instrumentationApplied(id, methodToSensorMap);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(true));
-				throw e;
-			} finally {
+
 				verify(agentService, times(1)).instrumentationApplied(id, methodToSensorMap);
 				verifyNoMoreInteractions(agentService);
 			}
-		}
 
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void remoteException() throws Exception {
-			when(client.isConnected()).thenReturn(true);
-			doThrow(RuntimeException.class).when(agentService).instrumentationApplied(anyLong(), Matchers.<Map<Long, long[]>> any());
-			Map<Long, long[]> methodToSensorMap = mock(Map.class);
-			when(methodToSensorMap.isEmpty()).thenReturn(false);
-			long id = 7;
+			@Test(expectedExceptions = { ServerUnavailableException.class })
+			public void timeout() throws Exception {
+				when(client.isConnected()).thenReturn(true);
+				doThrow(TimeoutException.class).when(agentService).instrumentationApplied(anyLong(), Matchers.<Map<Long, long[]>> any());
+				Map<Long, long[]> methodToSensorMap = mock(Map.class);
+				when(methodToSensorMap.isEmpty()).thenReturn(false);
+				long id = 7;
 
-			try {
-				connection.instrumentationApplied(id, methodToSensorMap);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(false));
-				throw e;
-			} finally {
-				// call depends on the retry strategy
-				verify(agentService, times(RetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).instrumentationApplied(id, methodToSensorMap);
-				verifyNoMoreInteractions(agentService);
+				try {
+					connection.instrumentationApplied(id, methodToSensorMap);
+				} catch (ServerUnavailableException e) {
+					assertThat(e.isServerTimeout(), is(true));
+					throw e;
+				} finally {
+					verify(agentService, times(1)).instrumentationApplied(id, methodToSensorMap);
+					verifyNoMoreInteractions(agentService);
+				}
+			}
+
+			@Test(expectedExceptions = { ServerUnavailableException.class })
+			public void remoteException() throws Exception {
+				when(client.isConnected()).thenReturn(true);
+				doThrow(RuntimeException.class).when(agentService).instrumentationApplied(anyLong(), Matchers.<Map<Long, long[]>> any());
+				Map<Long, long[]> methodToSensorMap = mock(Map.class);
+				when(methodToSensorMap.isEmpty()).thenReturn(false);
+				long id = 7;
+
+				try {
+					connection.instrumentationApplied(id, methodToSensorMap);
+				} catch (ServerUnavailableException e) {
+					assertThat(e.isServerTimeout(), is(false));
+					throw e;
+				} finally {
+					// call depends on the retry strategy
+					verify(agentService, times(RetryStrategy.DEFAULT_NUMBER_OF_RETRIES)).instrumentationApplied(id, methodToSensorMap);
+					verifyNoMoreInteractions(agentService);
+				}
+			}
+
+			@Test(expectedExceptions = { ServerUnavailableException.class })
+			public void notConnected() throws Exception {
+				when(client.isConnected()).thenReturn(false);
+				Map<Long, long[]> methodToSensorMap = mock(Map.class);
+				long id = 7;
+
+				try {
+					connection.instrumentationApplied(id, methodToSensorMap);
+				} catch (ServerUnavailableException e) {
+					assertThat(e.isServerTimeout(), is(false));
+					throw e;
+				} finally {
+					verifyZeroInteractions(agentService);
+				}
 			}
 		}
 
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void notConnected() throws Exception {
-			when(client.isConnected()).thenReturn(false);
-			Map<Long, long[]> methodToSensorMap = mock(Map.class);
-			long id = 7;
+		/**
+		 * Tests the {@link KryoNetConnection#fetchAgentMessages(long)} method.
+		 */
+		public static class FetchAgentMessages extends KryoNetConnectionTest {
 
-			try {
-				connection.instrumentationApplied(id, methodToSensorMap);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(false));
-				throw e;
-			} finally {
-				verifyZeroInteractions(agentService);
-			}
-		}
-	}
+			@Test
+			public void fetchAgentMessages() throws Exception {
+				IAgentMessage<?> message = mock(IAgentMessage.class);
+				List<IAgentMessage<?>> messages = Arrays.<IAgentMessage<?>> asList(message);
+				when(client.isConnected()).thenReturn(true);
+				long id = 7;
+				when(agentService.fetchAgentMessages(id)).thenReturn(messages);
 
-	/**
-	 * Tests the {@link KryoNetConnection#fetchAgentMessages(long)} method.
-	 */
-	public static class FetchAgentMessages extends KryoNetConnectionTest {
+				List<IAgentMessage<?>> result = connection.fetchAgentMessages(id);
 
-		@Test
-		public void fetchAgentMessages() throws Exception {
-			IAgentMessage<?> message = mock(IAgentMessage.class);
-			List<IAgentMessage<?>> messages = Arrays.<IAgentMessage<?>> asList(message);
-			when(client.isConnected()).thenReturn(true);
-			long id = 7;
-			when(agentService.fetchAgentMessages(id)).thenReturn(messages);
-
-			List<IAgentMessage<?>> result = connection.fetchAgentMessages(id);
-
-			assertThat(result, is(equalTo(messages)));
-			verify(agentService).fetchAgentMessages(id);
-			verifyNoMoreInteractions(agentService);
-		}
-
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void timeout() throws Exception {
-			when(client.isConnected()).thenReturn(true);
-			long id = 7;
-			when(agentService.fetchAgentMessages(id)).thenThrow(TimeoutException.class);
-
-			try {
-				connection.fetchAgentMessages(id);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(true));
-				throw e;
-			} finally {
+				assertThat(result, is(equalTo(messages)));
 				verify(agentService).fetchAgentMessages(id);
 				verifyNoMoreInteractions(agentService);
 			}
-		}
 
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void remoteException() throws Exception {
-			when(client.isConnected()).thenReturn(true);
-			long id = 7;
-			when(agentService.fetchAgentMessages(id)).thenThrow(RuntimeException.class);
+			@Test(expectedExceptions = { ServerUnavailableException.class })
+			public void timeout() throws Exception {
+				when(client.isConnected()).thenReturn(true);
+				long id = 7;
+				when(agentService.fetchAgentMessages(id)).thenThrow(TimeoutException.class);
 
-			try {
-				connection.fetchAgentMessages(id);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(false));
-				throw e;
-			} finally {
-				// fail fast call, only one attempt
-				verify(agentService).fetchAgentMessages(id);
-				verifyNoMoreInteractions(agentService);
-				verify(client).close();
+				try {
+					connection.fetchAgentMessages(id);
+				} catch (ServerUnavailableException e) {
+					assertThat(e.isServerTimeout(), is(true));
+					throw e;
+				} finally {
+					verify(agentService).fetchAgentMessages(id);
+					verifyNoMoreInteractions(agentService);
+				}
 			}
-		}
 
-		@Test(expectedExceptions = { ServerUnavailableException.class })
-		public void notConnected() throws Exception {
-			when(client.isConnected()).thenReturn(false);
-			long id = 7;
+			@Test(expectedExceptions = { ServerUnavailableException.class })
+			public void remoteException() throws Exception {
+				when(client.isConnected()).thenReturn(true);
+				long id = 7;
+				when(agentService.fetchAgentMessages(id)).thenThrow(RuntimeException.class);
 
-			try {
-				connection.fetchAgentMessages(id);
-			} catch (ServerUnavailableException e) {
-				assertThat(e.isServerTimeout(), is(false));
-				throw e;
-			} finally {
-				verifyZeroInteractions(agentService);
+				try {
+					connection.fetchAgentMessages(id);
+				} catch (ServerUnavailableException e) {
+					assertThat(e.isServerTimeout(), is(false));
+					throw e;
+				} finally {
+					// fail fast call, only one attempt
+					verify(agentService).fetchAgentMessages(id);
+					verifyNoMoreInteractions(agentService);
+					verify(client).close();
+				}
+			}
+
+			@Test(expectedExceptions = { ServerUnavailableException.class })
+			public void notConnected() throws Exception {
+				when(client.isConnected()).thenReturn(false);
+				long id = 7;
+
+				try {
+					connection.fetchAgentMessages(id);
+				} catch (ServerUnavailableException e) {
+					assertThat(e.isServerTimeout(), is(false));
+					throw e;
+				} finally {
+					verifyZeroInteractions(agentService);
+				}
 			}
 		}
 	}

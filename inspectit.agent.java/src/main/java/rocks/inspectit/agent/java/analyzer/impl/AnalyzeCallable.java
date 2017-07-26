@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
+import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 
@@ -88,7 +89,10 @@ public class AnalyzeCallable implements Callable<InstrumentationDefinition> {
 				LOG.warn("Type could not be sent to the CMR due to the ServerUnavailableException." + (e.isServerTimeout() ? " (timeout)" : "(error)"));
 			}
 			throw e;
+		} catch (BusinessException e) {
+			LOG.warn("No class cache available. Please reconnect the agent, to reload the class cache. This exception will be thrown only ones per agent.", e);
 		}
+		return null;
 	}
 
 }
