@@ -1,8 +1,5 @@
 package rocks.inspectit.agent.java.analyzer.impl;
 
-import info.novatec.inspectit.org.objectweb.asm.ClassReader;
-import info.novatec.inspectit.org.objectweb.asm.ClassWriter;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -28,6 +25,8 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.io.ByteStreams;
 
+import info.novatec.inspectit.org.objectweb.asm.ClassReader;
+import info.novatec.inspectit.org.objectweb.asm.ClassWriter;
 import rocks.inspectit.agent.java.analyzer.IByteCodeAnalyzer;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
 import rocks.inspectit.agent.java.config.StorageException;
@@ -42,6 +41,9 @@ import rocks.inspectit.agent.java.instrumentation.asm.ClassAnalyzer;
 import rocks.inspectit.agent.java.instrumentation.asm.ClassInstrumenter;
 import rocks.inspectit.agent.java.instrumentation.asm.LoaderAwareClassWriter;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
+import rocks.inspectit.agent.java.stats.AgentStatisticsLogger;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
 import rocks.inspectit.shared.all.instrumentation.classcache.Type;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodInstrumentationConfig;
@@ -124,6 +126,12 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 	 * Map of {@link IMethodSensor}s to their IDs for faster lookups.
 	 */
 	private Map<Long, IMethodSensor> methodSensorMap;
+
+	/**
+	 * Logs once, if the class cache is not available.
+	 */
+	@Autowired
+	private AgentStatisticsLogger agentStatisticsLogger;
 
 	/**
 	 * {@inheritDoc}
@@ -223,6 +231,13 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 			log.error("Error occurred instrumenting the byte code of class " + className, storageException);
 			return null;
 		} catch (ExecutionException executionException) {
+			if (executionException.getCause() instanceof BusinessException) {
+				BusinessException businessException = (BusinessException) executionException.getCause();
+				if (AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST.equals(businessException.getErrorCode())) {
+					agentStatisticsLogger.noClassCacheAvailable();
+					return null;
+				}
+			}
 			log.error("Error occurred instrumenting the byte code of class " + className, executionException);
 			return null;
 		} finally {

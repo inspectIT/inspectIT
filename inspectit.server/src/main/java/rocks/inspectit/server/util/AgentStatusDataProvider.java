@@ -158,6 +158,10 @@ public class AgentStatusDataProvider implements InitializingBean, ApplicationLis
 					log.info("Platform " + platformIdent + " sending keep-alive signals again.");
 				}
 			}
+		} else {
+			registerConnected(platformIdent);
+			log.info("Platform " + platformIdent + " has been reconnected, but no class cache is available for this agent. Please reconnect the agent, to reload the class cache.");
+			agentStatusDataMap.get(platformIdent).setInstrumentationStatus(InstrumentationStatus.NO_CLASS_CACHE_AVAILABLE);
 		}
 	}
 
