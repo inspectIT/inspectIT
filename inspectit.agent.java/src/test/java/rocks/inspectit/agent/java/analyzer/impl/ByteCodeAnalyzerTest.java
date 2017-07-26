@@ -14,15 +14,12 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-
-import info.novatec.inspectit.org.objectweb.asm.ClassReader;
-import info.novatec.inspectit.org.objectweb.asm.ClassWriter;
-import info.novatec.inspectit.org.objectweb.asm.MethodVisitor;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -30,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -47,6 +45,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import info.novatec.inspectit.org.objectweb.asm.ClassReader;
+import info.novatec.inspectit.org.objectweb.asm.ClassWriter;
+import info.novatec.inspectit.org.objectweb.asm.MethodVisitor;
 import rocks.inspectit.agent.java.analyzer.classes.AbstractSubTest;
 import rocks.inspectit.agent.java.analyzer.classes.TestClass;
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
@@ -57,6 +58,9 @@ import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.hooking.IHookDispatcherMapper;
 import rocks.inspectit.agent.java.instrumentation.InstrumenterFactory;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
+import rocks.inspectit.agent.java.stats.AgentStatisticsLogger;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
 import rocks.inspectit.shared.all.instrumentation.classcache.ClassType;
 import rocks.inspectit.shared.all.instrumentation.config.IMethodInstrumentationPoint;
 import rocks.inspectit.shared.all.instrumentation.config.impl.InstrumentationDefinition;
@@ -123,6 +127,9 @@ public class ByteCodeAnalyzerTest extends TestBase {
 
 	@Mock
 	Future<Object> future;
+
+	@Mock
+	AgentStatisticsLogger agentStatisticsLogger;
 
 	final Long platformId = 10L;
 
@@ -733,6 +740,45 @@ public class ByteCodeAnalyzerTest extends TestBase {
 			assertThat(rscCaptor.getValue().getSettings(), is(sensorInstrumentationPoint.getSettings()));
 			assertThat(rscCaptor.getValue().getPropertyAccessorList(), is(sensorInstrumentationPoint.getPropertyAccessorList()));
 			verifyNoMoreInteractions(hookDispatcherMapper, connection, classHashHelper);
+		}
+
+		@Test
+		public void noClassCacheWarningShouldBeLoggedOnce() throws Exception {
+			String className = TestClass.class.getName();
+			ClassLoader classLoader = TestClass.class.getClassLoader();
+			byte[] byteCode = getByteCode(className);
+
+			// make registered sensor config always instrument toString
+			when(methodInstrumentationConfig.getTargetClassFqn()).thenReturn(className);
+			when(methodInstrumentationConfig.getTargetMethodName()).thenReturn("<init>");
+			when(methodInstrumentationConfig.getReturnType()).thenReturn("void");
+			when(methodInstrumentationConfig.getParameterTypes()).thenReturn(Collections.<String> emptyList());
+			when(methodInstrumentationConfig.getSensorInstrumentationPoint()).thenReturn(sensorInstrumentationPoint);
+			when(methodInstrumentationConfig.getAllInstrumentationPoints()).thenReturn(Collections.<IMethodInstrumentationPoint> singleton(sensorInstrumentationPoint));
+			when(instrumenterFactory.getMethodVisitor(eq(sensorInstrumentationPoint), Matchers.<MethodVisitor> any(), anyInt(), anyString(), anyString(), anyBoolean())).thenReturn(methodVisitor);
+
+			ArgumentCaptor<ClassType> classCaptor = ArgumentCaptor.forClass(ClassType.class);
+			when(classHashHelper.isSent(anyString(), anyString())).thenReturn(false);
+			when(classHashHelper.isAnalyzed(anyString())).thenReturn(true);
+			when(classHashHelper.isAnalyzed(AbstractSubTest.class.getName())).thenReturn(true);
+			when(connection.isConnected()).thenReturn(true);
+			when(connection.analyze(eq(platformId.longValue()), anyString(), classCaptor.capture())).thenReturn(instrumentationResult);
+			when(instrumentationResult.getMethodInstrumentationConfigs()).thenReturn(Collections.singleton(methodInstrumentationConfig));
+			long rscId = 13L;
+			long[] sensorIds = { 17L };
+			when(sensorInstrumentationPoint.getId()).thenReturn(rscId);
+			when(sensorInstrumentationPoint.getSensorIds()).thenReturn(sensorIds);
+			when(sensorInstrumentationPoint.isStartsInvocation()).thenReturn(false);
+			when(sensorInstrumentationPoint.getSettings()).thenReturn(Collections.<String, Object> singletonMap("key", "value"));
+			when(sensorInstrumentationPoint.getPropertyAccessorList()).thenReturn(Collections.<PropertyPathStart> emptyList());
+			when(methodSensorTypeConfig.getId()).thenReturn(sensorIds[0]);
+
+			ExecutionException executionException = new ExecutionException(new BusinessException(AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST));
+			doThrow(executionException).when(future).get(anyLong(), Matchers.<TimeUnit> any());
+			byteCodeAnalyzer.analyzeAndInstrument(byteCode, className, classLoader);
+
+			// analyzeAndInstrument is called once
+			verify(agentStatisticsLogger, times(1)).noClassCacheAvailable();
 		}
 
 		@AfterMethod

@@ -158,6 +158,9 @@ public class AgentStatusDataProvider implements InitializingBean, ApplicationLis
 					log.info("Platform " + platformIdent + " sending keep-alive signals again.");
 				}
 			}
+		} else {
+			registerConnected(platformIdent);
+			agentStatusDataMap.get(platformIdent).setInstrumentationStatus(InstrumentationStatus.NO_CLASS_CACHE_AVAILABLE);
 		}
 	}
 

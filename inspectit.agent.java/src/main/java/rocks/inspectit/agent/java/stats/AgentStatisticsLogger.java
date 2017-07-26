@@ -27,6 +27,11 @@ public class AgentStatisticsLogger {
 	private static final BoundariesLogStrategy DROPPED_DATA_LOG_STRATEGY = new BoundariesLogStrategy(1, 10, 100, 1000);
 
 	/**
+	 * Log strategy for the {@link #thrownBusinessExceptionCount}.
+	 */
+	private static final BoundariesLogStrategy THROWN_BUSINESS_EXCEPTION_LOG_STRATEGY = new BoundariesLogStrategy(1, Long.MAX_VALUE);
+
+	/**
 	 * The logger of the class.
 	 */
 	@Log
@@ -36,6 +41,11 @@ public class AgentStatisticsLogger {
 	 * Count how much data are we dropping.
 	 */
 	private AtomicLong droppedDataCount = new AtomicLong(0);
+
+	/**
+	 * Count how much BusinessException are thrown caused by missing class cache.
+	 */
+	private AtomicLong thrownBusinessExceptionCount = new AtomicLong(0);
 
 	/**
 	 * Signals data drop.
@@ -53,6 +63,18 @@ public class AgentStatisticsLogger {
 		// log on first, tenth, hundredth and then on every one thousand elements dropped
 		if (log.isWarnEnabled() && DROPPED_DATA_LOG_STRATEGY.shouldLog(dropped - count, dropped)) {
 			log.warn("Monitoring data is dropped due to buffer capacity reached or connection failure. Current count of dropped data is " + dropped + ".");
+		}
+	}
+
+	/**
+	 * Signals throws businessTransaction caused by missing class cache.
+	 */
+	public void noClassCacheAvailable() {
+		long thrownBusinessTransactions = thrownBusinessExceptionCount.incrementAndGet();
+
+		// log only ones
+		if (log.isWarnEnabled() && THROWN_BUSINESS_EXCEPTION_LOG_STRATEGY.shouldLog(thrownBusinessTransactions - 1, thrownBusinessTransactions)) {
+			log.warn("No class cache available. Please reconnect the agent, to reload the class cache. This exception will be thrown only ones per agent.");
 		}
 	}
 

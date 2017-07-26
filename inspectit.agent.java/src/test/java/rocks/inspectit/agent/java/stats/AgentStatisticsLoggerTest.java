@@ -94,4 +94,23 @@ public class AgentStatisticsLoggerTest extends TestBase {
 		}
 	}
 
+	public static class NoClassCacheAvailable extends AgentStatisticsLoggerTest {
+
+		@Test
+		public void onFirst() {
+			statsLogger.noClassCacheAvailable();
+			verify(log, times(1)).warn(anyString());
+		}
+
+		@Test
+		public void onSecondUntilInfinity() {
+			// log should be executed onces
+			statsLogger.noClassCacheAvailable();
+			verify(log, times(1)).warn(anyString());
+
+			// log shouldn't be executed twice
+			statsLogger.noClassCacheAvailable();
+			verify(log, times(1)).warn(anyString());
+		}
+	}
 }
