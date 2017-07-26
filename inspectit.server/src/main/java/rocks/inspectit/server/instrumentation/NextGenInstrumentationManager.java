@@ -3,10 +3,12 @@ package rocks.inspectit.server.instrumentation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
@@ -93,6 +95,11 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 	private ApplicationEventPublisher eventPublisher;
 
 	/**
+	 * platformIdents with thrown {@link BusinessException}.
+	 */
+	Set<Long> platformIdentsWithThrownBusinessException = new HashSet<Long>();
+
+	/**
 	 * Cache for the agents and it's used class cache, environments and configurations.
 	 */
 	private final ConcurrentHashMap<Long, AgentCacheEntry> agentCacheMap = new ConcurrentHashMap<>();
@@ -153,7 +160,15 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 	public InstrumentationDefinition analyze(long platformIdent, String hash, Type sentType) throws BusinessException {
 		AgentCacheEntry agentCacheEntry = agentCacheMap.get(Long.valueOf(platformIdent));
 		if (null == agentCacheEntry) {
-			throw new BusinessException("Instrumenting class with hash '" + hash + "' for the agent with id=" + platformIdent, AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+			if (platformIdentsWithThrownBusinessException.contains(platformIdent)) {
+				return null;
+			} else {
+				platformIdentsWithThrownBusinessException.add(platformIdent);
+				throw new BusinessException(
+						"Instrumenting class with hash '" + hash + "' for the agent with id=" + platformIdent
+								+ ". No class cache is available. This exception will only be thrown onces per agent.  Please restart your agent to update the class cache of the CMR",
+						AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+			}
 		}
 
 		ClassCache classCache = agentCacheEntry.getClassCache();
@@ -230,7 +245,15 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 	public Collection<JmxAttributeDescriptor> analyzeJmxAttributes(long platformIdent, Collection<JmxAttributeDescriptor> attributeDescriptors) throws BusinessException {
 		AgentCacheEntry agentCacheEntry = agentCacheMap.get(Long.valueOf(platformIdent));
 		if (null == agentCacheEntry) {
-			throw new BusinessException("Analyzing the JMX attributes for the agent with id=" + platformIdent, AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+			if (platformIdentsWithThrownBusinessException.contains(platformIdent)) {
+				return Collections.emptyList();
+			} else {
+				platformIdentsWithThrownBusinessException.add(platformIdent);
+				throw new BusinessException(
+						"Analyzing the JMX attributes for the agent with id=" + platformIdent
+								+ ". No class cache is available. This exception will only be thrown onces per agent.  Please restart your agent to update the class cache of the CMR",
+						AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+			}
 		}
 
 		// if nothing sent do nothing

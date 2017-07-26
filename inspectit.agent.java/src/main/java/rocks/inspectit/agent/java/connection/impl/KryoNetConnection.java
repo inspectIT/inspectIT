@@ -454,7 +454,13 @@ public class KryoNetConnection implements IConnection {
 		FailFastRemoteMethodCall<IAgentService, Collection<JmxAttributeDescriptor>> call = new FailFastRemoteMethodCall<IAgentService, Collection<JmxAttributeDescriptor>>(agentService) {
 			@Override
 			protected Collection<JmxAttributeDescriptor> performRemoteCall(IAgentService service) throws Exception {
-				return agentService.analyzeJmxAttributes(platformIdent, descriptors);
+				try {
+					Collection<JmxAttributeDescriptor> jmxAttributesDescriptors = agentService.analyzeJmxAttributes(platformIdent, descriptors);
+					return jmxAttributesDescriptors;
+				} catch (BusinessException businessException) {
+					log.warn(businessException.getMessage(), businessException);
+					return Collections.emptyList();
+				}
 			}
 		};
 
