@@ -60,7 +60,12 @@ public class AgentStatusData implements Serializable {
 		/**
 		 * The agent has not the latest instrumentation.
 		 */
-		PENDING;
+		PENDING,
+
+		/**
+		 * The class cache of the CMR is empty. Dynamic instrumentation does not work.
+		 */
+		NO_CLASS_CACHE_AVAILABLE;
 	}
 
 	/**

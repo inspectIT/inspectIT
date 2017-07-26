@@ -153,7 +153,10 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 	public InstrumentationDefinition analyze(long platformIdent, String hash, Type sentType) throws BusinessException {
 		AgentCacheEntry agentCacheEntry = agentCacheMap.get(Long.valueOf(platformIdent));
 		if (null == agentCacheEntry) {
-			throw new BusinessException("Instrumenting class with hash '" + hash + "' for the agent with id=" + platformIdent, AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+				throw new BusinessException(
+						"Instrumenting class with hash '" + hash + "' for the agent with id=" + platformIdent
+								+ ". No class cache is available. This exception will only be thrown onces per agent.  Please restart your agent to update the class cache of the CMR",
+						AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
 		}
 
 		ClassCache classCache = agentCacheEntry.getClassCache();
@@ -230,7 +233,10 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 	public Collection<JmxAttributeDescriptor> analyzeJmxAttributes(long platformIdent, Collection<JmxAttributeDescriptor> attributeDescriptors) throws BusinessException {
 		AgentCacheEntry agentCacheEntry = agentCacheMap.get(Long.valueOf(platformIdent));
 		if (null == agentCacheEntry) {
-			throw new BusinessException("Analyzing the JMX attributes for the agent with id=" + platformIdent, AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
+				throw new BusinessException(
+						"Analyzing the JMX attributes for the agent with id=" + platformIdent
+								+ ". No class cache is available. This exception will only be thrown onces per agent.  Please restart your agent to update the class cache of the CMR",
+						AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST);
 		}
 
 		// if nothing sent do nothing
@@ -301,5 +307,4 @@ public class NextGenInstrumentationManager implements ApplicationListener<AgentD
 	public Map<Long, AgentCacheEntry> getAgentCacheMap() {
 		return Collections.unmodifiableMap(agentCacheMap);
 	}
-
 }

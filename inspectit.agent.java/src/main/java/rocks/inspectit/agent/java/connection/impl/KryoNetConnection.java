@@ -443,9 +443,12 @@ public class KryoNetConnection implements IConnection {
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws BusinessException
 	 */
 	@Override
-	public Collection<JmxAttributeDescriptor> analyzeJmxAttributes(final long platformIdent, final Collection<JmxAttributeDescriptor> descriptors) throws ServerUnavailableException {
+	public Collection<JmxAttributeDescriptor> analyzeJmxAttributes(final long platformIdent, final Collection<JmxAttributeDescriptor> descriptors)
+			throws ServerUnavailableException, BusinessException {
 		if (!isConnected()) {
 			throw new ServerUnavailableException();
 		}
@@ -461,7 +464,9 @@ public class KryoNetConnection implements IConnection {
 		try {
 			return call.makeCall();
 		} catch (ExecutionException executionException) {
-			if (log.isTraceEnabled()) {
+			if (executionException.getCause() instanceof BusinessException) {
+				throw ((BusinessException) executionException.getCause()); // NOPMD
+			} else if (log.isTraceEnabled()) {
 				log.trace("analyzeJmxAttributes(long,Collection)", executionException);
 			}
 

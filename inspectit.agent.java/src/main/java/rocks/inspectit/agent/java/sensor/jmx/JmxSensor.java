@@ -39,7 +39,10 @@ import rocks.inspectit.agent.java.connection.IConnection;
 import rocks.inspectit.agent.java.connection.ServerUnavailableException;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
+import rocks.inspectit.agent.java.stats.AgentStatisticsLogger;
 import rocks.inspectit.shared.all.communication.data.JmxSensorValueData;
+import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.all.exception.enumeration.AgentManagementErrorCodeEnum;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxAttributeDescriptor;
 import rocks.inspectit.shared.all.instrumentation.config.impl.JmxSensorTypeConfig;
 import rocks.inspectit.shared.all.spring.logger.Log;
@@ -120,6 +123,12 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean {
 	 * The timestamp of the last {@link #collectData(ICoreService, long)} method invocation.
 	 */
 	long lastDataCollectionTimestamp = 0;
+
+	/**
+	 * Logs once, if the class cache is not available.
+	 */
+	@Autowired
+	private AgentStatisticsLogger agentStatisticsLogger;
 
 	/**
 	 * {@inheritDoc}
@@ -282,7 +291,7 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean {
 			} catch (RuntimeMBeanException e) {
 				iterator.remove();
 				log.warn("JMX::Runtime error reading the attribute " + descriptor.getAttributeName() + " from the MBean " + descriptor.getmBeanObjectName()
-				+ ". Attribute removed from the actively read list.", e);
+						+ ". Attribute removed from the actively read list.", e);
 			}
 		}
 	}
@@ -348,6 +357,12 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean {
 		} catch (ServerUnavailableException e) {
 			if (log.isWarnEnabled()) {
 				log.warn("Error registering JMX attributes on the server.", e);
+			}
+		} catch (BusinessException e) {
+			if (e.getErrorCode().equals(AgentManagementErrorCodeEnum.AGENT_DOES_NOT_EXIST)) {
+				agentStatisticsLogger.noClassCacheAvailable();
+			} else {
+				log.warn(e.getMessage(), e);
 			}
 		}
 	}
