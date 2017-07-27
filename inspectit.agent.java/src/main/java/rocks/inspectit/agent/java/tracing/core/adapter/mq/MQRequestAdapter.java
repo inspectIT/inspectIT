@@ -29,13 +29,21 @@ public class MQRequestAdapter implements ServerRequestAdapter<TextMap>, ClientRe
 	private MQMessage message;
 
 	/**
+	 * If this is server side MQ request.
+	 */
+	private boolean isServerSide;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param message
 	 *            Message
+	 * @param isServerSide
+	 *            If this is server side MQ request.
 	 */
-	public MQRequestAdapter(MQMessage message) {
+	public MQRequestAdapter(MQMessage message, boolean isServerSide) {
 		this.message = message;
+		this.isServerSide = isServerSide;
 	}
 
 	/**
@@ -59,7 +67,14 @@ public class MQRequestAdapter implements ServerRequestAdapter<TextMap>, ClientRe
 	 */
 	@Override
 	public String getReferenceType() {
-		return References.FOLLOWS_FROM;
+		if (isServerSide) {
+			// on the server side MQ message is always asynchronous
+			return References.FOLLOWS_FROM;
+		} else {
+			// from the client point of view the sending of the message is synchronous as we can not
+			// measure the actual sending of the message
+			return References.CHILD_OF;
+		}
 	}
 
 	/**

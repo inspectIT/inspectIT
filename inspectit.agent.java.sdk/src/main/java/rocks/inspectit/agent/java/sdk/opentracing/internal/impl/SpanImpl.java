@@ -62,6 +62,11 @@ public class SpanImpl implements Span {
 	private Map<String, String> tags;
 
 	/**
+	 * Indicates whether the span has been finished.
+	 */
+	private boolean finished = false;
+
+	/**
 	 * Default constructor. Sets only the tracer.
 	 *
 	 * @param tracer
@@ -80,6 +85,13 @@ public class SpanImpl implements Span {
 	}
 
 	/**
+	 * Starts the span and sets the start time to the current time provided by the set tracer.
+	 */
+	public void start() {
+		start(tracer.getTimer().getCurrentTimeMicroseconds(), tracer.getTimer().getCurrentNanoTime());
+	}
+
+	/**
 	 * Internal start method with start time in microseconds and nano ticks.
 	 *
 	 * @param startTimeMicros
@@ -89,6 +101,10 @@ public class SpanImpl implements Span {
 	 *            using nano time.
 	 */
 	void start(long startTimeMicros, long startTimeNanos) {
+		if (isStarted()) {
+			return;
+		}
+
 		if (startTimeMicros <= 0) {
 			throw new IllegalArgumentException("Start time in microseconds must be provided.");
 		}
@@ -115,7 +131,18 @@ public class SpanImpl implements Span {
 	 */
 	@Override
 	public void finish(long finishMicros) {
-		duration = finishMicros - startTimeMicros;
+		// if already finish nothing to do
+		if (isFinished()) {
+			return;
+		}
+
+		// if not started we can not calculate duration
+		if (isStarted()) {
+			duration = finishMicros - startTimeMicros;
+		}
+
+		// inform tracer
+		finished = true;
 		tracer.spanEnded(this);
 	}
 
@@ -127,7 +154,16 @@ public class SpanImpl implements Span {
 	 *            Current nano time..
 	 */
 	private void finishWithNanos(long nanos) {
+		// if already finish nothing to do
+		if (isFinished()) {
+			return;
+		}
+
+		// it must be started if finishing with nanos
 		duration = (nanos - startTimeNanos) / 1000.d;
+
+		// inform tracer
+		finished = true;
 		tracer.spanEnded(this);
 	}
 
@@ -300,6 +336,24 @@ public class SpanImpl implements Span {
 	 */
 	public boolean isServer() {
 		return !isClient();
+	}
+
+	/**
+	 * Returns whether the span has already been started.
+	 *
+	 * @return Returns <code>true</code> if the span has been started otherwise <code>false</code>.
+	 */
+	public boolean isStarted() {
+		return startTimeMicros > 0L;
+	}
+
+	/**
+	 * Returns whether the span has been finished.
+	 *
+	 * @return Returns <code>true</code> if the span has been finished.
+	 */
+	public boolean isFinished() {
+		return finished;
 	}
 
 	/**

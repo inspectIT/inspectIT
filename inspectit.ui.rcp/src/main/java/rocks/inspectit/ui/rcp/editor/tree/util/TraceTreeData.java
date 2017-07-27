@@ -198,26 +198,7 @@ public final class TraceTreeData implements Comparable<TraceTreeData> {
 	 * @return If this trace part is considered to be asynchronous.
 	 */
 	public boolean isConsideredAsync() {
-		return isParentFollowsFromCaller() || isFollowsFromCallee();
-	}
-
-	/**
-	 * Returns true only if the parent of this trace data has a client span that has follows from
-	 * reference.
-	 *
-	 * @return if parent is client span called with follows from reference to
-	 */
-	private boolean isParentFollowsFromCaller() {
-		return (null != parent) && parent.getSpan().isCaller() && References.FOLLOWS_FROM.equals(parent.getSpan().getReferenceType());
-	}
-
-	/**
-	 * Returns true only if this trace data has a server span that has follows from reference.
-	 *
-	 * @return if data has server span called with follows from reference to
-	 */
-	private boolean isFollowsFromCallee() {
-		return !span.isCaller() && References.FOLLOWS_FROM.equals(span.getReferenceType());
+		return References.FOLLOWS_FROM.equals(span.getReferenceType());
 	}
 
 	/**

@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.opentracing.propagation.Format;
+import io.opentracing.propagation.TextMap;
 import io.opentracing.tag.Tags;
 import rocks.inspectit.agent.java.tracing.core.adapter.RequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
@@ -15,7 +17,7 @@ import rocks.inspectit.shared.all.tracing.data.PropagationType;
  * @author Ivan Senic
  *
  */
-public class HttpRequestAdapter implements RequestAdapter {
+public abstract class HttpRequestAdapter implements RequestAdapter<TextMap> {
 
 	/**
 	 * Http server request providing data we need.
@@ -60,6 +62,22 @@ public class HttpRequestAdapter implements RequestAdapter {
 			tags.put(Tags.HTTP_METHOD.getKey(), method);
 		}
 		return tags;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Format<TextMap> getFormat() {
+		return Format.Builtin.HTTP_HEADERS;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public TextMap getCarrier() {
+		return httpRequest;
 	}
 
 }

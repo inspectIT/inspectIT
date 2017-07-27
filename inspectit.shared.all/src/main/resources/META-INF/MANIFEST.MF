@@ -71,4 +71,5 @@ Require-Bundle: com.esotericsoftware.minlog;bundle-version="1.2.0",
  org.springframework.spring-expression;bundle-version="3.2.16",
  org.springframework.spring-web;bundle-version="3.2.16",
  jackson-core-asl;bundle-version="1.9.13",
- jackson-mapper-asl;bundle-version="1.9.13"
+ jackson-mapper-asl;bundle-version="1.9.13",
+ io.opentracing.api;bundle-version="0.20.9"

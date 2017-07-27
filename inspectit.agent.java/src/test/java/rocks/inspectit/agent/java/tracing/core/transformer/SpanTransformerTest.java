@@ -128,6 +128,50 @@ public class SpanTransformerTest extends TestBase {
 		}
 
 		@Test
+		public void methodIdTag() {
+			when(spanImpl.context()).thenReturn(SpanContextImpl.build());
+			when(spanImpl.getTags()).thenReturn(Collections.singletonMap(ExtraTags.INSPECTT_METHOD_ID, "7"));
+
+			AbstractSpan span = SpanTransformer.transformSpan(spanImpl);
+
+			assertThat(span.getMethodIdent(), is(7L));
+			assertThat(span.getTags().size(), is(0));
+		}
+
+		@Test
+		public void methodIdTagWrong() {
+			when(spanImpl.context()).thenReturn(SpanContextImpl.build());
+			when(spanImpl.getTags()).thenReturn(Collections.singletonMap(ExtraTags.INSPECTT_METHOD_ID, "blabla"));
+
+			AbstractSpan span = SpanTransformer.transformSpan(spanImpl);
+
+			assertThat(span.getMethodIdent(), is(0L));
+			assertThat(span.getTags().size(), is(0));
+		}
+
+		@Test
+		public void sensorIdTag() {
+			when(spanImpl.context()).thenReturn(SpanContextImpl.build());
+			when(spanImpl.getTags()).thenReturn(Collections.singletonMap(ExtraTags.INSPECTT_SENSOR_ID, "7"));
+
+			AbstractSpan span = SpanTransformer.transformSpan(spanImpl);
+
+			assertThat(span.getSensorTypeIdent(), is(7L));
+			assertThat(span.getTags().size(), is(0));
+		}
+
+		@Test
+		public void sensorIdTagWrong() {
+			when(spanImpl.context()).thenReturn(SpanContextImpl.build());
+			when(spanImpl.getTags()).thenReturn(Collections.singletonMap(ExtraTags.INSPECTT_SENSOR_ID, "blabla"));
+
+			AbstractSpan span = SpanTransformer.transformSpan(spanImpl);
+
+			assertThat(span.getSensorTypeIdent(), is(0L));
+			assertThat(span.getTags().size(), is(0));
+		}
+
+		@Test
 		public void time() {
 			long micros = 123456L;
 			when(spanImpl.context()).thenReturn(SpanContextImpl.build());

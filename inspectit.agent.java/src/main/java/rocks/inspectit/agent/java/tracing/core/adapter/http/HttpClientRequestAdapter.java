@@ -1,7 +1,6 @@
 package rocks.inspectit.agent.java.tracing.core.adapter.http;
 
 import io.opentracing.References;
-import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
@@ -45,22 +44,6 @@ public class HttpClientRequestAdapter extends HttpRequestAdapter implements Clie
 	@Override
 	public String getReferenceType() {
 		return References.CHILD_OF;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Format<TextMap> getFormat() {
-		return Format.Builtin.HTTP_HEADERS;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public TextMap getCarrier() {
-		return httpRequest;
 	}
 
 }

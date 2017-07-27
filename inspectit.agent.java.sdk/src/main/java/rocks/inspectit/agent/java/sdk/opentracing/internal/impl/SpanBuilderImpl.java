@@ -191,9 +191,8 @@ public class SpanBuilderImpl implements SpanBuilder {
 	 */
 	@Override
 	public SpanImpl start() {
-		// resolve context
-		SpanContextImpl context = SpanContextImpl.build(parent, referenceType, baggage);
-		span.setSpanContext(context);
+		// build to resolve context
+		build();
 
 		// if startTimestamp was not specified in the builder, we use the timer
 		long nanoTime = 0;
@@ -208,4 +207,17 @@ public class SpanBuilderImpl implements SpanBuilder {
 		return span;
 	}
 
+	/**
+	 * Builds (resolves the context) the span but does not start it. The method returns the built
+	 * span.
+	 *
+	 * @return the span which has been built
+	 */
+	public SpanImpl build() {
+		// resolve context
+		SpanContextImpl context = SpanContextImpl.build(parent, referenceType, baggage);
+		span.setSpanContext(context);
+
+		return span;
+	}
 }

@@ -50,26 +50,11 @@ public class SpringRestTemplateClientSensorTest extends TestBase {
 
 		@Test
 		public void properties() {
-			when(rsc.getTargetMethodName()).thenReturn("execute");
-
 			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(httpRequest, null, rsc);
 
 			assertThat(adapter.getPropagationType(), is(PropagationType.HTTP));
 			assertThat(adapter.getReferenceType(), is(References.CHILD_OF));
 			assertThat(adapter.getFormat(), is(Format.Builtin.HTTP_HEADERS));
-			verify(rsc).getTargetMethodName();
-			verifyNoMoreInteractions(rsc);
-		}
-
-		@Test
-		public void propertiesAsync() {
-			when(rsc.getTargetMethodName()).thenReturn("executeAsync");
-
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(httpRequest, null, rsc);
-
-			assertThat(adapter.getPropagationType(), is(PropagationType.HTTP));
-			assertThat(adapter.getReferenceType(), is(References.FOLLOWS_FROM));
-			verify(rsc).getTargetMethodName();
 			verifyNoMoreInteractions(rsc);
 		}
 
@@ -106,27 +91,23 @@ public class SpringRestTemplateClientSensorTest extends TestBase {
 		public void url() throws Exception {
 			String uri = "http://localhost";
 			when(httpRequest.getURI()).thenReturn(new URI(uri));
-			when(rsc.getTargetMethodName()).thenReturn("execute");
 
 			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(httpRequest, null, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(1));
 			assertThat(tags, hasEntry(Tags.HTTP_URL.getKey(), uri));
-			verify(rsc).getTargetMethodName();
 			verifyNoMoreInteractions(rsc);
 		}
 
 		@Test
 		public void urlUriNull() {
 			when(httpRequest.getURI()).thenReturn(null);
-			when(rsc.getTargetMethodName()).thenReturn("execute");
 
 			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(httpRequest, null, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(0));
-			verify(rsc).getTargetMethodName();
 			verifyNoMoreInteractions(rsc);
 		}
 
@@ -134,27 +115,23 @@ public class SpringRestTemplateClientSensorTest extends TestBase {
 		public void method() throws Exception {
 			String method = "GET";
 			when(httpRequest.getMethod()).thenReturn(method);
-			when(rsc.getTargetMethodName()).thenReturn("execute");
 
 			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(httpRequest, null, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(1));
 			assertThat(tags, hasEntry(Tags.HTTP_METHOD.getKey(), method));
-			verify(rsc).getTargetMethodName();
 			verifyNoMoreInteractions(rsc);
 		}
 
 		@Test
 		public void methodNull() {
 			when(httpRequest.getMethod()).thenReturn(null);
-			when(rsc.getTargetMethodName()).thenReturn("execute");
 
 			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(httpRequest, null, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(0));
-			verify(rsc).getTargetMethodName();
 			verifyNoMoreInteractions(rsc);
 		}
 
@@ -163,13 +140,11 @@ public class SpringRestTemplateClientSensorTest extends TestBase {
 			String key = "key";
 			String value = "value";
 			when(httpRequest.getHeaders()).thenReturn(headers);
-			when(rsc.getTargetMethodName()).thenReturn("execute");
 
 			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(httpRequest, null, rsc);
 			adapter.getCarrier().put(key, value);
 
 			verify(headers).set(key, value);
-			verify(rsc).getTargetMethodName();
 			verifyNoMoreInteractions(rsc);
 		}
 
@@ -178,12 +153,10 @@ public class SpringRestTemplateClientSensorTest extends TestBase {
 			String key = "key";
 			String value = "value";
 			when(httpRequest.getHeaders()).thenReturn(null);
-			when(rsc.getTargetMethodName()).thenReturn("execute");
 
 			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(httpRequest, null, rsc);
 			adapter.getCarrier().put(key, value);
 
-			verify(rsc).getTargetMethodName();
 			verifyNoMoreInteractions(rsc);
 		}
 	}
@@ -208,27 +181,12 @@ public class SpringRestTemplateClientSensorTest extends TestBase {
 		public void status() {
 			int status = 200;
 			when(httpResponse.getRawStatusCode()).thenReturn(status);
-			when(rsc.getTargetMethodName()).thenReturn("execute");
 
 			ResponseAdapter adapter = sensor.getClientResponseAdapter(httpRequest, null, httpResponse, false, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(1));
 			assertThat(tags, hasEntry(Tags.HTTP_STATUS.getKey(), String.valueOf(status)));
-			verify(rsc).getTargetMethodName();
-			verifyZeroInteractions(httpRequest);
-			verifyNoMoreInteractions(rsc);
-		}
-
-		@Test
-		public void statusAsync() {
-			when(rsc.getTargetMethodName()).thenReturn("executeAsync");
-
-			ResponseAdapter adapter = sensor.getClientResponseAdapter(httpRequest, null, null, false, rsc);
-
-			Map<String, String> tags = adapter.getTags();
-			assertThat(tags.size(), is(0));
-			verify(rsc).getTargetMethodName();
 			verifyZeroInteractions(httpRequest);
 			verifyNoMoreInteractions(rsc);
 		}
