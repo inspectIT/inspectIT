@@ -1,6 +1,6 @@
 package rocks.inspectit.agent.java.tracing.core.adapter.http;
 
-import io.opentracing.propagation.Format;
+import io.opentracing.References;
 import io.opentracing.propagation.TextMap;
 import rocks.inspectit.agent.java.tracing.core.adapter.ServerRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.SpanContextStore;
@@ -12,11 +12,6 @@ import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
  * @author Ivan Senic
  */
 public class HttpServerRequestAdapter extends HttpRequestAdapter implements ServerRequestAdapter<TextMap> {
-
-	/**
-	 * Http request providing data we need.
-	 */
-	private HttpRequest httpRequest;
 
 	/**
 	 * Span context store.
@@ -48,24 +43,7 @@ public class HttpServerRequestAdapter extends HttpRequestAdapter implements Serv
 	 */
 	public HttpServerRequestAdapter(HttpRequest httpRequest, SpanContextStore spanContextStore) {
 		super(httpRequest);
-		this.httpRequest = httpRequest;
 		this.spanContextStore = spanContextStore;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Format<TextMap> getFormat() {
-		return Format.Builtin.HTTP_HEADERS;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public TextMap getCarrier() {
-		return httpRequest;
 	}
 
 	/**
@@ -75,5 +53,13 @@ public class HttpServerRequestAdapter extends HttpRequestAdapter implements Serv
 	public SpanContextStore getSpanContextStore() {
 		return spanContextStore;
 	};
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getReferenceType() {
+		return References.CHILD_OF;
+	}
 
 }

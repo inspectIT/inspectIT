@@ -210,6 +210,46 @@ public class InvocationSequenceHookTest extends TestBase {
 
 	}
 
+	@Test
+	public void startEndInvocationWithAsyncSpanSaving() {
+		long platformId = 1L;
+		long methodId = 3L;
+		long sensorTypeId = 11L;
+		Object object = mock(Object.class);
+		Object[] parameters = new Object[0];
+		Object result = mock(Object.class);
+
+		when(platformManager.getPlatformId()).thenReturn(platformId);
+
+		double firstTimerValue = 1000.0d;
+		double secondTimerValue = 1323.0d;
+		when(timer.getCurrentTime()).thenReturn(firstTimerValue, secondTimerValue);
+		when(rsc.getMethodSensors()).thenReturn(Collections.singletonList(methodSensor));
+		when(methodSensor.getSensorTypeConfig()).thenReturn(methodSensorTypeConfig);
+
+		invocationSequenceHook.beforeBody(methodId, sensorTypeId, object, parameters, rsc);
+		// save span
+		SpanContextImpl context = SpanContextImpl.build();
+		invocationSequenceHook.asyncSpanContextCreated(context);
+		invocationSequenceHook.firstAfterBody(methodId, sensorTypeId, object, parameters, result, false, rsc);
+		invocationSequenceHook.secondAfterBody(coreService, methodId, sensorTypeId, object, parameters, result, false, rsc);
+
+		verify(timer, times(2)).getCurrentTime();
+		verifyZeroInteractions(realCoreService);
+
+		ArgumentCaptor<InvocationSequenceData> captor = ArgumentCaptor.forClass(InvocationSequenceData.class);
+		verify(coreService, times(1)).addMethodSensorData(eq(sensorTypeId), eq(methodId), Matchers.<String> anyObject(), captor.capture());
+
+		InvocationSequenceData invocation = captor.getValue();
+		assertThat(invocation.getPlatformIdent(), is(platformId));
+		assertThat(invocation.getMethodIdent(), is(methodId));
+		assertThat(invocation.getSensorTypeIdent(), is(sensorTypeId));
+		assertThat(invocation.getDuration(), is(secondTimerValue - firstTimerValue));
+		assertThat(invocation.getNestedSequences(), is(empty()));
+		assertThat(invocation.getChildCount(), is(0L));
+		assertThat(invocation.getSpanIdent(), is(SpanContextTransformer.transformSpanContext(context)));
+	}
+
 	/**
 	 * Tests that the correct time and ids will be set on the invocation.
 	 *

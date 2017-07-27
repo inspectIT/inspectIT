@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.mutable.MutableDouble;
 
+import io.opentracing.References;
 import rocks.inspectit.shared.all.communication.data.HttpTimerData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.ParameterContentData;
@@ -269,7 +270,9 @@ public final class InvocationSequenceDataHelper {
 			duration = data.getDuration();
 		} else if ((null != spanService) && hasSpanIdent(data)) {
 			Span span = spanService.get(data.getSpanIdent());
-			return span.getDuration();
+			if ((span != null) && !References.FOLLOWS_FROM.equals(span.getReferenceType())) {
+				return span.getDuration();
+			}
 		}
 		return duration;
 	}

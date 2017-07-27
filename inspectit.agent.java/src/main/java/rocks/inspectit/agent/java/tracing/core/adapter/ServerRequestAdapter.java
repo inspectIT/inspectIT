@@ -1,7 +1,5 @@
 package rocks.inspectit.agent.java.tracing.core.adapter;
 
-import io.opentracing.propagation.Format;
-
 /**
  * Server request requestAdapter works together with the
  * {@link rocks.inspectit.agent.java.tracing.core.ServerInterceptor} in order to correctly retrieve
@@ -16,21 +14,7 @@ import io.opentracing.propagation.Format;
  * @author Ivan Senic
  *
  */
-public interface ServerRequestAdapter<C> extends RequestAdapter {
-
-	/**
-	 * Format that the carrier supports.
-	 *
-	 * @return Format that the carrier supports.
-	 */
-	Format<C> getFormat();
-
-	/**
-	 * Carrier for extracting the baggage.
-	 *
-	 * @return carrier
-	 */
-	C getCarrier();
+public interface ServerRequestAdapter<C> extends RequestAdapter<C> {
 
 	/**
 	 * Optionally provides store adapter for storing and querying span contexts. Implementations

@@ -17,12 +17,12 @@ import rocks.inspectit.agent.java.tracing.core.transformer.SpanTransformer;
 import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
 
 /**
- * The hook is the default implementation of remote client. The hook works with the
- * {@link ClientInterceptor} in order to correctly handle client request start in the
+ * The hook is the default implementation of remote client for synchronous requests. The hook works
+ * with the {@link ClientInterceptor} in order to correctly handle client request start in the
  * {@link #beforeBody(long, long, Object, Object[], RegisteredSensorConfig)} and request end in the
  * {@link #secondAfterBody(ICoreService, long, long, Object, Object[], Object, boolean, RegisteredSensorConfig)}.
  * <p>
- * This hook measures also measures execution time.
+ * This hook also measures execution time.
  * <p>
  * The created spans will be passed to the give core service of the second after body method.
  *

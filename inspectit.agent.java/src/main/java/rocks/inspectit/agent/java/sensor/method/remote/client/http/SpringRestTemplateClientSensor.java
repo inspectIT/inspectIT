@@ -6,9 +6,7 @@ import rocks.inspectit.agent.java.sensor.method.remote.client.RemoteClientSensor
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientAdapterProvider;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
-import rocks.inspectit.agent.java.tracing.core.adapter.empty.EmptyResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.error.ThrowableAwareResponseAdapter;
-import rocks.inspectit.agent.java.tracing.core.adapter.http.AsyncHttpClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpResponse;
@@ -16,22 +14,17 @@ import rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl.SpringRest
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl.SpringRestTemplateHttpResponse;
 
 /**
- * Remote client sensor for intercepting HTTP calls made with Spring Rest Template wrapper.
+ * Remote client sensor for intercepting HTTP synchronous calls made with Spring Rest Template
+ * wrapper.
  * <p>
  * Targeted instrumentation method:
  * <ul>
  * <li>{@code org.springframework.http.client.ClientHttpRequest#execute()}
- * <li>{@code org.springframework.http.client.AsyncClientHttpRequest#executeAsync()}
  * </ul>
  *
  * @author Ivan Senic
  */
 public class SpringRestTemplateClientSensor extends RemoteClientSensor implements ClientAdapterProvider {
-
-	/**
-	 * Target method name for the asynchronous execution.
-	 */
-	private static final String ASYNC_METHOD_NAME = "executeAsync";
 
 	/**
 	 * {@inheritDoc}
@@ -48,12 +41,7 @@ public class SpringRestTemplateClientSensor extends RemoteClientSensor implement
 	public ClientRequestAdapter<TextMap> getClientRequestAdapter(Object object, Object[] parameters, RegisteredSensorConfig rsc) {
 		Object request = object;
 		SpringRestTemplateHttpClientRequest clientRequest = new SpringRestTemplateHttpClientRequest(request, CACHE);
-		// we know which one we are going for, can be only executeAsync or execute
-		if (ASYNC_METHOD_NAME.equals(rsc.getTargetMethodName())) {
-			return new AsyncHttpClientRequestAdapter(clientRequest);
-		} else {
-			return new HttpClientRequestAdapter(clientRequest);
-		}
+		return new HttpClientRequestAdapter(clientRequest);
 	}
 
 	/**
@@ -64,13 +52,10 @@ public class SpringRestTemplateClientSensor extends RemoteClientSensor implement
 		if (exception) {
 			// we can not delegate here as result is used
 			return new ThrowableAwareResponseAdapter(result.getClass().getSimpleName());
-		} else if (ASYNC_METHOD_NAME.equals(rsc.getTargetMethodName())) {
-			return EmptyResponseAdapter.INSTANCE;
-		} else {
-			Object response = result;
-			HttpResponse httpResponse = new SpringRestTemplateHttpResponse(response, CACHE);
-			return new HttpResponseAdapter(httpResponse);
 		}
+		Object response = result;
+		HttpResponse httpResponse = new SpringRestTemplateHttpResponse(response, CACHE);
+		return new HttpResponseAdapter(httpResponse);
 	}
 
 }

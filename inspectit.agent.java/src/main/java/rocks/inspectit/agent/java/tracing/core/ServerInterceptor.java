@@ -63,7 +63,7 @@ public class ServerInterceptor {
 
 		// eject data from request and add as reference
 		SpanContext context = tracer.extract(requestAdapter.getFormat(), requestAdapter.getCarrier());
-		builder.asChildOf(context);
+		builder.addReference(requestAdapter.getReferenceType(), context);
 
 		// check span context store, add reference as well
 		SpanContextStore store = requestAdapter.getSpanContextStore();

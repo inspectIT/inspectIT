@@ -10,9 +10,11 @@ import rocks.inspectit.agent.java.config.StorageException;
 import rocks.inspectit.agent.java.core.ICoreService;
 import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.hooking.IHook;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.SpanContextImpl;
 import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerImpl;
 import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
 import rocks.inspectit.agent.java.sensor.method.IMethodSensor;
+import rocks.inspectit.agent.java.tracing.core.listener.IAsyncSpanContextListener;
 import rocks.inspectit.agent.java.util.Timer;
 
 /**
@@ -22,7 +24,7 @@ import rocks.inspectit.agent.java.util.Timer;
  * @author Patrice Bouillet
  *
  */
-public class InvocationSequenceSensor extends AbstractMethodSensor implements IMethodSensor {
+public class InvocationSequenceSensor extends AbstractMethodSensor implements IMethodSensor, IAsyncSpanContextListener {
 
 	/**
 	 * The timer used for accurate measuring.
@@ -86,6 +88,14 @@ public class InvocationSequenceSensor extends AbstractMethodSensor implements IM
 		}
 
 		invocationSequenceHook = new InvocationSequenceHook(timer, platformManager, coreService, tracer, propertyAccessor, parameters, enhancedExceptionSensor);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void asyncSpanContextCreated(SpanContextImpl spanContextImpl) {
+		invocationSequenceHook.asyncSpanContextCreated(spanContextImpl);
 	}
 
 }

@@ -187,10 +187,15 @@ public class TraceInvocDetailsInputController extends SteppingInvocDetailInputCo
 				if (null != traceData) {
 					List<Object> objects = new ArrayList<>();
 					if (!span.isCaller()) {
-						objects.addAll(traceData.getInvocations());
-						// also all children that don't have invocations
-						for (TraceTreeData child : traceData.getChildren()) {
-							if (!child.getSpan().isCaller()) {
+						// this will eliminate every SDK span from the tree as now we don't have a
+						// way for correct placing of them
+						List<InvocationSequenceData> invocations = traceData.getInvocations();
+						if (CollectionUtils.isNotEmpty(invocations)) {
+							// if we have invocations add only those
+							objects.addAll(invocations);
+						} else {
+							// else add all children
+							for (TraceTreeData child : traceData.getChildren()) {
 								objects.add(child.getSpan());
 							}
 						}
