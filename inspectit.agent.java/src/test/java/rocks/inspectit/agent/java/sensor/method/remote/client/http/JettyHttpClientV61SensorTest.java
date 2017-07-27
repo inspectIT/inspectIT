@@ -3,16 +3,18 @@ package rocks.inspectit.agent.java.sensor.method.remote.client.http;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Map;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import io.opentracing.References;
@@ -20,10 +22,11 @@ import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 import io.opentracing.tag.Tags;
 import rocks.inspectit.agent.java.config.impl.RegisteredSensorConfig;
-import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
-import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
+import rocks.inspectit.agent.java.proxy.IRuntimeLinker;
+import rocks.inspectit.agent.java.tracing.core.adapter.AsyncClientRequestAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.http.proxy.JettyEventListenerProxy;
+import rocks.inspectit.agent.java.tracing.core.async.SpanStore;
 import rocks.inspectit.shared.all.testbase.TestBase;
-import rocks.inspectit.shared.all.tracing.constants.ExtraTags;
 import rocks.inspectit.shared.all.tracing.data.PropagationType;
 
 /**
@@ -37,9 +40,12 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 	JettyHttpClientV61Sensor sensor;
 
 	@Mock
+	IRuntimeLinker runtimeLinker;
+
+	@Mock
 	RegisteredSensorConfig rsc;
 
-	public static class GetClientRequestAdapter extends JettyHttpClientV61SensorTest {
+	public static class GetAsyncClientRequestAdapter extends JettyHttpClientV61SensorTest {
 
 		@Mock
 		Object object;
@@ -50,9 +56,12 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 		@Mock
 		Scheme scheme;
 
+		@Mock
+		SpanStore spanStore;
+
 		@Test
 		public void properties() {
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
+			AsyncClientRequestAdapter<TextMap> adapter = sensor.getAsyncClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
 
 			assertThat(adapter.getPropagationType(), is(PropagationType.HTTP));
 			assertThat(adapter.getReferenceType(), is(References.FOLLOWS_FROM));
@@ -62,7 +71,7 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 
 		@Test
 		public void spanStarting() {
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
+			AsyncClientRequestAdapter<TextMap> adapter = sensor.getAsyncClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
 
 			assertThat(adapter.startClientSpan(), is(true));
 		}
@@ -78,7 +87,7 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 			when(httpExchange.getRequestURI()).thenReturn(uri);
 
 
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
+			AsyncClientRequestAdapter<TextMap> adapter = sensor.getAsyncClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(1));
@@ -95,7 +104,7 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 			when(httpExchange.getAddress()).thenReturn(address);
 			when(httpExchange.getRequestURI()).thenReturn(null);
 
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
+			AsyncClientRequestAdapter<TextMap> adapter = sensor.getAsyncClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags, hasEntry(Tags.HTTP_URL.getKey(), schemeString + "://" + address));
@@ -111,7 +120,7 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 			when(httpExchange.getAddress()).thenReturn(null);
 			when(httpExchange.getRequestURI()).thenReturn(uri);
 
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
+			AsyncClientRequestAdapter<TextMap> adapter = sensor.getAsyncClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(1));
@@ -127,7 +136,7 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 			when(httpExchange.getAddress()).thenReturn(address);
 			when(httpExchange.getRequestURI()).thenReturn(uri);
 
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
+			AsyncClientRequestAdapter<TextMap> adapter = sensor.getAsyncClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(1));
@@ -144,7 +153,7 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 			when(httpExchange.getAddress()).thenReturn(address);
 			when(httpExchange.getRequestURI()).thenReturn(uri);
 
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
+			AsyncClientRequestAdapter<TextMap> adapter = sensor.getAsyncClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(1));
@@ -158,7 +167,7 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 			when(httpExchange.getAddress()).thenReturn(null);
 			when(httpExchange.getRequestURI()).thenReturn(null);
 
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
+			AsyncClientRequestAdapter<TextMap> adapter = sensor.getAsyncClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(0));
@@ -170,7 +179,7 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 			String method = "get";
 			when(httpExchange.getMethod()).thenReturn(method);
 
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
+			AsyncClientRequestAdapter<TextMap> adapter = sensor.getAsyncClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(1));
@@ -182,7 +191,7 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 		public void methodNull() {
 			when(httpExchange.getMethod()).thenReturn(null);
 
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
+			AsyncClientRequestAdapter<TextMap> adapter = sensor.getAsyncClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
 
 			Map<String, String> tags = adapter.getTags();
 			assertThat(tags.size(), is(0));
@@ -194,39 +203,45 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 			String key = "key";
 			String value = "value";
 
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
+			AsyncClientRequestAdapter<TextMap> adapter = sensor.getAsyncClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
 			adapter.getCarrier().put(key, value);
 
 			verify(httpExchange).setRequestHeader(key, value);
 			verifyZeroInteractions(object, rsc);
 		}
-	}
-
-	public static class GetClientResponseAdapter extends JettyHttpClientV61SensorTest {
-
-		@Mock
-		Object object;
-
-		@Mock
-		Object result;
 
 		@Test
-		public void empty() {
-			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, result, false, rsc);
+		public void spanStore() {
+			Object listener = new Object();
+			Proxy proxyListener = new Proxy();
+			when(httpExchange.getEventListener()).thenReturn(listener);
+			when(runtimeLinker.createProxy(eq(JettyEventListenerProxy.class), Mockito.<JettyEventListenerProxy> any(), Mockito.<ClassLoader> any())).thenReturn(proxyListener);
 
-			assertThat(adapter, is(not(nullValue())));
-			assertThat(adapter.getTags().size(), is(0));
+			AsyncClientRequestAdapter<TextMap> adapter = sensor.getAsyncClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
+			adapter.getSpanStoreAdapter().setSpanStore(spanStore);
+
+			verify(httpExchange).setEventListener(proxyListener);
+			ArgumentCaptor<JettyEventListenerProxy> proxyCaptor = ArgumentCaptor.forClass(JettyEventListenerProxy.class);
+			verify(runtimeLinker).createProxy(eq(JettyEventListenerProxy.class), proxyCaptor.capture(), eq(httpExchange.getClass().getClassLoader()));
+			assertThat(proxyCaptor.getValue().getOriginalListener(), is(listener));
+			assertThat(proxyCaptor.getValue().getSpanStore(), is(spanStore));
 			verifyZeroInteractions(object, rsc);
 		}
 
 		@Test
-		public void exception() {
-			ResponseAdapter adapter = sensor.getClientResponseAdapter(object, null, new NullPointerException(), true, rsc);
+		public void spanStoreListenerNull() {
+			Proxy proxyListener = new Proxy();
+			when(httpExchange.getEventListener()).thenReturn(null);
+			when(runtimeLinker.createProxy(eq(JettyEventListenerProxy.class), Mockito.<JettyEventListenerProxy> any(), Mockito.<ClassLoader> any())).thenReturn(proxyListener);
 
-			Map<String, String> tags = adapter.getTags();
-			assertThat(tags.size(), is(2));
-			assertThat(tags, hasEntry(Tags.ERROR.getKey(), String.valueOf(true)));
-			assertThat(tags, hasEntry(ExtraTags.THROWABLE_TYPE, NullPointerException.class.getSimpleName()));
+			AsyncClientRequestAdapter<TextMap> adapter = sensor.getAsyncClientRequestAdapter(object, new Object[] { httpExchange }, rsc);
+			adapter.getSpanStoreAdapter().setSpanStore(spanStore);
+
+			verify(httpExchange).setEventListener(proxyListener);
+			ArgumentCaptor<JettyEventListenerProxy> proxyCaptor = ArgumentCaptor.forClass(JettyEventListenerProxy.class);
+			verify(runtimeLinker).createProxy(eq(JettyEventListenerProxy.class), proxyCaptor.capture(), eq(httpExchange.getClass().getClassLoader()));
+			assertThat(proxyCaptor.getValue().getOriginalListener(), is(nullValue()));
+			assertThat(proxyCaptor.getValue().getSpanStore(), is(spanStore));
 			verifyZeroInteractions(object, rsc);
 		}
 
@@ -238,10 +253,16 @@ public class JettyHttpClientV61SensorTest extends TestBase {
 		Object getRequestURI();
 		String getMethod();
 		void setRequestHeader(String key, String value);
+		Object getEventListener();
+		void setEventListener(Listener listener);
 	}
 
 	interface Scheme {
 		byte[] array();
 	}
+
+	interface Listener {}
+	class Wrapper implements Listener {}
+	class Proxy extends Wrapper {}
 
 }

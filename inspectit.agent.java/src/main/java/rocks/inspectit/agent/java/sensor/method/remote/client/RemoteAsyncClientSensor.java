@@ -4,19 +4,20 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.hooking.IHook;
 import rocks.inspectit.agent.java.sensor.method.AbstractMethodSensor;
 import rocks.inspectit.agent.java.tracing.core.ClientInterceptor;
+import rocks.inspectit.agent.java.tracing.core.adapter.AsyncClientAdapterProvider;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientAdapterProvider;
+import rocks.inspectit.agent.java.tracing.core.listener.IAsyncSpanContextListener;
 import rocks.inspectit.agent.java.util.ReflectionCache;
 
 /**
- * Abstract class for all remote client sensors that make synchronous requests. Subclasses must
- * implement {@link #getClientAdapterProvider()} that is passed to the {@link RemoteClientHook}
+ * Abstract class for all remote async client sensors. Subclasses must implement
+ * {@link #getAsyncClientAdapterProvider()} that is passed to the {@link RemoteAsyncClientHook}
  * during initialization.
  * <p>
- * Note that all remote client sensors class names should be added to the
+ * Note that all remote async client sensors class names should be added to the
  * {@link rocks.inspectit.agent.java.sensor.method.invocationsequence.InvocationSequenceHook}, as we
  * don't want additional invocation children to be created if remote sensor did not create any
  * tracing data.
@@ -24,18 +25,12 @@ import rocks.inspectit.agent.java.util.ReflectionCache;
  * @author Ivan Senic
  *
  */
-public abstract class RemoteClientSensor extends AbstractMethodSensor {
+public abstract class RemoteAsyncClientSensor extends AbstractMethodSensor {
 
 	/**
 	 * One reflection cache for all instances of all remote client sensors.
 	 */
 	protected static final ReflectionCache CACHE = new ReflectionCache();
-
-	/**
-	 * The Platform manager.
-	 */
-	@Autowired
-	private IPlatformManager platformManager;
 
 	/**
 	 * Client interceptor.
@@ -44,9 +39,15 @@ public abstract class RemoteClientSensor extends AbstractMethodSensor {
 	private ClientInterceptor clientInterceptor;
 
 	/**
+	 * Listener for firing async spans.
+	 */
+	@Autowired
+	private IAsyncSpanContextListener asyncSpanContextListener;
+
+	/**
 	 * Hook.
 	 */
-	private RemoteClientHook hook;
+	private RemoteAsyncClientHook hook;
 
 	/**
 	 * Sub-classes should provide the correct requestAdapter provider based on the technology and framework
@@ -54,7 +55,7 @@ public abstract class RemoteClientSensor extends AbstractMethodSensor {
 	 *
 	 * @return {@link ClientAdapterProvider}.
 	 */
-	protected abstract ClientAdapterProvider getClientAdapterProvider();
+	protected abstract AsyncClientAdapterProvider getAsyncClientAdapterProvider();
 
 	/**
 	 * {@inheritDoc}
@@ -69,8 +70,8 @@ public abstract class RemoteClientSensor extends AbstractMethodSensor {
 	 */
 	@Override
 	protected void initHook(Map<String, Object> parameters) {
-		ClientAdapterProvider clientAdapterProvider = getClientAdapterProvider();
-		hook = new RemoteClientHook(clientInterceptor, clientAdapterProvider, platformManager);
+		AsyncClientAdapterProvider clientAdapterProvider = getAsyncClientAdapterProvider();
+		hook = new RemoteAsyncClientHook(clientInterceptor, clientAdapterProvider, asyncSpanContextListener);
 	}
 
 }

@@ -56,7 +56,7 @@ public class JmsRemoteClientSensorTest extends TestBase {
 			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { message }, rsc);
 
 			assertThat(adapter.getPropagationType(), is(PropagationType.JMS));
-			assertThat(adapter.getReferenceType(), is(References.FOLLOWS_FROM));
+			assertThat(adapter.getReferenceType(), is(References.CHILD_OF));
 			assertThat(adapter.getFormat(), is(Format.Builtin.TEXT_MAP));
 			verifyZeroInteractions(object);
 		}
