@@ -45,7 +45,7 @@ public class JmsRemoteClientSensor extends RemoteClientSensor implements ClientA
 	public ClientRequestAdapter<TextMap> getClientRequestAdapter(Object object, Object[] parameters, RegisteredSensorConfig rsc) {
 		Object message = getMessage(parameters, rsc);
 		JmsMessage jmsMessage = new JmsMessage(message, CACHE);
-		return new MQRequestAdapter(jmsMessage);
+		return new MQRequestAdapter(jmsMessage, false);
 	}
 
 	/**

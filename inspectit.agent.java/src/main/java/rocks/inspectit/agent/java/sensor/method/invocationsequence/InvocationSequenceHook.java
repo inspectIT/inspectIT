@@ -22,6 +22,7 @@ import rocks.inspectit.agent.java.core.IPlatformManager;
 import rocks.inspectit.agent.java.core.ListListener;
 import rocks.inspectit.agent.java.hooking.IConstructorHook;
 import rocks.inspectit.agent.java.hooking.IMethodHook;
+import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.SpanContextImpl;
 import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.TracerImpl;
 import rocks.inspectit.agent.java.sending.ISendingStrategy;
 import rocks.inspectit.agent.java.sensor.exception.ExceptionSensor;
@@ -38,6 +39,7 @@ import rocks.inspectit.agent.java.sensor.method.remote.client.mq.JmsRemoteClient
 import rocks.inspectit.agent.java.sensor.method.remote.server.http.JavaHttpRemoteServerSensor;
 import rocks.inspectit.agent.java.sensor.method.remote.server.manual.ManualRemoteServerSensor;
 import rocks.inspectit.agent.java.sensor.method.remote.server.mq.JmsListenerRemoteServerSensor;
+import rocks.inspectit.agent.java.tracing.core.listener.IAsyncSpanContextListener;
 import rocks.inspectit.agent.java.tracing.core.transformer.SpanContextTransformer;
 import rocks.inspectit.agent.java.util.StringConstraint;
 import rocks.inspectit.agent.java.util.ThreadLocalStack;
@@ -57,6 +59,7 @@ import rocks.inspectit.shared.all.communication.data.eum.AbstractEUMData;
 import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.PlatformSensorTypeConfig;
 import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
+import rocks.inspectit.shared.all.tracing.data.SpanIdent;
 
 /**
  * The invocation sequence hook stores the record of the invocation sequences in a
@@ -70,7 +73,7 @@ import rocks.inspectit.shared.all.tracing.data.AbstractSpan;
  * @author Patrice Bouillet
  *
  */
-public class InvocationSequenceHook implements IMethodHook, IConstructorHook, ICoreService {
+public class InvocationSequenceHook implements IMethodHook, IConstructorHook, ICoreService, IAsyncSpanContextListener {
 
 	/**
 	 * The logger of this class. Initialized manually.
@@ -589,6 +592,20 @@ public class InvocationSequenceHook implements IMethodHook, IConstructorHook, IC
 			return;
 		}
 		saveDataObject(exceptionSensorData.finalizeData());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void asyncSpanContextCreated(SpanContextImpl spanContextImpl) {
+		if (null != spanContextImpl) {
+			InvocationSequenceData invocationSequenceData = threadLocalInvocationData.get();
+			if (null != invocationSequenceData) {
+				SpanIdent spanIdent = SpanContextTransformer.transformSpanContext(spanContextImpl);
+				invocationSequenceData.setSpanIdent(spanIdent);
+			}
+		}
 	}
 
 	// ///////////////////////////////////////////////// //

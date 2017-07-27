@@ -15,13 +15,11 @@
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteUrlConnectionClientSensorConfig" class-name="java.net.HttpURLConnection" method-name="getInputStream" parameters="" superclass="true" />
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteUrlConnectionClientSensorConfig" class-name="java.net.HttpURLConnection" method-name="getOutputStream" parameters="" superclass="true" />
 
-		<!-- Client sensor for Jetty HttpClient 6.1 - 8.x-->
-		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61ClientSensorConfig" class-name="org.mortbay.jetty.client.HttpClient" method-name="send" parameters="org.mortbay.jetty.client.HttpExchange" />
+		<!-- Client sensor for Jetty HttpClient 7.x - 8.x-->
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61ClientSensorConfig" class-name="org.eclipse.jetty.client.HttpClient" method-name="send" parameters="org.eclipse.jetty.client.HttpExchange" />
 
 		<!-- Client sensor for Spring Rest Template v3.0+-->
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteSpringRestTemplateClientSensorConfig" class-name="org.springframework.http.client.ClientHttpRequest" method-name="execute" parameters="" interface="true" />
-		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteSpringRestTemplateClientSensorConfig" class-name="org.springframework.http.client.AsyncClientHttpRequest" method-name="executeAsync" parameters="" interface="true" />
 
 		<!-- Server sensor for all http -->
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig" class-name="javax.servlet.Filter" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" />

@@ -41,7 +41,7 @@ public class JmsListenerRemoteServerSensor extends RemoteServerSensor implements
 		// message is first parameter
 		Object message = parameters[0];
 		JmsMessage jmsMessage = new JmsMessage(message, CACHE);
-		return new MQRequestAdapter(jmsMessage);
+		return new MQRequestAdapter(jmsMessage, true);
 	}
 
 	/**

@@ -62,6 +62,7 @@ public class SpanBuilderImplTest extends TestBase {
 
 			SpanImpl span = builder.start();
 
+			assertThat(span.isStarted(), is(true));
 			assertThat(span.getOperationName(), is(op));
 			assertThat(span.getStartTimeMicros(), is(currentTime));
 			assertThat(span.context().getId(), is(span.context().getParentId()));
@@ -96,6 +97,7 @@ public class SpanBuilderImplTest extends TestBase {
 
 			SpanImpl span = builder.start();
 
+			assertThat(span.isStarted(), is(true));
 			assertThat(span.context().getParentId(), is(parent.getId()));
 			assertThat(span.context().getTraceId(), is(parent.getTraceId()));
 			assertThat(span.context().getReferenceType(), is(References.FOLLOWS_FROM));
@@ -117,6 +119,7 @@ public class SpanBuilderImplTest extends TestBase {
 
 			SpanImpl span = builder.start();
 
+			assertThat(span.isStarted(), is(true));
 			// first parent is trace responsible
 			assertThat(span.context().getParentId(), is(parent1.getId()));
 			assertThat(span.context().getTraceId(), is(parent1.getTraceId()));
@@ -142,6 +145,7 @@ public class SpanBuilderImplTest extends TestBase {
 
 			SpanImpl span = builder.start();
 
+			assertThat(span.isStarted(), is(true));
 			// first parent is trace responsible
 			assertThat(span.context().getParentId(), is(parent2.getId()));
 			assertThat(span.context().getTraceId(), is(parent2.getTraceId()));
@@ -164,6 +168,7 @@ public class SpanBuilderImplTest extends TestBase {
 
 			SpanImpl span = builder.start();
 
+			assertThat(span.isStarted(), is(true));
 			assertThat(span.context().getId(), is(span.context().getParentId()));
 			assertThat(span.context().getReferenceType(), is(nullValue()));
 		}
@@ -176,6 +181,7 @@ public class SpanBuilderImplTest extends TestBase {
 
 			SpanImpl span = builder.start();
 
+			assertThat(span.isStarted(), is(true));
 			assertThat(span.context().getId(), is(span.context().getParentId()));
 			assertThat(span.context().getReferenceType(), is(nullValue()));
 		}
@@ -189,6 +195,7 @@ public class SpanBuilderImplTest extends TestBase {
 
 			SpanImpl span = builder.start();
 
+			assertThat(span.isStarted(), is(true));
 			assertThat(span.context().getId(), is(span.context().getParentId()));
 			assertThat(span.context().getReferenceType(), is(nullValue()));
 			assertThat(span.context().getBaggageItem("key"), is("value"));
@@ -202,6 +209,7 @@ public class SpanBuilderImplTest extends TestBase {
 
 			SpanImpl span = builder.start();
 
+			assertThat(span.isStarted(), is(true));
 			assertThat(span.context().getId(), is(span.context().getParentId()));
 			assertThat(span.context().getReferenceType(), is(nullValue()));
 		}
@@ -213,6 +221,7 @@ public class SpanBuilderImplTest extends TestBase {
 
 			SpanImpl span = builder.start();
 
+			assertThat(span.isStarted(), is(true));
 			assertThat(span.isReport(), is(false));
 		}
 
@@ -223,6 +232,7 @@ public class SpanBuilderImplTest extends TestBase {
 
 			SpanImpl span = builder.start();
 
+			assertThat(span.isStarted(), is(true));
 			assertThat(span.getStartTimeMicros(), is(micros));
 			verifyZeroInteractions(timer);
 		}
@@ -234,6 +244,7 @@ public class SpanBuilderImplTest extends TestBase {
 
 			SpanImpl span = builder.start();
 
+			assertThat(span.isStarted(), is(true));
 			assertThat(span.getTags().size(), is(1));
 			assertThat(span.getTags(), hasEntry("key", String.valueOf(false)));
 		}
@@ -245,6 +256,7 @@ public class SpanBuilderImplTest extends TestBase {
 
 			SpanImpl span = builder.start();
 
+			assertThat(span.isStarted(), is(true));
 			assertThat(span.getTags().size(), is(1));
 			assertThat(span.getTags(), hasEntry("key", String.valueOf(5L)));
 		}
@@ -256,8 +268,48 @@ public class SpanBuilderImplTest extends TestBase {
 
 			SpanImpl span = builder.start();
 
+			assertThat(span.isStarted(), is(true));
 			assertThat(span.getTags().size(), is(1));
 			assertThat(span.getTags(), hasEntry("key", "value"));
+		}
+	}
+
+	public static class Build extends SpanBuilderImplTest {
+
+		@Test
+		public void base() {
+			String op = "operation";
+			SpanBuilderImpl builder = new SpanBuilderImpl(tracer, op);
+
+			SpanImpl span = builder.build();
+
+			assertThat(span.isStarted(), is(false));
+			assertThat(span.getOperationName(), is(op));
+			assertThat(span.context().getId(), is(span.context().getParentId()));
+			assertThat(span.context().getReferenceType(), is(nullValue()));
+			// verify tracer passed
+			verify(tracer, atLeastOnce()).getTimer();
+			verifyNoMoreInteractions(tracer);
+		}
+
+		@Test
+		public void parent() {
+			SpanContextImpl parent = new SpanContextImpl(1, 2, 3, null, Collections.<String, String> singletonMap("key", "value"));
+			SpanBuilderImpl builder = new SpanBuilderImpl(tracer, null).addReference(References.FOLLOWS_FROM, parent);
+
+			SpanImpl span = builder.build();
+
+			assertThat(span.isStarted(), is(false));
+			assertThat(span.context().getParentId(), is(parent.getId()));
+			assertThat(span.context().getTraceId(), is(parent.getTraceId()));
+			assertThat(span.context().getReferenceType(), is(References.FOLLOWS_FROM));
+			Map<String, String> contextBaggage = mapFromEntryIterator(span.context().baggageItems());
+			assertThat(contextBaggage.size(), is(1));
+			assertThat(contextBaggage, hasEntry("key", "value"));
+			// assert baggage of the builder as well
+			Map<String, String> builderBaggage = mapFromEntryIterator(builder.baggageItems());
+			assertThat(builderBaggage.size(), is(1));
+			assertThat(builderBaggage, hasEntry("key", "value"));
 		}
 	}
 

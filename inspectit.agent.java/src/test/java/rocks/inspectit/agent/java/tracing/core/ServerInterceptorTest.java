@@ -78,6 +78,7 @@ public class ServerInterceptorTest extends TestBase {
 
 		@Test
 		public void happyPath() {
+			when(requestAdapter.getReferenceType()).thenReturn("reference");
 			when(requestAdapter.getPropagationType()).thenReturn(PropagationType.HTTP);
 			when(requestAdapter.getTags()).thenReturn(Collections.<String, String> singletonMap(Tags.HTTP_URL.getKey(), "value"));
 			when(tracer.extract(Format.Builtin.TEXT_MAP, carrier)).thenReturn(context);
@@ -88,7 +89,7 @@ public class ServerInterceptorTest extends TestBase {
 			assertThat(result, is(span));
 			verify(tracer).buildSpan();
 			verify(tracer).extract(Format.Builtin.TEXT_MAP, carrier);
-			verify(spanBuilder).asChildOf(context);
+			verify(spanBuilder).addReference("reference", context);
 			verify(spanBuilder).addReference(References.FOLLOWS_FROM, context2);
 			verify(spanBuilder).doNotReport();
 			verify(spanBuilder).withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_SERVER);
@@ -104,6 +105,7 @@ public class ServerInterceptorTest extends TestBase {
 
 		@Test
 		public void noTracePassed() {
+			when(requestAdapter.getReferenceType()).thenReturn("reference");
 			when(tracer.extract(Format.Builtin.TEXT_MAP, carrier)).thenReturn(null);
 			when(spanContextStore.getSpanContext()).thenReturn(null);
 
@@ -112,7 +114,7 @@ public class ServerInterceptorTest extends TestBase {
 			assertThat(result, is(span));
 			verify(tracer).buildSpan();
 			verify(tracer).extract(Format.Builtin.TEXT_MAP, carrier);
-			verify(spanBuilder).asChildOf((SpanContextImpl) null);
+			verify(spanBuilder).addReference("reference", (SpanContextImpl) null);
 			verify(spanBuilder).addReference(References.FOLLOWS_FROM, null);
 			verify(spanBuilder).doNotReport();
 			verify(spanBuilder).withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_SERVER);
@@ -127,6 +129,7 @@ public class ServerInterceptorTest extends TestBase {
 		@Test
 		public void tagsNull() {
 			when(requestAdapter.getTags()).thenReturn(null);
+			when(requestAdapter.getReferenceType()).thenReturn("reference");
 			when(requestAdapter.getPropagationType()).thenReturn(PropagationType.HTTP);
 			when(tracer.extract(Format.Builtin.TEXT_MAP, carrier)).thenReturn(context);
 			when(spanContextStore.getSpanContext()).thenReturn(null);
@@ -136,7 +139,7 @@ public class ServerInterceptorTest extends TestBase {
 			assertThat(result, is(span));
 			verify(tracer).buildSpan();
 			verify(tracer).extract(Format.Builtin.TEXT_MAP, carrier);
-			verify(spanBuilder).asChildOf(context);
+			verify(spanBuilder).addReference("reference", context);
 			verify(spanBuilder).addReference(References.FOLLOWS_FROM, null);
 			verify(spanBuilder).doNotReport();
 			verify(spanBuilder).withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_SERVER);
@@ -151,6 +154,7 @@ public class ServerInterceptorTest extends TestBase {
 
 		@Test
 		public void propagationNull() {
+			when(requestAdapter.getReferenceType()).thenReturn("reference");
 			when(requestAdapter.getPropagationType()).thenReturn(null);
 			when(tracer.extract(Format.Builtin.TEXT_MAP, carrier)).thenReturn(context);
 			when(spanContextStore.getSpanContext()).thenReturn(null);
@@ -160,8 +164,32 @@ public class ServerInterceptorTest extends TestBase {
 			assertThat(result, is(span));
 			verify(tracer).buildSpan();
 			verify(tracer).extract(Format.Builtin.TEXT_MAP, carrier);
-			verify(spanBuilder).asChildOf(context);
+			verify(spanBuilder).addReference("reference", context);
 			verify(spanBuilder).addReference(References.FOLLOWS_FROM, null);
+			verify(spanBuilder).doNotReport();
+			verify(spanBuilder).withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_SERVER);
+			verify(spanBuilder).start();
+			verify(spanContextStore).setSpanContext(result.context());
+			verify(spanContextStore).getSpanContext();
+			verify(span, times(2)).context(); // one in test itself
+			verifyNoMoreInteractions(tracer, spanBuilder, span, spanContextStore);
+			verifyZeroInteractions(context, context2);
+		}
+
+		@Test
+		public void contextFromStoreReferred() {
+			when(requestAdapter.getReferenceType()).thenReturn("reference");
+			when(tracer.extract(Format.Builtin.TEXT_MAP, carrier)).thenReturn(null);
+			when(tracer.extract(Format.Builtin.TEXT_MAP, carrier)).thenReturn(null);
+			when(spanContextStore.getSpanContext()).thenReturn(context2);
+
+			SpanImpl result = interceptor.handleRequest(requestAdapter);
+
+			assertThat(result, is(span));
+			verify(tracer).buildSpan();
+			verify(tracer).extract(Format.Builtin.TEXT_MAP, carrier);
+			verify(spanBuilder).addReference("reference", (SpanContextImpl) null);
+			verify(spanBuilder).addReference(References.FOLLOWS_FROM, context2);
 			verify(spanBuilder).doNotReport();
 			verify(spanBuilder).withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_SERVER);
 			verify(spanBuilder).start();

@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -52,9 +53,64 @@ public class SpanImplTest extends TestBase {
 			span.start(startTime, 0);
 
 			assertThat(span.getStartTimeMicros(), is(startTime));
+			assertThat(span.isStarted(), is(true));
+			assertThat(span.isFinished(), is(false));
 			verify(tracer).spanStarted(span);
 			verifyNoMoreInteractions(tracer);
 			verifyZeroInteractions(timer);
+		}
+
+		@Test
+		public void startTwice() {
+			long startTime = 1442l;
+			long startTime2 = 1557l;
+
+			span.start(startTime, 0);
+			span.start(startTime2, 0);
+
+			assertThat(span.getStartTimeMicros(), is(startTime));
+			assertThat(span.isStarted(), is(true));
+			assertThat(span.isFinished(), is(false));
+			verify(tracer).spanStarted(span);
+			verifyNoMoreInteractions(tracer);
+			verifyZeroInteractions(timer);
+		}
+
+		@Test
+		public void startWithTracer() {
+			long startTime = 1442l;
+			when(timer.getCurrentTimeMicroseconds()).thenReturn(startTime);
+			when(timer.getCurrentNanoTime()).thenReturn(0L);
+
+			span.start();
+
+			assertThat(span.getStartTimeMicros(), is(startTime));
+			assertThat(span.isStarted(), is(true));
+			assertThat(span.isFinished(), is(false));
+			verify(tracer).spanStarted(span);
+			verify(tracer, atLeastOnce()).getTimer();
+			verify(timer).getCurrentNanoTime();
+			verify(timer).getCurrentTimeMicroseconds();
+			verifyZeroInteractions(timer, tracer);
+		}
+
+		@Test
+		public void startWithTracerTwice() {
+			long startTime = 1442l;
+			when(timer.getCurrentTimeMicroseconds()).thenReturn(startTime);
+			when(timer.getCurrentNanoTime()).thenReturn(0L);
+
+			span.start();
+			span.start();
+
+			assertThat(span.getStartTimeMicros(), is(startTime));
+			assertThat(span.isStarted(), is(true));
+			assertThat(span.isFinished(), is(false));
+			verify(tracer).spanStarted(span);
+			verify(tracer, atLeastOnce()).getTimer();
+			verify(timer, times(2)).getCurrentNanoTime();
+			verify(timer, times(2)).getCurrentTimeMicroseconds();
+			verifyZeroInteractions(timer, tracer);
 		}
 
 		@Test(expectedExceptions = IllegalArgumentException.class)
@@ -75,6 +131,7 @@ public class SpanImplTest extends TestBase {
 
 			span.finish();
 
+			assertThat(span.isFinished(), is(true));
 			assertThat(span.getStartTimeMicros(), is(startTime));
 			assertThat(span.getDuration(), is((double) endTime - startTime));
 			verify(tracer).spanStarted(span);
@@ -92,6 +149,7 @@ public class SpanImplTest extends TestBase {
 
 			span.finish(endTime);
 
+			assertThat(span.isFinished(), is(true));
 			assertThat(span.getStartTimeMicros(), is(startTime));
 			assertThat(span.getDuration(), is((double) endTime - startTime));
 			verify(tracer).spanStarted(span);
@@ -110,6 +168,7 @@ public class SpanImplTest extends TestBase {
 
 			span.finish();
 
+			assertThat(span.isFinished(), is(true));
 			assertThat(span.getStartTimeMicros(), is(startTime));
 			assertThat(span.getDuration(), is((endTimeNanos - startTimeNanos) / 1000.d));
 			verify(tracer).spanStarted(span);
@@ -127,12 +186,90 @@ public class SpanImplTest extends TestBase {
 
 			span.finish(endTime);
 
+			assertThat(span.isFinished(), is(true));
 			assertThat(span.getStartTimeMicros(), is(startTime));
 			assertThat(span.getDuration(), is((double) endTime - startTime));
 			verify(tracer).spanStarted(span);
 			verify(tracer).spanEnded(span);
 			verifyNoMoreInteractions(tracer);
 			verifyZeroInteractions(timer);
+		}
+
+		@Test
+		public void noNanosTwice() {
+			long startTime = System.currentTimeMillis();
+			long endTime = startTime + 1223l;
+			long endTime2 = startTime + 11557l;
+			when(timer.getCurrentTimeMicroseconds()).thenReturn(endTime).thenReturn(endTime2);
+			span.start(startTime, 0);
+
+			span.finish();
+			span.finish();
+
+			assertThat(span.isFinished(), is(true));
+			assertThat(span.getStartTimeMicros(), is(startTime));
+			assertThat(span.getDuration(), is((double) endTime - startTime));
+			verify(tracer).spanStarted(span);
+			verify(tracer).spanEnded(span);
+			verify(tracer, atLeastOnce()).getTimer();
+			verify(timer, times(2)).getCurrentTimeMicroseconds();
+			verifyNoMoreInteractions(tracer, timer);
+		}
+
+		@Test
+		public void nanosTwice() {
+			long startTime = System.currentTimeMillis();
+			long startTimeNanos = System.nanoTime();
+			long endTimeNanos = startTimeNanos + 22546l;
+			long endTimeNanos2 = startTimeNanos + 11557l;
+			when(timer.getCurrentNanoTime()).thenReturn(endTimeNanos).thenReturn(endTimeNanos2);
+			span.start(startTime, startTimeNanos);
+
+			span.finish();
+			span.finish();
+
+			assertThat(span.isFinished(), is(true));
+			assertThat(span.getStartTimeMicros(), is(startTime));
+			assertThat(span.getDuration(), is((endTimeNanos - startTimeNanos) / 1000.d));
+			verify(tracer).spanStarted(span);
+			verify(tracer).spanEnded(span);
+			verify(tracer, atLeastOnce()).getTimer();
+			verify(timer, times(2)).getCurrentNanoTime();
+			verifyNoMoreInteractions(tracer, timer);
+		}
+
+		@Test
+		public void noNanosWithoutStart() {
+			long startTime = System.currentTimeMillis();
+			long endTime = startTime + 1223l;
+			when(timer.getCurrentTimeMicroseconds()).thenReturn(endTime);
+
+			span.finish();
+
+			assertThat(span.isFinished(), is(true));
+			assertThat(span.getStartTimeMicros(), is(0L));
+			assertThat(span.getDuration(), is(0D));
+			verify(tracer).spanEnded(span);
+			verify(tracer, atLeastOnce()).getTimer();
+			verify(timer).getCurrentTimeMicroseconds();
+			verifyNoMoreInteractions(tracer, timer);
+		}
+
+		@Test
+		public void nanosWithoutStart() {
+			long startTimeNanos = System.nanoTime();
+			long endTimeNanos = startTimeNanos + 22546l;
+			when(timer.getCurrentNanoTime()).thenReturn(endTimeNanos);
+
+			span.finish();
+
+			assertThat(span.isFinished(), is(true));
+			assertThat(span.getStartTimeMicros(), is(0L));
+			assertThat(span.getDuration(), is(0D));
+			verify(tracer).spanEnded(span);
+			verify(tracer, atLeastOnce()).getTimer();
+			verify(timer).getCurrentTimeMicroseconds();
+			verifyNoMoreInteractions(tracer, timer);
 		}
 
 	}

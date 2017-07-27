@@ -37,4 +37,14 @@ public interface ExtraTags {
 	 */
 	String THROWABLE_TYPE = "ext.throw.type";
 
+	/**
+	 * Inspectit method id.
+	 */
+	String INSPECTT_METHOD_ID = "ext.inspectit.method";
+
+	/**
+	 * Inspectit sensor id.
+	 */
+	String INSPECTT_SENSOR_ID = "ext.inspectit.sensor";
+
 }

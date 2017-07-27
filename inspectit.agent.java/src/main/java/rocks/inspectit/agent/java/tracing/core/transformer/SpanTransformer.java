@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang.math.NumberUtils;
 
 import io.opentracing.tag.Tags;
 import rocks.inspectit.agent.java.sdk.opentracing.internal.impl.SpanImpl;
@@ -92,6 +93,11 @@ public final class SpanTransformer implements Transformer {
 			String propagation = spanImpl.getTags().get(ExtraTags.PROPAGATION_TYPE);
 			span.setPropagationType(PropagationType.safeValueOf(propagation));
 
+			// extra for method and sensor id
+			String methodId = spanImpl.getTags().get(ExtraTags.INSPECTT_METHOD_ID);
+			span.setMethodIdent(NumberUtils.toLong(methodId, 0));
+			String sensorId = spanImpl.getTags().get(ExtraTags.INSPECTT_SENSOR_ID);
+			span.setSensorTypeIdent(NumberUtils.toLong(sensorId, 0));
 
 			for (Map.Entry<String, String> entry : spanImpl.getTags().entrySet()) {
 				if (!isTagIgnored(entry.getKey())) {
@@ -126,13 +132,13 @@ public final class SpanTransformer implements Transformer {
 
 	/**
 	 * If tags key is ignored for the copy to the our span representation. Ignored are: propagation
-	 * type and spin kind.
+	 * type. method and sensor id as well as spin kind.
 	 *
 	 * @param key
 	 *            tag key
 	 * @return if tag with given key should be ignored when copied.
 	 */
 	private static boolean isTagIgnored(String key) {
-		return ExtraTags.PROPAGATION_TYPE.equals(key) || Tags.SPAN_KIND.getKey().equals(key);
+		return ExtraTags.PROPAGATION_TYPE.equals(key) || ExtraTags.INSPECTT_METHOD_ID.equals(key) || ExtraTags.INSPECTT_SENSOR_ID.equals(key) || Tags.SPAN_KIND.getKey().equals(key);
 	}
 }
