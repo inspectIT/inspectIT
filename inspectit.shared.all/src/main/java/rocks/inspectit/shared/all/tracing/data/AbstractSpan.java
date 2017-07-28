@@ -56,6 +56,11 @@ public abstract class AbstractSpan extends MethodSensorData implements Span {
 	private String referenceType;
 
 	/**
+	 * ID of the span's parent. Can be 0 to denote that there is no parent.
+	 */
+	private long parentSpanId;
+
+	/**
 	 * Defined tags.
 	 */
 	private Map<String, String> tags;
@@ -145,6 +150,45 @@ public abstract class AbstractSpan extends MethodSensorData implements Span {
 	}
 
 	/**
+	 * Gets {@link #parentSpanId}.
+	 *
+	 * @return {@link #parentSpanId}
+	 */
+	@Override
+	public long getParentSpanId() {
+		return this.parentSpanId;
+	}
+
+	/**
+	 * Sets {@link #parentSpanId}.
+	 *
+	 * @param parentId
+	 *            New value for {@link #parentSpanId} or 0 to make this span a root.
+	 */
+	public void setParentSpanId(long parentId) {
+		this.parentSpanId = parentId;
+	}
+
+	/**
+	 * If this is span is a root span.
+	 *
+	 * @return If this is span identification for a root span.
+	 */
+	@Override
+	public boolean isRoot() {
+		return this.parentSpanId == 0;
+	}
+
+	/**
+	 * Same as {@link #isRoot()}. Needed for querying.
+	 *
+	 * @return {@link #isRoot()}
+	 */
+	public boolean getRoot() { // NOPMD
+		return isRoot();
+	}
+
+	/**
 	 * Adds tag to this span.
 	 *
 	 * @param tag
@@ -193,7 +237,7 @@ public abstract class AbstractSpan extends MethodSensorData implements Span {
 	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = super.getObjectSize(objectSizes, doAlign);
-		size += objectSizes.getPrimitiveTypesSize(4, 0, 0, 0, 0, 1);
+		size += objectSizes.getPrimitiveTypesSize(4, 0, 0, 0, 1, 1);
 		size += objectSizes.getSizeOf(spanIdent);
 		if (null != tags) {
 			int tagsSize = tags.size();
@@ -219,6 +263,7 @@ public abstract class AbstractSpan extends MethodSensorData implements Span {
 		long temp;
 		temp = Double.doubleToLongBits(this.duration);
 		result = (prime * result) + (int) (temp ^ (temp >>> 32));
+		result = (prime * result) + (int) (this.parentSpanId ^ (this.parentSpanId >>> 32));
 		result = (prime * result) + ((this.propagationType == null) ? 0 : this.propagationType.hashCode());
 		result = (prime * result) + ((this.referenceType == null) ? 0 : this.referenceType.hashCode());
 		result = (prime * result) + ((this.spanIdent == null) ? 0 : this.spanIdent.hashCode());
@@ -242,6 +287,9 @@ public abstract class AbstractSpan extends MethodSensorData implements Span {
 		}
 		AbstractSpan other = (AbstractSpan) obj;
 		if (Double.doubleToLongBits(this.duration) != Double.doubleToLongBits(other.duration)) {
+			return false;
+		}
+		if (this.parentSpanId != other.parentSpanId) {
 			return false;
 		}
 		if (this.propagationType != other.propagationType) {
@@ -276,9 +324,9 @@ public abstract class AbstractSpan extends MethodSensorData implements Span {
 	 */
 	@Override
 	public String toString() {
-		return "AbstractSpan [getSpanIdent()=" + this.getSpanIdent() + ", getPropagationType()=" + this.getPropagationType() + ", getReferenceType()=" + this.getReferenceType() + ", isCaller()="
-				+ this.isCaller() + ", getTags()=" + this.getTags() + ", getDuration()=" + this.getDuration() + "]";
+		return "AbstractSpan [isCaller()=" + this.isCaller() + ", getSpanIdent()=" + this.getSpanIdent() + ", getDuration()=" + this.getDuration() + ", getPropagationType()="
+				+ this.getPropagationType() + ", getReferenceType()=" + this.getReferenceType() + ", getParentSpanId()=" + this.getParentSpanId() + ", isRoot()=" + this.isRoot() + ", getTags()="
+				+ this.getTags() + "]";
 	}
-
 
 }

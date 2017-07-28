@@ -76,6 +76,9 @@ public final class SpanTransformer implements Transformer {
 		span.setDuration(durationMillis);
 
 		// reference
+		if (spanImpl.context().getParentId() != ident.getId()) {
+			span.setParentSpanId(spanImpl.context().getParentId());
+		}
 		span.setReferenceType(spanImpl.context().getReferenceType());
 
 		// operation name (we save as tag)

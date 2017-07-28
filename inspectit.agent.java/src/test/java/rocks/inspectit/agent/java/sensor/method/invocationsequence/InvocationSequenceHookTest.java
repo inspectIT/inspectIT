@@ -185,7 +185,7 @@ public class InvocationSequenceHookTest extends TestBase {
 
 		invocationSequenceHook.beforeBody(methodId, sensorTypeId, object, parameters, rsc);
 		// save span
-		SpanIdent spanIdent = new SpanIdent(0, 0, 0);
+		SpanIdent spanIdent = new SpanIdent(0, 0);
 		ClientSpan clientSpan = new ClientSpan();
 		clientSpan.setSpanIdent(spanIdent);
 		invocationSequenceHook.addMethodSensorData(0, 0, "", clientSpan);
@@ -954,7 +954,7 @@ public class InvocationSequenceHookTest extends TestBase {
 		invocationSequenceHook.beforeBody(methodId2, sensorTypeId, object, parameters, removingRsc);
 
 		AbstractSpan span = new ClientSpan();
-		span.setSpanIdent(new SpanIdent(1, 2, 3));
+		span.setSpanIdent(new SpanIdent(1, 2));
 		invocationSequenceHook.addMethodSensorData(0, 0, null, span);
 
 		invocationSequenceHook.firstAfterBody(methodId2, sensorTypeId, object, parameters, result, false, removingRsc);

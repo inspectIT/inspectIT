@@ -75,10 +75,10 @@ public final class TraceTreeData implements Comparable<TraceTreeData> {
 		Span root = null;
 		Multimap<Long, Span> parentToSpanMap = MultimapBuilder.hashKeys().arrayListValues().build();
 		for (Span span : spans) {
-			if (span.getSpanIdent().isRoot()) {
+			if (span.isRoot()) {
 				root = span;
 			} else {
-				parentToSpanMap.put(span.getSpanIdent().getParentId(), span);
+				parentToSpanMap.put(span.getParentSpanId(), span);
 			}
 		}
 

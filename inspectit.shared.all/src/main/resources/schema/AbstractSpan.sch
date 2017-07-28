@@ -16,3 +16,4 @@ class: rocks.inspectit.shared.all.tracing.data.AbstractSpan
 9: propagationType
 10: referenceType
 11: tags
+12: parentSpanId

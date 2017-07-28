@@ -91,6 +91,20 @@ public interface Span extends ISpanIdentAware {
 	String getReferenceType();
 
 	/**
+	 * Span-ID of the span's parent. Only available if {{@link #isRoot()} returns false.
+	 *
+	 * @return the spanId
+	 */
+	long getParentSpanId();
+
+	/**
+	 * Return true, if this span is a root span, meaning that it has no parent.
+	 *
+	 * @return true, if this span is a root
+	 */
+	boolean isRoot();
+
+	/**
 	 * Denotes if the this span is caller span.
 	 *
 	 * @return If it is caller span.
