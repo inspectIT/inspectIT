@@ -35,15 +35,10 @@ public class SpanIdent implements Sizeable, Serializable {
 	private final long traceId;
 
 	/**
-	 * ID of the span's parent. Can be same as {@link #id} to denote that there is no parent.
-	 */
-	private final long parentId;
-
-	/**
 	 * No-arg constructor.
 	 */
 	protected SpanIdent() {
-		this(0, 0, 0);
+		this(0, 0);
 	}
 
 	/**
@@ -53,31 +48,10 @@ public class SpanIdent implements Sizeable, Serializable {
 	 *            Unique ID of the span.
 	 * @param traceId
 	 *            ID of the trace that span belongs to. Can be same as {@link #id}.
-	 * @param parentId
-	 *            ID of the span's parent. Can be <code>0</code> to denote that there is no parent.
 	 */
-	public SpanIdent(long id, long traceId, long parentId) {
+	public SpanIdent(long id, long traceId) {
 		this.id = id;
 		this.traceId = traceId;
-		this.parentId = parentId;
-	}
-
-	/**
-	 * If this is span identification for a root span.
-	 *
-	 * @return If this is span identification for a root span.
-	 */
-	public boolean isRoot() {
-		return (this.parentId == this.id) && (this.traceId == this.id);
-	}
-
-	/**
-	 * Same as {@link #isRoot()}. Needed for querying.
-	 *
-	 * @return {@link #isRoot()}
-	 */
-	public boolean getRoot() { // NOPMD
-		return isRoot();
 	}
 
 	/**
@@ -99,15 +73,6 @@ public class SpanIdent implements Sizeable, Serializable {
 	}
 
 	/**
-	 * Gets {@link #parentId}.
-	 *
-	 * @return {@link #parentId}
-	 */
-	public long getParentId() {
-		return this.parentId;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -121,7 +86,7 @@ public class SpanIdent implements Sizeable, Serializable {
 	@Override
 	public long getObjectSize(IObjectSizes objectSizes, boolean doAlign) {
 		long size = objectSizes.getSizeOfObjectHeader();
-		size += objectSizes.getPrimitiveTypesSize(0, 0, 0, 0, 3, 0);
+		size += objectSizes.getPrimitiveTypesSize(0, 0, 0, 0, 2, 0);
 
 		if (doAlign) {
 			return objectSizes.alignTo8Bytes(size);
@@ -138,7 +103,6 @@ public class SpanIdent implements Sizeable, Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = (prime * result) + (int) (this.id ^ (this.id >>> 32));
-		result = (prime * result) + (int) (this.parentId ^ (this.parentId >>> 32));
 		result = (prime * result) + (int) (this.traceId ^ (this.traceId >>> 32));
 		return result;
 	}
@@ -161,9 +125,6 @@ public class SpanIdent implements Sizeable, Serializable {
 		if (this.id != other.id) {
 			return false;
 		}
-		if (this.parentId != other.parentId) {
-			return false;
-		}
 		if (this.traceId != other.traceId) {
 			return false;
 		}
@@ -175,7 +136,7 @@ public class SpanIdent implements Sizeable, Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "SpanIdent [id=" + this.id + ", traceId=" + this.traceId + ", parentId=" + this.parentId + ", isRoot()=" + this.isRoot() + "]";
+		return "SpanIdent [id=" + this.id + ", traceId=" + this.traceId + "]";
 	}
 
 }

@@ -54,7 +54,7 @@ public class SpanTransformerTest extends TestBase {
 		}
 
 		@Test
-		public void ident() {
+		public void context() {
 			when(spanImpl.context()).thenReturn(new SpanContextImpl(1, 2, 3, null, Collections.<String, String> emptyMap()));
 
 			AbstractSpan span = SpanTransformer.transformSpan(spanImpl);
@@ -62,7 +62,7 @@ public class SpanTransformerTest extends TestBase {
 			SpanIdent spanIdent = span.getSpanIdent();
 			assertThat(spanIdent.getId(), is(1L));
 			assertThat(spanIdent.getTraceId(), is(2L));
-			assertThat(spanIdent.getParentId(), is(3L));
+			assertThat(span.getParentSpanId(), is(3L));
 		}
 
 		@Test
@@ -160,7 +160,7 @@ public class SpanTransformerTest extends TestBase {
 			SpanIdent spanIdent = span.getSpanIdent();
 			assertThat(spanIdent.getId(), is(1L));
 			assertThat(spanIdent.getTraceId(), is(2L));
-			assertThat(spanIdent.getParentId(), is(3L));
+			assertThat(span.getParentSpanId(), is(3L));
 		}
 
 		@Test(expectedExceptions = IllegalArgumentException.class)

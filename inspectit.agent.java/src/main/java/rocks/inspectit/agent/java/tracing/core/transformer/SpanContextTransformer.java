@@ -48,7 +48,7 @@ public final class SpanContextTransformer implements Transformer {
 			return null;
 		}
 
-		return new SpanIdent(context.getId(), context.getTraceId(), context.getParentId());
+		return new SpanIdent(context.getId(), context.getTraceId());
 	}
 
 }

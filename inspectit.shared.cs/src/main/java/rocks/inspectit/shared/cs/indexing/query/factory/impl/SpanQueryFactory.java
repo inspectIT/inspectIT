@@ -46,7 +46,7 @@ public class SpanQueryFactory<E extends IIndexQuery> extends AbstractQueryFactor
 		query.setObjectClasses(CLASSES_LIST);
 
 		// only root spans
-		query.addIndexingRestriction(IndexQueryRestrictionFactory.equal("spanIdent.root", true));
+		query.addIndexingRestriction(IndexQueryRestrictionFactory.equal("root", true));
 
 		// set time bounds
 		if (fromDate != null) {

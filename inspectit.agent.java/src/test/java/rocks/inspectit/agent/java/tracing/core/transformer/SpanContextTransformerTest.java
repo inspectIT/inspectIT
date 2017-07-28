@@ -27,7 +27,6 @@ public class SpanContextTransformerTest {
 
 			assertThat(spanIdent.getId(), is(1L));
 			assertThat(spanIdent.getTraceId(), is(2L));
-			assertThat(spanIdent.getParentId(), is(3L));
 		}
 
 		@Test
@@ -45,7 +44,6 @@ public class SpanContextTransformerTest {
 
 			assertThat(spanIdent.getId(), is(1L));
 			assertThat(spanIdent.getTraceId(), is(2L));
-			assertThat(spanIdent.getParentId(), is(3L));
 		}
 
 		@Test(expectedExceptions = IllegalArgumentException.class)
