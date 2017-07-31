@@ -102,7 +102,7 @@ public class ExtendedByteBufferOutputStreamTest {
 	@Test(invocationCount = 5)
 	public void writeMoreThanBufferSize() throws IOException {
 		Random random = new Random();
-		int writeCount = random.nextInt(bufferSize * 5);
+		int writeCount = (bufferSize + 1) + random.nextInt(bufferSize * 5);
 		byte[] array = new byte[writeCount];
 		random.nextBytes(array);
 		int buffersUsed = writeCount / bufferSize;
