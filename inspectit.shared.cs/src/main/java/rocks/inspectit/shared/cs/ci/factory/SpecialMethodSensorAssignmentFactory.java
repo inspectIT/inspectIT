@@ -13,8 +13,10 @@ import org.springframework.stereotype.Component;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.CloseableHttpAsyncClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.EUMInstrumentationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ExecutorIntercepterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.HttpClientBuilderSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
 
 /**
@@ -49,6 +51,16 @@ public class SpecialMethodSensorAssignmentFactory {
 	private Collection<SpecialMethodSensorAssignment> executorInterceptorAssignments;
 
 	/**
+	 * Assignments for the http client builder.
+	 */
+	private Collection<SpecialMethodSensorAssignment> httpClientBuilderAssignments;
+
+	/**
+	 * Assignments for the closeable http async client.
+	 */
+	private Collection<SpecialMethodSensorAssignment> closeableHttpAsyncClientAssignments;
+
+	/**
 	 * Private as factory.
 	 */
 	protected SpecialMethodSensorAssignmentFactory() {
@@ -77,6 +89,9 @@ public class SpecialMethodSensorAssignmentFactory {
 		}
 
 		assignments.addAll(executorInterceptorAssignments);
+
+		assignments.addAll(httpClientBuilderAssignments);
+		assignments.addAll(closeableHttpAsyncClientAssignments);
 
 		return assignments;
 	}
@@ -153,6 +168,20 @@ public class SpecialMethodSensorAssignmentFactory {
 		execSubmitRunnableInstr.setParameters(Arrays.asList("java.lang.Runnable"));
 
 		executorInterceptorAssignments = Arrays.asList(execSubmitRunnableInstr);
+
+		SpecialMethodSensorAssignment httpClientBuilderAddInterceptorInstr = new SpecialMethodSensorAssignment(HttpClientBuilderSensorConfig.INSTANCE);
+		httpClientBuilderAddInterceptorInstr.setClassName("org.apache.http.impl.nio.client.HttpAsyncClientBuilder");
+		httpClientBuilderAddInterceptorInstr.setMethodName("build");
+
+		httpClientBuilderAssignments = Arrays.asList(httpClientBuilderAddInterceptorInstr);
+
+		SpecialMethodSensorAssignment closeableHttpAsyncClientInstr = new SpecialMethodSensorAssignment(CloseableHttpAsyncClientSensorConfig.INSTANCE);
+		closeableHttpAsyncClientInstr.setClassName("org.apache.http.impl.nio.client.CloseableHttpAsyncClient");
+		closeableHttpAsyncClientInstr.setMethodName("execute");
+		closeableHttpAsyncClientInstr
+		.setParameters(Arrays.asList("org.apache.http.HttpHost", "org.apache.http.HttpRequest", "org.apache.http.protocol.HttpContext", "org.apache.http.concurrent.FutureCallback"));
+
+		closeableHttpAsyncClientAssignments = Arrays.asList(closeableHttpAsyncClientInstr);
 	}
 
 }

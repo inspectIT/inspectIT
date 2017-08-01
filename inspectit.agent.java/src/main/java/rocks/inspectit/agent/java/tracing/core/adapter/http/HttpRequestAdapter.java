@@ -55,7 +55,7 @@ public abstract class HttpRequestAdapter implements RequestAdapter<TextMap> {
 		}
 
 		Map<String, String> tags = new HashMap<String, String>(2, 1f);
-		if (null != url) {
+		if ((null != url) && !url.isEmpty()) {
 			tags.put(Tags.HTTP_URL.getKey(), url);
 		}
 		if (null != method) {

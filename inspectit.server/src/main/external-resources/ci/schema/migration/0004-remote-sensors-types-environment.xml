@@ -14,14 +14,15 @@
 	<xsl:template match="environment/method-sensor-configs">
 		<xsl:copy>
 			<xsl:apply-templates select="@* | node()"/>
-			<xsl:element name="remote-apache-httpclientV40-client-sensor-config"/>
-			<xsl:element name="remote-jetty-httpclientV61-client-sensor-config"/>
-			<xsl:element name="remote-urlconnection-client-sensor-config"/>
-			<xsl:element name="remote-spring-resttemplate-client-sensor-config"/>
-			<xsl:element name="remote-http-server-sensor-config"/>
-			<xsl:element name="remote-jms-client-sensor-config"/>
-			<xsl:element name="remote-jms-listener-server-sensor-config"/>
-			<xsl:element name="remote-manual-server-sensor-config"/>
+			<xsl:element name="remote-apache-httpclientV40-client-sensor-config"/> 
+		    <xsl:element name="remote-jetty-httpclientV61-client-sensor-config"/> 
+		    <xsl:element name="remote-urlconnection-client-sensor-config"/> 
+		    <xsl:element name="remote-spring-resttemplate-client-sensor-config"/> 
+		    <xsl:element name="remote-http-server-sensor-config"/> 
+		    <xsl:element name="remote-jms-client-sensor-config"/> 
+		    <xsl:element name="remote-jms-listener-server-sensor-config"/> 
+		    <xsl:element name="remote-manual-server-sensor-config"/>
+			<xsl:element name="remote-async-apache-httpclient-sensor-config"/>
 		</xsl:copy>
 	</xsl:template>
 

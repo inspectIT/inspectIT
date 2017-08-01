@@ -19,6 +19,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteAsyncApacheHttpClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61ClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsClientSensorConfig;
@@ -111,6 +112,8 @@ public enum SensorTypeEnum {
 	ALERT_INVOCATION(InvocationSequenceSensorConfig.CLASS_NAME + "#alert", InspectITImages.IMG_ALARM_INVOCATION),
 	/** The Remote Apache sensor. */
 	REMOTE_APACHE_HTTP_CLIENT_V40(RemoteApacheHttpClientV40SensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
+	/** The Remote Async Apache sensor. */
+	REMOTE_ASYNC_APACHE_HTTP(RemoteAsyncApacheHttpClientSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
 	/** The Remote UrlConnection sensor. */
 	REMOTE_HTTP_URL_CONNECTION(RemoteUrlConnectionClientSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
 	/** The Remote UrlConnection sensor. */
