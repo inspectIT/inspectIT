@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.mock;
@@ -36,6 +37,7 @@ import rocks.inspectit.shared.cs.ci.profile.data.SensorAssignmentProfileData;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ExecutorClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.CloseableHttpAsyncClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.EUMInstrumentationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ExecutorIntercepterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
@@ -45,6 +47,8 @@ import rocks.inspectit.shared.cs.cmr.service.IConfigurationInterfaceService;
  * Tests the {@link SpecialMethodSensorAssignmentFactory} class.
  *
  * @author Ivan Senic
+ * @author Isabel Vico Peinado
+ * @author Marius Oehler
  *
  */
 @SuppressWarnings({ "PMD", "unchecked", "all" })
@@ -83,8 +87,10 @@ public class SpecialMethodSensorAssignmentFactoryTest extends TestBase {
 
 			Collection<SpecialMethodSensorAssignment> assignments = factory.getSpecialAssignments(environment);
 
-			assertThat(assignments, hasSize(1));
 			assertThat(assignments, hasItem(hasProperty("specialMethodSensorConfig", is(ExecutorIntercepterSensorConfig.INSTANCE))));
+			assertThat(assignments, hasSize(2));
+			assertThat("There must be at least three items in special sensor: HttpClientBuilder and CloseableHttpAsyncClient", assignments, everyItem(hasProperty("specialMethodSensorConfig",
+					anyOf(is(ExecutorIntercepterSensorConfig.INSTANCE), is(CloseableHttpAsyncClientSensorConfig.INSTANCE)))));
 		}
 
 		@Test
@@ -95,19 +101,25 @@ public class SpecialMethodSensorAssignmentFactoryTest extends TestBase {
 
 			Collection<SpecialMethodSensorAssignment> assignments = factory.getSpecialAssignments(environment);
 
-			assertThat(assignments, hasSize(1));
 			assertThat(assignments, hasItem(hasProperty("specialMethodSensorConfig", is(ExecutorIntercepterSensorConfig.INSTANCE))));
+			assertThat(assignments, hasSize(2));
+			for (SpecialMethodSensorAssignment assigment : assignments) {
+				assertThat("Must not be an instance of jmxSensorConfig", assigment, not(instanceOf(JmxSensorConfig.class)));
+			}
 		}
 
 		@Test
 		public void classLoadingDelegation() {
 			when(environment.isClassLoadingDelegation()).thenReturn(true);
 			when(environment.getJmxSensorConfig()).thenReturn(null);
+			when(environment.getEumConfig()).thenReturn(null);
 
 			Collection<SpecialMethodSensorAssignment> assignments = factory.getSpecialAssignments(environment);
 
 			assertThat(assignments, is(not(empty())));
-			assertThat(assignments, everyItem(hasProperty("specialMethodSensorConfig", anyOf(is(ClassLoadingDelegationSensorConfig.INSTANCE), is(ExecutorIntercepterSensorConfig.INSTANCE)))));
+			assertThat("Must be at least one classLoadingDelegationAssignment in the special sensors", assignments,
+					everyItem(hasProperty("specialMethodSensorConfig", anyOf(is(ClassLoadingDelegationSensorConfig.INSTANCE), is(ExecutorIntercepterSensorConfig.INSTANCE),
+							is(CloseableHttpAsyncClientSensorConfig.INSTANCE)))));
 		}
 
 		@Test
@@ -116,16 +128,17 @@ public class SpecialMethodSensorAssignmentFactoryTest extends TestBase {
 			when(environment.isClassLoadingDelegation()).thenReturn(false);
 			when(environment.getJmxSensorConfig()).thenReturn(jmxSensorConfig);
 			when(jmxSensorConfig.isActive()).thenReturn(true);
+			when(environment.getEumConfig()).thenReturn(null);
 
 			Collection<SpecialMethodSensorAssignment> assignments = factory.getSpecialAssignments(environment);
 
 			assertThat(assignments, is(not(empty())));
-			assertThat(assignments, everyItem(hasProperty("specialMethodSensorConfig", anyOf(is(MBeanServerInterceptorSensorConfig.INSTANCE), is(ExecutorIntercepterSensorConfig.INSTANCE)))));
+			assertThat("Must be at least one mbeanServerInterceptorAssignments in the special sensors", assignments, everyItem(hasProperty("specialMethodSensorConfig",
+					anyOf(is(MBeanServerInterceptorSensorConfig.INSTANCE), is(ExecutorIntercepterSensorConfig.INSTANCE), is(CloseableHttpAsyncClientSensorConfig.INSTANCE)))));
 		}
 
 		@Test
 		public void endUserMonitoring() {
-
 			EndUserMonitoringConfig eumConf = new EndUserMonitoringConfig();
 			eumConf.setActiveModules("" + JSAgentModule.NAVTIMINGS_MODULE.getIdentifier());
 			eumConf.setScriptBaseUrl("/");
@@ -136,7 +149,8 @@ public class SpecialMethodSensorAssignmentFactoryTest extends TestBase {
 			Collection<SpecialMethodSensorAssignment> assignments = factory.getSpecialAssignments(environment);
 
 			assertThat(assignments, is(not(empty())));
-			assertThat(assignments, everyItem(hasProperty("specialMethodSensorConfig", anyOf(is(EUMInstrumentationSensorConfig.INSTANCE), is(ExecutorIntercepterSensorConfig.INSTANCE)))));
+			assertThat("Must be at least one EUMInstrumentation in the special sensors", assignments, everyItem(hasProperty("specialMethodSensorConfig",
+					anyOf(is(ExecutorIntercepterSensorConfig.INSTANCE), is(EUMInstrumentationSensorConfig.INSTANCE), is(CloseableHttpAsyncClientSensorConfig.INSTANCE)))));
 		}
 
 		@Test
@@ -154,7 +168,8 @@ public class SpecialMethodSensorAssignmentFactoryTest extends TestBase {
 			Collection<SpecialMethodSensorAssignment> assignments = factory.getSpecialAssignments(environment);
 
 			assertThat(assignments, is(not(empty())));
-			assertThat(assignments, everyItem(hasProperty("specialMethodSensorConfig", is(ExecutorIntercepterSensorConfig.INSTANCE))));
+			assertThat(assignments, hasItem(hasProperty("specialMethodSensorConfig", is(ExecutorIntercepterSensorConfig.INSTANCE))));
+			assertThat(assignments, hasItem(hasProperty("specialMethodSensorConfig", is(CloseableHttpAsyncClientSensorConfig.INSTANCE))));
 		}
 
 		@Test
@@ -163,8 +178,18 @@ public class SpecialMethodSensorAssignmentFactoryTest extends TestBase {
 
 			Collection<SpecialMethodSensorAssignment> assignments = factory.getSpecialAssignments(environment);
 
-			assertThat(assignments, hasSize(1));
+			assertThat(assignments, hasSize(2));
 			assertThat(assignments, hasItem(hasProperty("specialMethodSensorConfig", is(ExecutorIntercepterSensorConfig.INSTANCE))));
+			assertThat(assignments, hasItem(hasProperty("specialMethodSensorConfig", is(CloseableHttpAsyncClientSensorConfig.INSTANCE))));
+		}
+
+		@Test
+		public void closeableHttpAsyncClientSensorIsActive() {
+			Collection<SpecialMethodSensorAssignment> assignments = factory.getSpecialAssignments(environment);
+
+			assertThat(assignments, is(not(empty())));
+			assertThat("Must be at least one CloseableHttpAsyncClient in the special sensors", assignments,
+					hasItem(hasProperty("specialMethodSensorConfig", is(CloseableHttpAsyncClientSensorConfig.INSTANCE))));
 		}
 	}
 }

@@ -9,6 +9,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.ConnectionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.ExecutorClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.NHttpClientConnectionManagerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
@@ -21,7 +22,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
  *
  */
 @XmlSeeAlso({ ConnectionSensorConfig.class, HttpSensorConfig.class, InvocationSequenceSensorConfig.class, PreparedStatementParameterSensorConfig.class, PreparedStatementSensorConfig.class,
-	StatementSensorConfig.class, TimerSensorConfig.class, ExecutorClientSensorConfig.class })
+		StatementSensorConfig.class, TimerSensorConfig.class, ExecutorClientSensorConfig.class, NHttpClientConnectionManagerSensorConfig.class })
 public abstract class AbstractMethodSensorConfig implements IMethodSensorConfig {
 
 	/**

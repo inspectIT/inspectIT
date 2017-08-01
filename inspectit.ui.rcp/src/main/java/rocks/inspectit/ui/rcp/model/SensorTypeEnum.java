@@ -16,9 +16,11 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.ExecutorClientSensorConfi
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.HttpSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.NHttpClientConnectionManagerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteAsyncApacheHttpClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61ClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsClientSensorConfig;
@@ -29,6 +31,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteUrlConnectionClient
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.StatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.CloseableHttpAsyncClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.EUMInstrumentationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ExecutorIntercepterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
@@ -111,6 +114,8 @@ public enum SensorTypeEnum {
 	ALERT_INVOCATION(InvocationSequenceSensorConfig.CLASS_NAME + "#alert", InspectITImages.IMG_ALARM_INVOCATION),
 	/** The Remote Apache sensor. */
 	REMOTE_APACHE_HTTP_CLIENT_V40(RemoteApacheHttpClientV40SensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
+	/** The Remote Async Apache sensor. */
+	REMOTE_ASYNC_APACHE_HTTP(RemoteAsyncApacheHttpClientSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
 	/** The Remote UrlConnection sensor. */
 	REMOTE_HTTP_URL_CONNECTION(RemoteUrlConnectionClientSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
 	/** The Remote UrlConnection sensor. */
@@ -134,7 +139,11 @@ public enum SensorTypeEnum {
 	/** Special sensor for substituting {@link java.lang.Runnable}s for thread correlation. */
 	EXECUTOR_INTERCEPTOR(ExecutorIntercepterSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
 	/** Executor client sensor for correlating threads via executors. */
-	EXECUTOR_CLIENT(ExecutorClientSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false);
+	EXECUTOR_CLIENT(ExecutorClientSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
+	/** NHTTP client connection manager sensor. */
+	NHTTP_CLIENT_CONNECTION_MAnAGER(NHttpClientConnectionManagerSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false),
+	/** HTTP async-client sensor for asynchronous tracing via Apache library. */
+	CLOSEABLE_HTTP_ASYNC_CLIENT(CloseableHttpAsyncClientSensorConfig.CLASS_NAME, InspectITImages.IMG_REMOTE, false);
 
 	/**
 	 * The LOOKUP map which is used to get an element of the enumeration when passing the full

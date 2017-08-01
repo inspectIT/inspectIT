@@ -91,6 +91,8 @@
 
   <xs:element name="name-extraction" type="nameExtractionExpression"/>
 
+  <xs:element name="nhttp-client-connection-manager-sensor-config" type="nHttpClientConnectionManagerSensorConfig"/>
+
   <xs:element name="not" type="notExpression"/>
 
   <xs:element name="or" type="orExpression"/>
@@ -104,6 +106,8 @@
   <xs:element name="profile" type="profile"/>
 
   <xs:element name="remote-apache-httpclientV40-client-sensor-config" type="remoteApacheHttpClientV40SensorConfig"/>
+
+  <xs:element name="remote-async-apache-httpclient-sensor-config" type="remoteAsyncApacheHttpClientSensorConfig"/>
 
   <xs:element name="remote-http-server-sensor-config" type="remoteJavaHttpServerSensorConfig"/>
 
@@ -528,11 +532,13 @@
                   <xs:element ref="remote-http-server-sensor-config"/>
                   <xs:element ref="remote-jms-listener-server-sensor-config"/>
                   <xs:element ref="remote-apache-httpclientV40-client-sensor-config"/>
+                  <xs:element ref="remote-async-apache-httpclient-sensor-config"/>
                   <xs:element ref="remote-urlconnection-client-sensor-config"/>
                   <xs:element ref="remote-jetty-httpclientV61-client-sensor-config"/>
                   <xs:element ref="remote-spring-resttemplate-client-sensor-config"/>
                   <xs:element ref="remote-jms-client-sensor-config"/>
                   <xs:element ref="remote-manual-server-sensor-config"/>
+                  <xs:element ref="nhttp-client-connection-manager-sensor-config"/>
                 </xs:choice>
               </xs:sequence>
             </xs:complexType>
@@ -736,6 +742,14 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="remoteAsyncApacheHttpClientSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <xs:complexType name="remoteUrlConnectionClientSensorConfig">
     <xs:complexContent>
       <xs:extension base="abstractRemoteSensorConfig">
@@ -769,6 +783,14 @@
   </xs:complexType>
 
   <xs:complexType name="remoteManualServerSensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="nHttpClientConnectionManagerSensorConfig" final="extension restriction">
     <xs:complexContent>
       <xs:extension base="abstractRemoteSensorConfig">
         <xs:sequence/>
@@ -1016,6 +1038,14 @@
             </xs:complexType>
           </xs:element>
         </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="closeableHttpAsyncClientSensorConfig" final="extension restriction">
+    <xs:complexContent>
+      <xs:extension base="abstractMethodSensorConfig">
+        <xs:sequence/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

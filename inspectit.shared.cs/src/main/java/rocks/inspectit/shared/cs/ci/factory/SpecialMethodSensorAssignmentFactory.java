@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.annotation.XmlTransient;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.CloseableHttpAsyncClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.EUMInstrumentationSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ExecutorIntercepterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
@@ -49,6 +51,11 @@ public class SpecialMethodSensorAssignmentFactory {
 	private Collection<SpecialMethodSensorAssignment> executorInterceptorAssignments;
 
 	/**
+	 * Assignments for the closeable http async client.
+	 */
+	private Collection<SpecialMethodSensorAssignment> closeableHttpAsyncClientAssignments;
+
+	/**
 	 * Private as factory.
 	 */
 	protected SpecialMethodSensorAssignmentFactory() {
@@ -77,6 +84,7 @@ public class SpecialMethodSensorAssignmentFactory {
 		}
 
 		assignments.addAll(executorInterceptorAssignments);
+		assignments.addAll(closeableHttpAsyncClientAssignments);
 
 		return assignments;
 	}
@@ -153,6 +161,14 @@ public class SpecialMethodSensorAssignmentFactory {
 		execSubmitRunnableInstr.setParameters(Arrays.asList("java.lang.Runnable"));
 
 		executorInterceptorAssignments = Arrays.asList(execSubmitRunnableInstr);
+
+		SpecialMethodSensorAssignment closeableHttpAsyncClientInstr = new SpecialMethodSensorAssignment(CloseableHttpAsyncClientSensorConfig.INSTANCE);
+		closeableHttpAsyncClientInstr.setClassName("org.apache.http.impl.nio.client.CloseableHttpAsyncClient");
+		closeableHttpAsyncClientInstr.setMethodName("execute");
+		List<String> executeParameters = Arrays.asList("org.apache.http.HttpHost", "org.apache.http.HttpRequest", "org.apache.http.protocol.HttpContext", "org.apache.http.concurrent.FutureCallback");
+		closeableHttpAsyncClientInstr.setParameters(executeParameters);
+
+		closeableHttpAsyncClientAssignments = Arrays.asList(closeableHttpAsyncClientInstr);
 	}
 
 }
