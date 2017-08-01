@@ -1,7 +1,9 @@
 package rocks.inspectit.agent.java.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.theInstance;
 
 import org.mockito.InjectMocks;
 import org.testng.annotations.Test;
@@ -12,8 +14,10 @@ import rocks.inspectit.agent.java.AbstractLogSupport;
  * Tests for the {@link ReflectionCache} class.
  *
  * @author Patrice Bouillet
+ * @author Marius Oehler
  *
  */
+@SuppressWarnings("PMD")
 public class ReflectionCacheTest extends AbstractLogSupport {
 
 	/**
@@ -144,7 +148,101 @@ public class ReflectionCacheTest extends AbstractLogSupport {
 
 			assertThat(result, is(errorValue));
 		}
-
 	}
 
+	/**
+	 * Tests for the {@link ReflectionCache#getField(Class, String, Object)} method.
+	 *
+	 * @author Marius Oehler
+	 *
+	 */
+	public static class GetField extends ReflectionCacheTest {
+
+		@Test
+		public void normalUsage() {
+			TestClass testInstance = new TestClass();
+
+			String field = (String) cache.getField(TestClass.class, "field", testInstance, null);
+
+			assertThat(field, is(equalTo("X")));
+		}
+
+		@Test
+		public void normalUsageJavaClass() {
+			String testInstance = "test";
+
+			char[] field = (char[]) cache.getField(String.class, "value", testInstance, null);
+
+			assertThat(field, is(equalTo(testInstance.toCharArray())));
+		}
+
+		@Test
+		public void getFieldInSuperClass() {
+			TestClass testInstance = new TestClass();
+
+			String field = (String) cache.getField(TestClass.class, "superField", testInstance, null);
+
+			assertThat(field, is(equalTo("Y")));
+		}
+
+		@Test
+		public void getFieldInSuperSuperClass() {
+			TestClass testInstance = new TestClass();
+
+			String field = (String) cache.getField(TestClass.class, "superSuperField", testInstance, null);
+
+			assertThat(field, is(equalTo("Z")));
+		}
+
+		@Test
+		public void getStaticField() {
+			String field = (String) cache.getField(TestClass.class, "staticField", null, null);
+
+			assertThat(field, is(equalTo("S")));
+		}
+
+		@Test
+		public void nullClass() {
+			Object errorvalue = "errorvalue";
+
+			Object result = cache.getField(null, "field", "instance", errorvalue);
+
+			assertThat(result, is(theInstance(errorvalue)));
+		}
+
+		@Test
+		public void nullField() {
+			Object errorvalue = "errorvalue";
+
+			Object result = cache.getField(TestClass.class, null, "instance", errorvalue);
+
+			assertThat(result, is(theInstance(errorvalue)));
+		}
+
+		@Test
+		public void noSuchField() {
+			TestClass testInstance = new TestClass();
+			Object errorValue = "errorValue";
+
+			Object field = cache.getField(TestClass.class, "notExisting", testInstance, errorValue);
+
+			assertThat(field, is(theInstance(errorValue)));
+		}
+	}
+
+	@SuppressWarnings("unused")
+	static abstract class SuperSuperTestClass {
+		private String superSuperField = "Z";
+	}
+
+	@SuppressWarnings("unused")
+	static abstract class SuperTestClass extends SuperSuperTestClass {
+		private String superField = "Y";
+	}
+
+	@SuppressWarnings("unused")
+	static class TestClass extends SuperTestClass {
+		private static String staticField = "S";
+		private String field = "X";
+	}
 }
