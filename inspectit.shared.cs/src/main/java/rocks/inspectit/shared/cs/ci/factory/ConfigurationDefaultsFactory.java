@@ -20,6 +20,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteAsyncApacheHttpClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61ClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsClientSensorConfig;
@@ -96,6 +97,7 @@ public final class ConfigurationDefaultsFactory {
 		methodSensorConfigs.add(new RemoteJmsListenerServerSensorConfig());
 		methodSensorConfigs.add(new RemoteManualServerSensorConfig());
 		methodSensorConfigs.add(new ExecutorClientSensorConfig());
+		methodSensorConfigs.add(new RemoteAsyncApacheHttpClientSensorConfig());
 		return methodSensorConfigs;
 	}
 

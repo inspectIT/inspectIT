@@ -105,6 +105,8 @@
 
   <xs:element name="remote-apache-httpclientV40-client-sensor-config" type="remoteApacheHttpClientV40SensorConfig"/>
 
+  <xs:element name="remote-async-apache-httpclient-sensor-config" type="remoteAsyncApacheHttpClientSensorConfig"/>
+
   <xs:element name="remote-http-server-sensor-config" type="remoteJavaHttpServerSensorConfig"/>
 
   <xs:element name="remote-jetty-httpclientV61-client-sensor-config" type="remoteJettyHttpClientV61ClientSensorConfig"/>
@@ -528,6 +530,7 @@
                   <xs:element ref="remote-http-server-sensor-config"/>
                   <xs:element ref="remote-jms-listener-server-sensor-config"/>
                   <xs:element ref="remote-apache-httpclientV40-client-sensor-config"/>
+                  <xs:element ref="remote-async-apache-httpclient-sensor-config"/>
                   <xs:element ref="remote-urlconnection-client-sensor-config"/>
                   <xs:element ref="remote-jetty-httpclientV61-client-sensor-config"/>
                   <xs:element ref="remote-spring-resttemplate-client-sensor-config"/>
@@ -729,6 +732,14 @@
   </xs:complexType>
 
   <xs:complexType name="remoteApacheHttpClientV40SensorConfig">
+    <xs:complexContent>
+      <xs:extension base="abstractRemoteSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="remoteAsyncApacheHttpClientSensorConfig">
     <xs:complexContent>
       <xs:extension base="abstractRemoteSensorConfig">
         <xs:sequence/>
@@ -1016,6 +1027,22 @@
             </xs:complexType>
           </xs:element>
         </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="closeableHttpAsyncClientSensorConfig" final="extension restriction">
+    <xs:complexContent>
+      <xs:extension base="abstractMethodSensorConfig">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="httpClientBuilderSensorConfig" final="extension restriction">
+    <xs:complexContent>
+      <xs:extension base="abstractMethodSensorConfig">
+        <xs:sequence/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

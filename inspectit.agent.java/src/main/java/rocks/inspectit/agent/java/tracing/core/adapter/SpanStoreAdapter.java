@@ -38,5 +38,10 @@ public interface SpanStoreAdapter {
 		 * Constant for span store key. Can be used for storing in maps or map like data structures.
 		 */
 		String ID = "rocks.inspectit.spanstore";
+
+		/**
+		 * Constant for the CANCEL tag which indicates whether a Span has been canceled.
+		 */
+		String CANCEL = "rocks.inspectit.cancel";
 	}
 }

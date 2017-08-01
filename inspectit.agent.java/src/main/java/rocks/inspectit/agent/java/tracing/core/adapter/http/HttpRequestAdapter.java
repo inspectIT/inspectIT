@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 import io.opentracing.tag.Tags;
@@ -55,7 +57,7 @@ public abstract class HttpRequestAdapter implements RequestAdapter<TextMap> {
 		}
 
 		Map<String, String> tags = new HashMap<String, String>(2, 1f);
-		if (null != url) {
+		if (StringUtils.isNotEmpty(url)) {
 			tags.put(Tags.HTTP_URL.getKey(), url);
 		}
 		if (null != method) {
