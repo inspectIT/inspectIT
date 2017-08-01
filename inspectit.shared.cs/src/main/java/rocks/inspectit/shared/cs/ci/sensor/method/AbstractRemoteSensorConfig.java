@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 
 import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteAsyncApacheHttpClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61ClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsClientSensorConfig;
@@ -21,8 +22,9 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteUrlConnectionClient
  * @author Thomas Kluge
  *
  */
-@XmlSeeAlso({ RemoteJavaHttpServerSensorConfig.class, RemoteJmsListenerServerSensorConfig.class, RemoteApacheHttpClientV40SensorConfig.class, RemoteUrlConnectionClientSensorConfig.class,
-	RemoteJettyHttpClientV61ClientSensorConfig.class, RemoteSpringRestTemplateClientSensorConfig.class, RemoteJmsClientSensorConfig.class, RemoteManualServerSensorConfig.class })
+@XmlSeeAlso({ RemoteJavaHttpServerSensorConfig.class, RemoteJmsListenerServerSensorConfig.class, RemoteApacheHttpClientV40SensorConfig.class, RemoteAsyncApacheHttpClientSensorConfig.class,
+	RemoteUrlConnectionClientSensorConfig.class, RemoteJettyHttpClientV61ClientSensorConfig.class, RemoteSpringRestTemplateClientSensorConfig.class, RemoteJmsClientSensorConfig.class,
+	RemoteManualServerSensorConfig.class })
 public abstract class AbstractRemoteSensorConfig implements IMethodSensorConfig {
 
 	/**

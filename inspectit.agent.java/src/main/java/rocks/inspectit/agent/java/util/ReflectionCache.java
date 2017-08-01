@@ -1,5 +1,6 @@
 package rocks.inspectit.agent.java.util;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
@@ -22,9 +23,14 @@ public class ReflectionCache {
 	private static final Logger LOG = LoggerFactory.getLogger(ReflectionCache.class);
 
 	/**
-	 * Cache that holds the <code> Method </code> instances for the Class and method Names.
+	 * Cache that holds the {@link Method} instances for the Class and method Names.
 	 */
-	Cache<Class<?>, Cache<String, Method>> cache = CacheBuilder.newBuilder().weakKeys().softValues().build();
+	Cache<Class<?>, Cache<String, Method>> methodCache = CacheBuilder.newBuilder().weakKeys().softValues().build();
+
+	/**
+	 * Cache that holds the {@link Field} instances for the Class and method Names.
+	 */
+	Cache<Class<?>, Cache<String, Field>> fieldCache = CacheBuilder.newBuilder().weakKeys().softValues().build();
 
 	/**
 	 * Invokes the given method on the given class. This method uses the cache to only lookup the
@@ -89,7 +95,7 @@ public class ReflectionCache {
 		if ((null == clazz) || (null == methodName)) {
 			return errorValue;
 		}
-		Cache<String, Method> classCache = cache.getIfPresent(clazz);
+		Cache<String, Method> classCache = methodCache.getIfPresent(clazz);
 		if (null == classCache) {
 			// create a new cache and add it. There can be race conditions here. There is no entry
 			// for class C and caller A and caller B
@@ -97,9 +103,9 @@ public class ReflectionCache {
 			// overwrites the other. This is not a big issue
 			// as the only result will be that the method will not be cached for one and will be
 			// cached with the next invocation. This
-			// approach is way cheaper than synchronisation or copy on write.
-			classCache = CacheBuilder.newBuilder().expireAfterAccess(20 * 60, TimeUnit.SECONDS).weakKeys().build();
-			cache.put(clazz, classCache);
+			// approach is way cheaper than synchronization or copy on write.
+			classCache = CacheBuilder.newBuilder().expireAfterAccess(20, TimeUnit.MINUTES).weakKeys().build();
+			methodCache.put(clazz, classCache);
 		}
 
 		// get method
@@ -141,4 +147,67 @@ public class ReflectionCache {
 		}
 	}
 
+	/**
+	 * Gets the given field on the given class. This method uses the cache to only lookup the field
+	 * if the same field was not looked up before for the same class.
+	 *
+	 * @param clazz
+	 *            The class on which the field should be gotten.
+	 * @param fieldName
+	 *            The name of the field.
+	 * @param instance
+	 *            The instance on which the method call should be invoked.
+	 * @param errorValue
+	 *            The value that should be returned in case of an error or <code>null</code> if none
+	 *            are needed.
+	 * @return The current value of the field.
+	 */
+	public Object getField(Class<?> clazz, String fieldName, Object instance, Object errorValue) {
+		if ((null == clazz) || (null == fieldName)) {
+			return errorValue;
+		}
+		Cache<String, Field> classCache = fieldCache.getIfPresent(clazz);
+		if (null == classCache) {
+			// create a new cache and add it. There can be race conditions here. There is no entry
+			// for class C and caller A and caller B
+			// want to execute method a or b on the same class. It can thus happen that one
+			// overwrites the other. This is not a big issue
+			// as the only result will be that the method will not be cached for one and will be
+			// cached with the next invocation. This
+			// approach is way cheaper than synchronization or copy on write.
+			classCache = CacheBuilder.newBuilder().expireAfterAccess(20, TimeUnit.MINUTES).weakKeys().build();
+			fieldCache.put(clazz, classCache);
+		}
+
+		// get field
+		Field field = classCache.getIfPresent(fieldName);
+		if (null == field) {
+			Class<?> lookupClass = clazz;
+			while (field == null) {
+				try {
+					field = lookupClass.getDeclaredField(fieldName);
+				} catch (NoSuchFieldException nsfe) {
+					lookupClass = lookupClass.getSuperclass();
+					if (lookupClass == null) {
+						LOG.warn("Could not lookup field " + fieldName + " on class " + clazz.getName(), nsfe);
+						return errorValue;
+					}
+				} catch (Throwable t) { // NOPMD
+					LOG.warn("Could not lookup field " + fieldName + " on class " + clazz.getName(), t);
+					return errorValue;
+				}
+			}
+
+			field.setAccessible(true);
+			classCache.put(fieldName, field);
+		}
+
+		// get field
+		try {
+			return field.get(instance);
+		} catch (Throwable t) { // NOPMD
+			LOG.warn("Could not get field " + fieldName + " on instance " + instance, t);
+			return errorValue;
+		}
+	}
 }

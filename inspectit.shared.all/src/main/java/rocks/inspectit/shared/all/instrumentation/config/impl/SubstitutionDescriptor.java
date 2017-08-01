@@ -32,7 +32,7 @@ public class SubstitutionDescriptor {
 	 * @param returnValueSubstitution
 	 *            If return value substitution should be performed.
 	 * @param parameterValueSubstitution
-	 *            If return value substitution should be performed.
+	 *            If parameter value substitution should be performed.
 	 */
 	public SubstitutionDescriptor(boolean returnValueSubstitution, boolean parameterValueSubstitution) {
 		this.returnValueSubstitution = returnValueSubstitution;
