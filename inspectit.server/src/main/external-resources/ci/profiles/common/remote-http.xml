@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<profile schemaVersion="7" id="remote-http" name="Remote-HTTP" common="true" default="true" created-on="2016-11-24T12:00:00" description="Profile for the Remote HTTP Calls."
+<profile schemaVersion="8" id="remote-http" name="Remote-HTTP" common="true" default="true" created-on="2016-11-24T12:00:00" description="Profile for the Remote HTTP Calls."
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schema/ciSchema.xsd">
 
 	<sensor-assignment-profile-data>
@@ -9,6 +9,9 @@
 		<!-- Client sensor for  Apache HttpClient 4.0 - 4.2.x-->
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig" class-name="org.apache.http.client.HttpClient" method-name="execute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" interface="true" />
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig" class-name="org.apache.http.client.RequestDirector" method-name="execute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" interface="true" />
+
+		<!-- Client sensor for  Apache Async HttpClient 4.x-->
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteAsyncApacheHttpClientSensorConfig" class-name="org.apache.http.nio.client.HttpAsyncClient" method-name="execute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext org.apache.http.concurrent.FutureCallback" interface="true"/>
 
 		<!-- Client sensor for Java HttpURLConnection-->
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteUrlConnectionClientSensorConfig" class-name="java.net.HttpURLConnection" method-name="connect" parameters="" superclass="true" />

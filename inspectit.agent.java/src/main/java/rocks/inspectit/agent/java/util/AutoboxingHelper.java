@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  *
- * Helps with mapping of primtive types to their Boxed class and backwards.
+ * Helps with mapping of primitive types to their Boxed class and backwards.
  *
  * @author Jonas Kunz
  *

@@ -45,6 +45,7 @@ import rocks.inspectit.shared.all.testbase.TestBase;
  * @author Jonas Kunz
  *
  */
+@SuppressWarnings("PMD")
 public class EUMInstrumentationHookTest extends TestBase {
 
 	AgentEndUserMonitoringConfig eumConfig = new AgentEndUserMonitoringConfig();
