@@ -27,6 +27,8 @@ import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.Iterators;
+
 import rocks.inspectit.shared.all.instrumentation.config.PriorityEnum;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentEndUserMonitoringConfig;
@@ -47,7 +49,9 @@ import rocks.inspectit.shared.cs.ci.sensor.exception.IExceptionSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.jmx.JmxSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ClassLoadingDelegationSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.CloseableHttpAsyncClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.ExecutorIntercepterSensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.HttpClientBuilderSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.special.impl.MBeanServerInterceptorSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.platform.IPlatformSensorConfig;
 import rocks.inspectit.shared.cs.ci.strategy.IStrategyConfig;
@@ -70,6 +74,10 @@ public class ConfigurationCreatorTest extends TestBase {
 
 	public ExecutorIntercepterSensorConfig eisc = ExecutorIntercepterSensorConfig.INSTANCE;
 
+	public HttpClientBuilderSensorConfig httpClientBuilder = HttpClientBuilderSensorConfig.INSTANCE;
+
+	public CloseableHttpAsyncClientSensorConfig closeableHttpAsyncCLient = CloseableHttpAsyncClientSensorConfig.INSTANCE;
+
 	@BeforeMethod
 	public void setup() {
 		// mock strategies
@@ -87,6 +95,8 @@ public class ConfigurationCreatorTest extends TestBase {
 
 			assertThat(agentConfiguration.getPlatformId(), is(agentId));
 			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(httpClientBuilder.getClassName()), eq(httpClientBuilder.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(closeableHttpAsyncCLient.getClassName()), eq(closeableHttpAsyncCLient.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -114,6 +124,8 @@ public class ConfigurationCreatorTest extends TestBase {
 
 			verify(registrationService).registerPlatformSensorTypeIdent(agentId, className);
 			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(httpClientBuilder.getClassName()), eq(httpClientBuilder.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(closeableHttpAsyncCLient.getClassName()), eq(closeableHttpAsyncCLient.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -130,6 +142,8 @@ public class ConfigurationCreatorTest extends TestBase {
 			assertThat(sensorTypeConfigs, is(empty()));
 
 			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(closeableHttpAsyncCLient.getClassName()), eq(closeableHttpAsyncCLient.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(httpClientBuilder.getClassName()), eq(httpClientBuilder.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -161,6 +175,8 @@ public class ConfigurationCreatorTest extends TestBase {
 
 			verify(registrationService).registerMethodSensorTypeIdent(agentId, className, parameters);
 			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(httpClientBuilder.getClassName()), eq(httpClientBuilder.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(closeableHttpAsyncCLient.getClassName()), eq(closeableHttpAsyncCLient.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -189,6 +205,8 @@ public class ConfigurationCreatorTest extends TestBase {
 
 			verify(registrationService).registerMethodSensorTypeIdent(agentId, className, parameters);
 			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(httpClientBuilder.getClassName()), eq(httpClientBuilder.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(closeableHttpAsyncCLient.getClassName()), eq(closeableHttpAsyncCLient.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -215,7 +233,7 @@ public class ConfigurationCreatorTest extends TestBase {
 
 			verify(registrationService).registerJmxSensorTypeIdent(agentId, className);
 			// needed because of the intercepting server sensor
-			verify(registrationService, times(2)).registerMethodSensorTypeIdent(anyLong(), anyString(), anyMap());
+			verify(registrationService, times(4)).registerMethodSensorTypeIdent(anyLong(), anyString(), anyMap());
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -232,6 +250,8 @@ public class ConfigurationCreatorTest extends TestBase {
 			assertThat(sensorTypeConfig, is(nullValue()));
 
 			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(httpClientBuilder.getClassName()), eq(httpClientBuilder.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(closeableHttpAsyncCLient.getClassName()), eq(closeableHttpAsyncCLient.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -270,8 +290,9 @@ public class ConfigurationCreatorTest extends TestBase {
 			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
 
 			Collection<MethodSensorTypeConfig> sensorTypeConfigs = agentConfiguration.getSpecialMethodSensorTypeConfigs();
-			assertThat(sensorTypeConfigs, hasSize(1));
-			assertThat(sensorTypeConfigs.iterator().next().getClassName(), is(equalTo(eisc.getClassName())));
+			assertThat(Iterators.get(sensorTypeConfigs.iterator(), 0).getClassName(), is(equalTo(eisc.getClassName())));
+			assertThat(Iterators.get(sensorTypeConfigs.iterator(), 1).getClassName(), is(equalTo(httpClientBuilder.getClassName())));
+			assertThat(Iterators.get(sensorTypeConfigs.iterator(), 2).getClassName(), is(equalTo(closeableHttpAsyncCLient.getClassName())));
 		}
 
 		@Test
@@ -285,7 +306,7 @@ public class ConfigurationCreatorTest extends TestBase {
 			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
 
 			Collection<MethodSensorTypeConfig> sensorTypeConfigs = agentConfiguration.getSpecialMethodSensorTypeConfigs();
-			assertThat(sensorTypeConfigs, hasSize(2));
+			assertThat(sensorTypeConfigs, hasSize(4));
 			// first element will be class loading config
 			MethodSensorTypeConfig sensorTypeConfig = sensorTypeConfigs.iterator().next();
 			assertThat(sensorTypeConfig.getId(), is(sensorId));
@@ -296,6 +317,8 @@ public class ConfigurationCreatorTest extends TestBase {
 
 			verify(registrationService).registerMethodSensorTypeIdent(agentId, cldConfig.getClassName(), cldConfig.getParameters());
 			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(httpClientBuilder.getClassName()), eq(httpClientBuilder.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(closeableHttpAsyncCLient.getClassName()), eq(closeableHttpAsyncCLient.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -352,7 +375,7 @@ public class ConfigurationCreatorTest extends TestBase {
 			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
 
 			Collection<MethodSensorTypeConfig> sensorTypeConfigs = agentConfiguration.getSpecialMethodSensorTypeConfigs();
-			assertThat(sensorTypeConfigs, hasSize(2));
+			assertThat(sensorTypeConfigs, hasSize(4));
 			// first element will be mbean server interceptor config
 			MethodSensorTypeConfig sensorTypeConfig = sensorTypeConfigs.iterator().next();
 			assertThat(sensorTypeConfig.getId(), is(sensorId));
@@ -365,6 +388,8 @@ public class ConfigurationCreatorTest extends TestBase {
 			// needed because jmx sensor will be also registered
 			verify(registrationService).registerJmxSensorTypeIdent(anyLong(), anyString());
 			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(httpClientBuilder.getClassName()), eq(httpClientBuilder.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(closeableHttpAsyncCLient.getClassName()), eq(closeableHttpAsyncCLient.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
 
@@ -378,13 +403,13 @@ public class ConfigurationCreatorTest extends TestBase {
 			AgentConfig agentConfiguration = creator.environmentToConfiguration(environment, agentId);
 
 			Collection<MethodSensorTypeConfig> sensorTypeConfigs = agentConfiguration.getSpecialMethodSensorTypeConfigs();
-			assertThat(sensorTypeConfigs, hasSize(1));
+			assertThat(sensorTypeConfigs, hasSize(3));
 			assertThat(sensorTypeConfigs.iterator().next().getClassName(), is(equalTo(eisc.getClassName())));
 
 			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(eisc.getClassName()), eq(eisc.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(httpClientBuilder.getClassName()), eq(httpClientBuilder.getParameters()));
+			verify(registrationService).registerMethodSensorTypeIdent(anyLong(), eq(closeableHttpAsyncCLient.getClassName()), eq(closeableHttpAsyncCLient.getParameters()));
 			verifyNoMoreInteractions(registrationService);
 		}
-
 	}
-
 }

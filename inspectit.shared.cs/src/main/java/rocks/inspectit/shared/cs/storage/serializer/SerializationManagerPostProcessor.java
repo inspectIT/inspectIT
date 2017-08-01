@@ -66,6 +66,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.Log4jLoggingSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementParameterSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.PreparedStatementSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig;
+import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteAsyncApacheHttpClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJettyHttpClientV61ClientSensorConfig;
 import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJmsClientSensorConfig;
@@ -454,6 +455,9 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 
 		// INSPECTIT-2192
 		kryo.register(AgentNameValueSource.class, new FieldSerializer<AgentNameValueSource>(kryo, AgentNameValueSource.class), nextRegistrationId++);
+
+		// INSPECTIT-2458
+		kryo.register(RemoteAsyncApacheHttpClientSensorConfig.class, new FieldSerializer<>(kryo, RemoteAsyncApacheHttpClientSensorConfig.class), nextRegistrationId++);
 	}
 
 }

@@ -10,6 +10,9 @@
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig" class-name="org.apache.http.client.HttpClient" method-name="execute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" interface="true" />
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig" class-name="org.apache.http.client.RequestDirector" method-name="execute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" interface="true" />
 
+		<!-- Client sensor for  Apache Async HttpClient 4.x-->
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteAsyncApacheHttpClientSensorConfig" class-name="org.apache.http.nio.client.HttpAsyncClient" method-name="execute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext org.apache.http.concurrent.FutureCallback" interface="true"/>
+
 		<!-- Client sensor for Java HttpURLConnection-->
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteUrlConnectionClientSensorConfig" class-name="java.net.HttpURLConnection" method-name="connect" parameters="" superclass="true" />
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteUrlConnectionClientSensorConfig" class-name="java.net.HttpURLConnection" method-name="getInputStream" parameters="" superclass="true" />
