@@ -131,12 +131,15 @@ public class DefineNewStorageWizzardPage extends WizardPage {
 		if (index != -1) {
 			cmrRepositoryCombo.select(index);
 			cmrRepositoryCombo.setEnabled(false);
+		} else {
+			cmrRepositoryCombo.select(0);
 		}
 
 		Label nameLabel = new Label(main, SWT.LEFT);
 		nameLabel.setText("Storage name:");
 		nameBox = new Text(main, SWT.BORDER);
 		nameBox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		nameBox.setFocus();
 
 		Label descLabel = new Label(main, SWT.LEFT);
 		descLabel.setText("Description:");
