@@ -15,9 +15,11 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeUtil;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.tree.InvocationTreeContentProvider;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 import rocks.inspectit.ui.rcp.util.ElementOccurrenceCount;
 import rocks.inspectit.ui.rcp.util.OccurrenceFinderFactory;
@@ -120,13 +122,27 @@ public class SteppingInvocDetailInputController extends InvocDetailInputControll
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public ElementOccurrenceCount countOccurrences(Object element, ViewerFilter[] filters) {
-		List<Object> input = (List<Object>) getTreeInput();
-		if ((input != null) && !input.isEmpty()) {
-			InvocationSequenceData invocation = (InvocationSequenceData) input.get(0);
-			return OccurrenceFinderFactory.getOccurrenceCount(invocation, element, filters);
+		InvocationTreeContentProvider contentProvider = (InvocationTreeContentProvider) getContentProvider();
+
+		// count span occurence
+		if (element instanceof Span) {
+			boolean containsSpan = contentProvider.getLookupMap().containsKey(InvocationTreeUtil.calculateLookupKey(element));
+
+			if (containsSpan) {
+				ElementOccurrenceCount elementCount = new ElementOccurrenceCount();
+				elementCount.increaseVisibleOccurrences();
+				return elementCount;
+			}
+		}
+
+		// count invocation occurence
+		if (contentProvider.getRootElement() != null) {
+			List<InvocationSequenceData> sequences;
+			sequences = InvocationTreeUtil.getInvocationSequences(contentProvider.getRootElement());
+
+			return OccurrenceFinderFactory.getOccurrenceCount(sequences, element, filters);
 		}
 		return ElementOccurrenceCount.emptyElement();
 	}
@@ -146,13 +162,20 @@ public class SteppingInvocDetailInputController extends InvocDetailInputControll
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object getElement(Object template, int occurance, ViewerFilter[] filters) {
-		List<Object> input = (List<Object>) getTreeInput();
-		if ((input != null) && !input.isEmpty()) {
-			InvocationSequenceData invocation = (InvocationSequenceData) input.get(0);
-			InvocationSequenceData found = OccurrenceFinderFactory.getOccurrence(invocation, template, occurance, filters);
+		// return the span directly because it is unique
+		if (template instanceof Span) {
+			return template;
+		}
+
+		// returning matching invocations
+		InvocationTreeContentProvider contentProvider = (InvocationTreeContentProvider) getContentProvider();
+		if (contentProvider.getRootElement() != null) {
+			List<InvocationSequenceData> sequences;
+			sequences = InvocationTreeUtil.getInvocationSequences(contentProvider.getRootElement());
+
+			InvocationSequenceData found = OccurrenceFinderFactory.getOccurrence(sequences, template, occurance, filters);
 			if (InvocationSequenceDataHelper.hasSpanIdent(found) && (template instanceof Span)) {
 				return spanService.get(found.getSpanIdent());
 			} else {

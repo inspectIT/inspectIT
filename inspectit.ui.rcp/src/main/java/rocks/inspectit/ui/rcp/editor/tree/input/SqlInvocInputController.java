@@ -33,6 +33,8 @@ import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorE
 import rocks.inspectit.shared.cs.communication.comparator.IDataComparator;
 import rocks.inspectit.shared.cs.communication.comparator.SqlStatementDataComparatorEnum;
 import rocks.inspectit.shared.cs.communication.comparator.TimerDataComparatorEnum;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeElement;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeUtil;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.SqlStatementDataAggregator;
 import rocks.inspectit.ui.rcp.InspectIT;
@@ -43,7 +45,6 @@ import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.Prefere
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.tree.TreeViewerComparator;
 import rocks.inspectit.ui.rcp.editor.tree.util.DatabaseSqlTreeComparator;
-import rocks.inspectit.ui.rcp.editor.tree.util.TraceTreeData;
 import rocks.inspectit.ui.rcp.editor.viewers.RawAggregatedResultComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
@@ -73,7 +74,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 	 * @author Patrice Bouillet
 	 *
 	 */
-	private static enum Column {
+	private enum Column {
 		/** The timestamp column. */
 		TIMESTAMP("Timestamp", 130, InspectITImages.IMG_TIMESTAMP, false, true, DefaultDataComparatorEnum.TIMESTAMP),
 		/** The column containing the name of the database. */
@@ -123,7 +124,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 		 *            Comparator for the column.
 		 *
 		 */
-		private Column(String name, int width, String imageName, boolean showInAggregatedMode, boolean showInRawMode, IDataComparator<? super SqlStatementData> dataComparator) {
+		Column(String name, int width, String imageName, boolean showInAggregatedMode, boolean showInRawMode, IDataComparator<? super SqlStatementData> dataComparator) {
 			this.name = name;
 			this.width = width;
 			this.image = InspectIT.getDefault().getImage(imageName);
@@ -324,8 +325,8 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 			return true;
 		}
 
-		// or one trace data
-		if (data.get(0) instanceof TraceTreeData) {
+		// or one trace InvocationTreeElement
+		if (data.get(0) instanceof InvocationTreeElement) {
 			return true;
 		}
 
@@ -365,9 +366,9 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 
 			if (input.get(0) instanceof InvocationSequenceData) {
 				sqlStatementDataList = getRawInputList((List<InvocationSequenceData>) input, new ArrayList<SqlStatementData>());
-			} else if (input.get(0) instanceof TraceTreeData) {
-				TraceTreeData traceTreeData = (TraceTreeData) input.get(0);
-				sqlStatementDataList = getRawInputList(TraceTreeData.collectInvocations(traceTreeData, new ArrayList<InvocationSequenceData>()), new ArrayList<SqlStatementData>());
+			} else if (input.get(0) instanceof InvocationTreeElement) {
+				InvocationTreeElement tree = (InvocationTreeElement) input.get(0);
+				sqlStatementDataList = getRawInputList(InvocationTreeUtil.getInvocationSequences(tree), new ArrayList<SqlStatementData>());
 			} else {
 				sqlStatementDataList = (List<SqlStatementData>) input;
 			}
