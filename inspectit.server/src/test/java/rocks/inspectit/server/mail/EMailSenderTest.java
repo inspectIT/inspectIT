@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Future;
@@ -372,7 +373,29 @@ public class EMailSenderTest extends TestBase {
 		}
 
 		@Test
-		public void notConnected() throws Exception {
+		public void emptyRecipiants() throws Exception {
+			Session session = Session.getInstance(new Properties());
+			when(mailMock.getMailSession()).thenReturn(session);
+			when(objectFactoryMock.createHtmlEmail()).thenReturn(mailMock);
+			when(objectFactoryMock.getSmtpTransport()).thenReturn(transportMock);
+			mailSender.defaultRecipientString = "";
+			mailSender.smtpHost = "host";
+			mailSender.smtpPort = 25;
+			mailSender.smtpUser = "user";
+			mailSender.smtpPassword = "passwd";
+			mailSender.senderAddress = "sender@example.com";
+			mailSender.senderName = "Sender Name";
+			mailSender.smtpEnabled = true;
+			mailSender.init();
+
+			boolean result = mailSender.sendEMail("subject", "htmlBody", "textBody", Collections.emptyList());
+
+			assertThat(result, is(false));
+			assertThat(mailSender.getServiceStatus(), is(ExternalServiceStatus.CONNECTED));
+		}
+
+		@Test
+		public void notConnected() {
 			mailSender.smtpEnabled = true;
 			boolean result = mailSender.sendEMail("subject", "htmlBody", "textBody", Arrays.asList("one@example.com"));
 
