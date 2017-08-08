@@ -179,6 +179,10 @@ public class EMailSender implements IExternalService {
 			log.warn("Failed sending e-mail! E-Mail service cannot connect to the SMTP server. Check the connection settings!");
 			return false;
 		}
+		if (recipients.isEmpty()) {
+			log.warn("Failed sending e-mail! No recipients are defined.");
+			return false;
+		}
 		try {
 			HtmlEmail email = prepareHtmlEmail(recipients);
 			email.setSubject(subject);
