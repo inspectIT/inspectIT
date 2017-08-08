@@ -29,10 +29,15 @@ import org.eclipse.swt.widgets.TreeColumn;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
+import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorEnum;
 import rocks.inspectit.shared.cs.communication.comparator.IDataComparator;
 import rocks.inspectit.shared.cs.communication.comparator.SqlStatementDataComparatorEnum;
 import rocks.inspectit.shared.cs.communication.comparator.TimerDataComparatorEnum;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeBuilder;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeElement;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeUtil;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeBuilder.Mode;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.SqlStatementDataAggregator;
 import rocks.inspectit.ui.rcp.InspectIT;
@@ -43,7 +48,6 @@ import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.Prefere
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.tree.TreeViewerComparator;
 import rocks.inspectit.ui.rcp.editor.tree.util.DatabaseSqlTreeComparator;
-import rocks.inspectit.ui.rcp.editor.tree.util.TraceTreeData;
 import rocks.inspectit.ui.rcp.editor.viewers.RawAggregatedResultComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
@@ -325,7 +329,7 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 		}
 
 		// or one trace data
-		if (data.get(0) instanceof TraceTreeData) {
+		if (data.get(0) instanceof Span) {
 			return true;
 		}
 
@@ -365,9 +369,9 @@ public class SqlInvocInputController extends AbstractTreeInputController {
 
 			if (input.get(0) instanceof InvocationSequenceData) {
 				sqlStatementDataList = getRawInputList((List<InvocationSequenceData>) input, new ArrayList<SqlStatementData>());
-			} else if (input.get(0) instanceof TraceTreeData) {
-				TraceTreeData traceTreeData = (TraceTreeData) input.get(0);
-				sqlStatementDataList = getRawInputList(TraceTreeData.collectInvocations(traceTreeData, new ArrayList<InvocationSequenceData>()), new ArrayList<SqlStatementData>());
+			} else if (input.get(0) instanceof Span) {
+				InvocationTreeElement tree = new InvocationTreeBuilder().setMode(Mode.ALL).setTraceId(((Span) input.get(0)).getSpanIdent().getTraceId()).build();
+				sqlStatementDataList = getRawInputList(InvocationTreeUtil.getInvocationSequences(tree), new ArrayList<SqlStatementData>());
 			} else {
 				sqlStatementDataList = (List<SqlStatementData>) input;
 			}

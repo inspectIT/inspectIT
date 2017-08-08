@@ -29,12 +29,17 @@ import rocks.inspectit.shared.all.communication.ExceptionEvent;
 import rocks.inspectit.shared.all.communication.data.AggregatedExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.ExceptionSensorData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.shared.cs.communication.comparator.AggregatedExceptionSensorDataComparatorEnum;
 import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorEnum;
 import rocks.inspectit.shared.cs.communication.comparator.ExceptionSensorDataComparatorEnum;
 import rocks.inspectit.shared.cs.communication.comparator.IDataComparator;
 import rocks.inspectit.shared.cs.communication.comparator.MethodSensorDataComparatorEnum;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeBuilder;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeElement;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeUtil;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeBuilder.Mode;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.ExceptionDataAggregator;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.ExceptionDataAggregator.ExceptionAggregationType;
@@ -45,7 +50,6 @@ import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
-import rocks.inspectit.ui.rcp.editor.tree.util.TraceTreeData;
 import rocks.inspectit.ui.rcp.editor.viewers.RawAggregatedResultComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
@@ -325,7 +329,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 		}
 
 		// or one trace data
-		if (data.get(0) instanceof TraceTreeData) {
+		if (data.get(0) instanceof Span) {
 			return true;
 		}
 
@@ -366,8 +370,10 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 			}
 
 			List<InvocationSequenceData> invocationSequenceDataList;
-			if (input.get(0) instanceof TraceTreeData) {
-				invocationSequenceDataList = TraceTreeData.collectInvocations((TraceTreeData) input.get(0), new ArrayList<InvocationSequenceData>());
+			if (input.get(0) instanceof Span) {
+				Span span = (Span) input.get(0);
+				InvocationTreeElement tree = new InvocationTreeBuilder().setMode(Mode.ALL).setTraceId(span.getSpanIdent().getTraceId()).build();
+				invocationSequenceDataList = InvocationTreeUtil.getInvocationSequences(tree);
 			} else {
 				invocationSequenceDataList = (List<InvocationSequenceData>) inputElement;
 			}

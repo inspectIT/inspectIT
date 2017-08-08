@@ -1,6 +1,8 @@
 package rocks.inspectit.ui.rcp.editor.tree.input;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -15,9 +17,11 @@ import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeUtil;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.InputDefinitionExtrasMarkerFactory;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.tree.InvocationTreeContentProvider;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
 import rocks.inspectit.ui.rcp.util.ElementOccurrenceCount;
 import rocks.inspectit.ui.rcp.util.OccurrenceFinderFactory;
@@ -125,8 +129,18 @@ public class SteppingInvocDetailInputController extends InvocDetailInputControll
 	public ElementOccurrenceCount countOccurrences(Object element, ViewerFilter[] filters) {
 		List<Object> input = (List<Object>) getTreeInput();
 		if ((input != null) && !input.isEmpty()) {
-			InvocationSequenceData invocation = (InvocationSequenceData) input.get(0);
-			return OccurrenceFinderFactory.getOccurrenceCount(invocation, element, filters);
+
+			List<InvocationSequenceData> sequences;
+			if (input.get(0) instanceof InvocationSequenceData) {
+				sequences = Arrays.asList((InvocationSequenceData) input.get(0));
+			} else if (input.get(0) instanceof Span) {
+				InvocationTreeContentProvider contentProvider = (InvocationTreeContentProvider) getContentProvider();
+				sequences = InvocationTreeUtil.getInvocationSequences(contentProvider.getTree());
+			} else {
+				sequences = Collections.emptyList();
+			}
+
+			return OccurrenceFinderFactory.getOccurrenceCount(sequences, element, filters);
 		}
 		return ElementOccurrenceCount.emptyElement();
 	}
@@ -151,8 +165,18 @@ public class SteppingInvocDetailInputController extends InvocDetailInputControll
 	public Object getElement(Object template, int occurance, ViewerFilter[] filters) {
 		List<Object> input = (List<Object>) getTreeInput();
 		if ((input != null) && !input.isEmpty()) {
-			InvocationSequenceData invocation = (InvocationSequenceData) input.get(0);
-			InvocationSequenceData found = OccurrenceFinderFactory.getOccurrence(invocation, template, occurance, filters);
+			List<InvocationSequenceData> sequences;
+
+			if (input.get(0) instanceof InvocationSequenceData) {
+				sequences = Arrays.asList((InvocationSequenceData) input.get(0));
+			} else if (input.get(0) instanceof Span) {
+				InvocationTreeContentProvider contentProvider = (InvocationTreeContentProvider) getContentProvider();
+				sequences = InvocationTreeUtil.getInvocationSequences(contentProvider.getTree());
+			} else {
+				sequences = Collections.emptyList();
+			}
+
+			InvocationSequenceData found = OccurrenceFinderFactory.getOccurrence(sequences, template, occurance, filters);
 			if (InvocationSequenceDataHelper.hasSpanIdent(found) && (template instanceof Span)) {
 				return spanService.get(found.getSpanIdent());
 			} else {

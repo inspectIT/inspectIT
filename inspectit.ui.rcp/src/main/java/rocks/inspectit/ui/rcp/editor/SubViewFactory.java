@@ -44,7 +44,6 @@ import rocks.inspectit.ui.rcp.editor.tree.input.SqlInputController;
 import rocks.inspectit.ui.rcp.editor.tree.input.SqlInvocInputController;
 import rocks.inspectit.ui.rcp.editor.tree.input.SteppingInvocDetailInputController;
 import rocks.inspectit.ui.rcp.editor.tree.input.TraceDetailsTreeInputController;
-import rocks.inspectit.ui.rcp.editor.tree.input.TraceInvocDetailsInputController;
 import rocks.inspectit.ui.rcp.model.SensorTypeEnum;
 
 /**
@@ -244,7 +243,7 @@ public final class SubViewFactory {
 			return tracingSashSubView;
 		case TRACING_DETAILS:
 			TabbedCompositeSubView invocTabbedSubView2 = new TabbedCompositeSubView();
-			ISubView invocDetails2 = new SteppingTreeSubView(new TraceInvocDetailsInputController());
+			ISubView invocDetails2 = new SteppingTreeSubView(new SteppingInvocDetailInputController(false));
 			ISubView invocSql2 = new TreeSubView(new SqlInvocInputController());
 			ISubView invocMethods2 = new TableSubView(new MethodInvocInputController());
 			ISubView invocExceptions2 = new TableSubView(new ExceptionSensorInvocInputController());

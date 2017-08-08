@@ -14,7 +14,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.dialog.DetailsDialog;
-import rocks.inspectit.ui.rcp.editor.tree.util.TraceTreeData;
 import rocks.inspectit.ui.rcp.provider.IInputDefinitionProvider;
 import rocks.inspectit.ui.rcp.repository.RepositoryDefinition;
 
@@ -41,10 +40,6 @@ public class DetailsHandler extends AbstractHandler implements IHandler {
 		if (editor instanceof IInputDefinitionProvider) {
 			IInputDefinitionProvider inputDefinitionProvider = (IInputDefinitionProvider) editor;
 			repositoryDefinition = inputDefinitionProvider.getInputDefinition().getRepositoryDefinition();
-		}
-
-		if (selected instanceof TraceTreeData) {
-			selected = ((TraceTreeData) selected).getSpan();
 		}
 
 		if ((selected instanceof DefaultData) && (null != repositoryDefinition)) {

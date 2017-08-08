@@ -161,6 +161,7 @@ public interface InspectITImages {
 	String IMG_TRANSFORM = InspectITConstants.ICON_PATH_ECLIPSE + "transform.gif";
 	String IMG_USER = InspectITConstants.ICON_PATH_ECLIPSE + "user.gif";
 	String IMG_METHOD_PARAMETER = InspectITConstants.ICON_PATH_ECLIPSE + "method-parameter.png";
+	String IMG_DISCOVERY_QUESTION = InspectITConstants.ICON_PATH_ECLIPSE + "discovery_question.png";
 
 	// Fugue set - license Creative Commons v3.0
 	String IMG_ADDRESSBOOK = InspectITConstants.ICON_PATH_FUGUE + "address-book.png";
