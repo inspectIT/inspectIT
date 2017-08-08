@@ -10,10 +10,8 @@ import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
-import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
@@ -23,7 +21,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.ui.progress.DeferredTreeContentManager;
 
 import rocks.inspectit.shared.all.cmr.model.MethodIdent;
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
@@ -38,11 +35,14 @@ import rocks.inspectit.shared.all.tracing.data.Span;
 import rocks.inspectit.shared.all.tracing.data.SpanIdent;
 import rocks.inspectit.shared.cs.cmr.service.ISpanService;
 import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeElement;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeUtil;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
+import rocks.inspectit.ui.rcp.editor.tree.InvocationTreeContentProvider;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
@@ -58,7 +58,7 @@ import rocks.inspectit.ui.rcp.preferences.PreferencesUtils;
  * @author Patrice Bouillet
  *
  */
-public class InvocDetailInputController extends AbstractTreeInputController { // NOPMD
+public class InvocDetailInputController extends AbstractTreeInputController {
 
 	/**
 	 * The ID of this subview / controller.
@@ -93,7 +93,7 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 	 * @author Patrice Bouillet
 	 *
 	 */
-	private static enum Column {
+	private enum Column {
 		/** The element column. */
 		ELEMENT("Element", 700, InspectITImages.IMG_CALL_HIERARCHY),
 		/** The duration column. */
@@ -126,7 +126,7 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 		 * @param imageName
 		 *            The name of the image. Names are defined in {@link InspectITImages}.
 		 */
-		private Column(String name, int width, String imageName) {
+		Column(String name, int width, String imageName) {
 			this.name = name;
 			this.width = width;
 			this.image = InspectIT.getDefault().getImage(imageName);
@@ -158,9 +158,9 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 	protected ISpanService spanService;
 
 	/**
-	 * Current input of the tree.
+	 * Content provider for this class.
 	 */
-	private List<InvocationSequenceData> input;
+	private InvocationTreeContentProvider contentProvider = new InvocationTreeContentProvider();
 
 	/**
 	 * {@inheritDoc}
@@ -193,16 +193,8 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object getTreeInput() {
-		return input;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public IContentProvider getContentProvider() {
-		return new InvocDetailContentProvider();
+		return contentProvider;
 	}
 
 	/**
@@ -264,13 +256,13 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 			return true;
 		}
 
-		for (Object object : data) {
-			if (!(object instanceof InvocationSequenceData)) {
-				return false;
-			}
+		Object inputObject = data.get(0);
+
+		if (inputObject instanceof InvocationTreeElement) {
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	/**
@@ -301,6 +293,12 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 				return getStyledTextForColumn(data, methodIdent, enumId);
 			} else if (element instanceof Span) {
 				return getStyledTextForColumn((Span) element, enumId);
+			} else if (element instanceof SpanIdent) {
+				StyledString missingSpanString = new StyledString();
+				if (enumId == Column.ELEMENT) {
+					missingSpanString.append("Unknown Span", StyledString.QUALIFIER_STYLER);
+				}
+				return missingSpanString;
 			}
 
 			return super.getStyledText(element, index);
@@ -343,6 +341,13 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 				switch (enumId) {
 				case ELEMENT:
 					return ImageFormatter.getSpanImage(span, resourceManager);
+				default:
+					return null;
+				}
+			} else if (element instanceof SpanIdent) {
+				switch (enumId) {
+				case ELEMENT:
+					return InspectIT.getDefault().getImage(InspectITImages.IMG_DISCOVERY_QUESTION);
 				default:
 					return null;
 				}
@@ -528,220 +533,6 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 	}
 
 	/**
-	 * The invoc detail content provider for this view.
-	 *
-	 * @author Patrice Bouillet
-	 *
-	 */
-	protected class InvocDetailContentProvider implements ITreeContentProvider {
-
-		/**
-		 * The deferred manager is used here to update the tree in a concurrent thread so the UI
-		 * responds much better if many items are displayed.
-		 */
-		private DeferredTreeContentManager manager;
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public Object[] getChildren(Object parent) {
-			if (parent instanceof InvocationSequenceData) {
-				InvocationSequenceData invocationSequenceData = (InvocationSequenceData) parent;
-				// we will use the deferred manager when we know there are only invocations as
-				// children, otherwise go for direct load
-				// this should work good as invocations usually don't have any span attached
-				if (!InvocationSequenceDataHelper.hasSpanIdent(invocationSequenceData)) {
-					return manager.getChildren(invocationSequenceData);
-				} else {
-					return getChildren(invocationSequenceData);
-				}
-			} else if (parent instanceof Span) {
-				return getChildren((Span) parent);
-			}
-			return new Object[0];
-		}
-
-		/**
-		 * Returns children of the invocation sequence. It's all nested sequences or it's spans,
-		 * plus any client span connected to invocation.
-		 *
-		 * @param invoc
-		 *            invocation data
-		 * @return children
-		 */
-		protected Object[] getChildren(InvocationSequenceData invoc) {
-			List<Object> objects = new ArrayList<>();
-
-			// first any client span
-			if (null != invoc.getSpanIdent()) {
-				Span span = spanService.get(invoc.getSpanIdent());
-				if ((null != span) && span.isCaller()) {
-					objects.add(span);
-				}
-			}
-
-			// then children - all invocations or their server spans
-			for (InvocationSequenceData child : invoc.getNestedSequences()) {
-				addSpanOrInvoc(objects, child);
-			}
-
-			return objects.toArray();
-		}
-
-		/**
-		 * Returns children of the span.only server spans have children, and it's the invocation
-		 * bounded to.
-		 *
-		 * @param span
-		 *            span
-		 * @return children
-		 */
-		protected Object[] getChildren(Span span) {
-			if (!span.isCaller()) {
-				InvocationSequenceData invoc = getForSpanIdent(input, span.getSpanIdent());
-				return new Object[] { invoc };
-			}
-			return new Object[0];
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public boolean hasChildren(Object parent) {
-			if (parent instanceof InvocationSequenceData) {
-				return hasChildren((InvocationSequenceData) parent);
-
-			} else if (parent instanceof Span) {
-				return hasChildren((Span) parent);
-			}
-
-			return false;
-		}
-
-		/**
-		 * If invocation has children. First checks for nested sequences. Otherwise checks if the
-		 * invocation has client span connected.
-		 *
-		 * @param invoc
-		 *            invocation data
-		 * @return if invocation has children
-		 */
-		protected boolean hasChildren(InvocationSequenceData invoc) {
-			if (!invoc.getNestedSequences().isEmpty()) {
-				return true;
-			}
-
-			if (InvocationSequenceDataHelper.hasSpanIdent(invoc)) {
-				Span span = spanService.get(invoc.getSpanIdent());
-				return (null != span) && span.isCaller();
-			}
-
-			return false;
-		}
-
-		/**
-		 * If span has children. Only child of the span can be invocation if the span is server
-		 * kind.
-		 *
-		 * @param span
-		 *            span
-		 * @return if span has children in the tree
-		 */
-		protected boolean hasChildren(Span span) {
-			InvocationSequenceData invoc = getForSpanIdent(input, span.getSpanIdent());
-			return (null != invoc) && !span.isCaller();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public Object getParent(Object child) {
-			if (child instanceof InvocationSequenceData) {
-				return getParent((InvocationSequenceData) child);
-			} else if (child instanceof Span) {
-				return getParent((Span) child);
-			}
-
-			return null;
-		}
-
-		/**
-		 * Returns parent of the invocation. First checks for the connected server span, then goes
-		 * for normal sequence parent.
-		 *
-		 * @param invoc
-		 *            invocation
-		 * @return parent
-		 */
-		protected Object getParent(InvocationSequenceData invoc) {
-			// invocation parent can be called span or the normal invocation parent
-			// try span first
-			if (InvocationSequenceDataHelper.hasSpanIdent(invoc)) {
-				Span span = spanService.get(invoc.getSpanIdent());
-				if ((null != span) && !span.isCaller()) {
-					return span;
-				}
-			}
-
-			// if does not work, then invocation parent
-			return invoc.getParentSequence();
-		}
-
-		/**
-		 * Returns parent of the span.
-		 *
-		 * @param span
-		 *            span
-		 * @return parent
-		 */
-		protected Object getParent(Span span) {
-			// for span, if it's client on then parent is invocation is bounded on, otherwise
-			// the parent of the invocation it belongs to
-			InvocationSequenceData invoc = getForSpanIdent(input, span.getSpanIdent());
-			if (!span.isCaller()) {
-				return null;
-			} else {
-				return invoc.getParentSequence();
-			}
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		@SuppressWarnings("unchecked")
-		public Object[] getElements(Object inputElement) {
-			List<InvocationSequenceData> invocationSequenceData = (List<InvocationSequenceData>) inputElement;
-			List<Object> objects = new ArrayList<>();
-			for (InvocationSequenceData data : invocationSequenceData) {
-				addSpanOrInvoc(objects, data);
-			}
-			return objects.toArray();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@SuppressWarnings("unchecked")
-		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			manager = new DeferredTreeContentManager((AbstractTreeViewer) viewer);
-			input = (List<InvocationSequenceData>) newInput;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void dispose() {
-		}
-
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -924,59 +715,9 @@ public class InvocDetailInputController extends AbstractTreeInputController { //
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object[] getObjectsToSearch(Object treeInput) {
-		List<InvocationSequenceData> invocationSequenceDataList = (List<InvocationSequenceData>) treeInput;
-		if (!invocationSequenceDataList.isEmpty()) {
-			InvocationSequenceData invocation = invocationSequenceDataList.get(0);
-			List<Object> allObjects = new ArrayList<>((int) invocation.getChildCount());
-			extractAllChildren(allObjects, invocation);
-			return allObjects.toArray();
-		}
-		return new Object[0];
-
-	}
-
-	/**
-	 * Extracts all invocations inside the invocation in one list via reflection.
-	 *
-	 * @param resultList
-	 *            List to contain all the extracted data.
-	 * @param invocation
-	 *            Invocation to extract.
-	 */
-	private void extractAllChildren(List<Object> resultList, InvocationSequenceData invocation) {
-		resultList.add(invocation);
-		if (InvocationSequenceDataHelper.hasSpanIdent(invocation)) {
-			Span span = spanService.get(invocation.getSpanIdent());
-			CollectionUtils.addIgnoreNull(resultList, span);
-		}
-		for (InvocationSequenceData child : invocation.getNestedSequences()) {
-			extractAllChildren(resultList, child);
-		}
-	}
-
-	/**
-	 * Adds invoc and possibly span to the list of objects. Order depends on span calling
-	 * properties.
-	 *
-	 * @param objects
-	 *            Object to add data to.
-	 * @param data
-	 *            Invocation
-	 */
-	private void addSpanOrInvoc(List<Object> objects, InvocationSequenceData data) {
-		if (InvocationSequenceDataHelper.hasSpanIdent(data)) {
-			Span span = spanService.get(data.getSpanIdent());
-			if ((null != span) && !span.isCaller()) {
-				objects.add(span);
-			} else {
-				objects.add(data);
-			}
-		} else {
-			objects.add(data);
-		}
+		return InvocationTreeUtil.getDataElements(contentProvider.getRootElement()).toArray();
 	}
 
 	/**

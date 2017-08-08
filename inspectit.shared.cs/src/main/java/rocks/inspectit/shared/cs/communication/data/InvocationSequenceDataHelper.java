@@ -1,8 +1,10 @@
 package rocks.inspectit.shared.cs.communication.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.mutable.MutableDouble;
@@ -341,4 +343,26 @@ public final class InvocationSequenceDataHelper {
 		}
 	}
 
+	/**
+	 * Returns the input sequence including its nested sequences as a stream.
+	 *
+	 * @param sequence
+	 *            sequence to represent as a stream
+	 * @return returns a {@link Stream} including the given sequence and all nested ones
+	 */
+	public static Stream<InvocationSequenceData> asStream(InvocationSequenceData sequence) {
+		return Stream.concat(Stream.of(sequence), sequence.getNestedSequences().stream().flatMap(InvocationSequenceDataHelper::asStream));
+	}
+
+	/**
+	 * Returns a stream containing all invocation sequences of the given collection and their nested
+	 * ones.
+	 *
+	 * @param sequences
+	 *            collection of sequences
+	 * @return returns a {@link Stream} including the given sequences and all nested ones
+	 */
+	public static Stream<InvocationSequenceData> asStream(Collection<InvocationSequenceData> sequences) {
+		return sequences.stream().flatMap(InvocationSequenceDataHelper::asStream);
+	}
 }

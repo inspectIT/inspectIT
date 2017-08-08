@@ -2,6 +2,7 @@ package rocks.inspectit.ui.rcp.editor.table.input;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
@@ -38,12 +39,16 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
+import rocks.inspectit.shared.cs.cmr.service.ISpanService;
 import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorEnum;
 import rocks.inspectit.shared.cs.communication.comparator.IDataComparator;
 import rocks.inspectit.shared.cs.communication.comparator.InvocationSequenceDataComparatorEnum;
 import rocks.inspectit.shared.cs.communication.comparator.MethodSensorDataComparatorEnum;
 import rocks.inspectit.shared.cs.communication.comparator.ResultComparator;
 import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeBuilder;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeBuilder.Mode;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeElement;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
@@ -83,7 +88,7 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 	 * @author Patrice Bouillet
 	 *
 	 */
-	protected static enum Column {
+	protected enum Column {
 		/** The time column. */
 		NESTED_DATA("Nested Data", 40, null, InvocationSequenceDataComparatorEnum.NESTED_DATA),
 		/** The time column. */
@@ -126,7 +131,7 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 		 * @param dataComparator
 		 *            Comparator for the column.
 		 */
-		private Column(String name, int width, String imageName, IDataComparator<? super InvocationSequenceData> dataComparator) {
+		Column(String name, int width, String imageName, IDataComparator<? super InvocationSequenceData> dataComparator) {
 			this.name = name;
 			this.width = width;
 			this.image = InspectIT.getDefault().getImage(imageName);
@@ -210,6 +215,11 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 	private ResultComparator<InvocationSequenceData> resultComparator = defaultComparator;
 
 	/**
+	 * The span service.
+	 */
+	private ISpanService spanService;
+
+	/**
 	 *
 	 * @return Returns list of invocation sequence data that represents a table input.
 	 */
@@ -258,6 +268,7 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 
 		dataAccessService = inputDefinition.getRepositoryDefinition().getInvocationDataAccessService();
 		cachedDataService = inputDefinition.getRepositoryDefinition().getCachedDataService();
+		spanService = inputDefinition.getRepositoryDefinition().getSpanService();
 	}
 
 	/**
@@ -443,17 +454,19 @@ public class InvocOverviewInputController extends AbstractTableInputController {
 					@Override
 					public void run(final IProgressMonitor monitor) {
 						monitor.beginTask("Retrieving Invocation detail data", IProgressMonitor.UNKNOWN);
+
 						InvocationSequenceData invocationSequenceData = (InvocationSequenceData) selection.getFirstElement();
 						InvocationSequenceData data = dataAccessService.getInvocationSequenceDetail(invocationSequenceData);
-						final List<InvocationSequenceData> invocationSequenceDataList = new ArrayList<>();
-						invocationSequenceDataList.add(data);
+
+						final InvocationTreeElement tree = new InvocationTreeBuilder().setSpanService(spanService).setInvocationSequence(data).setMode(Mode.SINGLE).build();
+
 						Display.getDefault().asyncExec(new Runnable() {
 							@Override
 							public void run() {
 								IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 								IWorkbenchPage page = window.getActivePage();
 								IRootEditor rootEditor = (IRootEditor) page.getActiveEditor();
-								rootEditor.setDataInput(invocationSequenceDataList);
+								rootEditor.setDataInput(Collections.singletonList(tree));
 							}
 						});
 						monitor.done();

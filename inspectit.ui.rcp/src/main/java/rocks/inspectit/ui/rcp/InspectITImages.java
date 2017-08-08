@@ -120,6 +120,7 @@ public interface InspectITImages {
 	String IMG_CHART_BAR = InspectITConstants.ICON_PATH_ECLIPSE + "graph_bar.gif";
 	String IMG_CHART_PIE = InspectITConstants.ICON_PATH_ECLIPSE + "graph_pie.gif";
 	String IMG_CLASS_EXCLUDE = InspectITConstants.ICON_PATH_ECLIPSE + "class_exclude.gif";
+	String IMG_DISCOVERY_QUESTION = InspectITConstants.ICON_PATH_ECLIPSE + "discovery_question.png";
 	String IMG_EDIT = InspectITConstants.ICON_PATH_ECLIPSE + "edit.gif";
 	String IMG_FLAG = InspectITConstants.ICON_PATH_ECLIPSE + "flag.gif";
 	String IMG_HTTP_URL = InspectITConstants.ICON_PATH_ECLIPSE + "url.gif";
@@ -129,6 +130,7 @@ public interface InspectITImages {
 	String IMG_LOCATE_IN_HIERARCHY = InspectITConstants.ICON_PATH_ECLIPSE + "locate_in_hierarchy.gif";
 	String IMG_LOG = InspectITConstants.ICON_PATH_ECLIPSE + "log.gif";
 	String IMG_METHOD = InspectITConstants.ICON_PATH_ECLIPSE + "method.gif";
+	String IMG_METHOD_PARAMETER = InspectITConstants.ICON_PATH_ECLIPSE + "method-parameter.png";
 	String IMG_MESSAGE = InspectITConstants.ICON_PATH_ECLIPSE + "message.gif";
 	String IMG_NUMBER = InspectITConstants.ICON_PATH_ECLIPSE + "number.gif";
 	String IMG_OVERLAY_ERROR = InspectITConstants.ICON_PATH_ECLIPSE + "overlay_error.gif";
@@ -160,7 +162,6 @@ public interface InspectITImages {
 	String IMG_TOOL = InspectITConstants.ICON_PATH_ECLIPSE + "build.gif";
 	String IMG_TRANSFORM = InspectITConstants.ICON_PATH_ECLIPSE + "transform.gif";
 	String IMG_USER = InspectITConstants.ICON_PATH_ECLIPSE + "user.gif";
-	String IMG_METHOD_PARAMETER = InspectITConstants.ICON_PATH_ECLIPSE + "method-parameter.png";
 
 	// Fugue set - license Creative Commons v3.0
 	String IMG_ADDRESSBOOK = InspectITConstants.ICON_PATH_FUGUE + "address-book.png";
