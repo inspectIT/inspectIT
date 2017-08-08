@@ -18,13 +18,11 @@ import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -41,8 +39,13 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.cmr.ApplicationData;
 import rocks.inspectit.shared.all.communication.data.cmr.BusinessTransactionData;
 import rocks.inspectit.shared.all.tracing.data.Span;
+import rocks.inspectit.shared.all.tracing.data.SpanIdent;
 import rocks.inspectit.shared.cs.cmr.service.IInvocationDataAccessService;
 import rocks.inspectit.shared.cs.cmr.service.ISpanService;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeBuilder;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeBuilder.Mode;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeElement;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeUtil;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
@@ -51,7 +54,7 @@ import rocks.inspectit.ui.rcp.editor.inputdefinition.extra.TraceInputDefinitionE
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
-import rocks.inspectit.ui.rcp.editor.tree.util.TraceTreeData;
+import rocks.inspectit.ui.rcp.editor.tree.InvocationTreeContentProvider;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
@@ -145,12 +148,7 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 	/**
 	 * Trace id to display details for.
 	 */
-	private long traceId;
-
-	/**
-	 * The cached service is needed because of the ID mappings.
-	 */
-	private ICachedDataService cachedDataService;
+	private Long traceId;
 
 	/**
 	 * Span service for loading traces.
@@ -163,14 +161,24 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 	private IInvocationDataAccessService invocationDataAccessService;
 
 	/**
-	 * Current input of the tree.
-	 */
-	private TraceTreeData input;
-
-	/**
 	 * Decimal places.
 	 */
 	private int timeDecimalPlaces = PreferencesUtils.getIntValue(PreferencesConstants.DECIMAL_PLACES);
+
+	/**
+	 * The tree content provider for this view.
+	 */
+	private InvocationTreeContentProvider contentProvider = new InvocationTreeContentProvider();
+
+	/**
+	 * The cached data service.
+	 */
+	private ICachedDataService cachedDataService;
+
+	/**
+	 * The tree which is displayed.
+	 */
+	private InvocationTreeElement spanTree;
 
 	/**
 	 * {@inheritDoc}
@@ -243,11 +251,11 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 	public void doRefresh(IProgressMonitor monitor, IRootEditor rootEditor) {
 		monitor.beginTask("Loading trace details..", IProgressMonitor.UNKNOWN);
 
-		Collection<? extends Span> spans = spanService.getSpans(traceId);
-		Collection<InvocationSequenceData> invocations = invocationDataAccessService.getInvocationSequenceDetail(traceId);
-
-		if (CollectionUtils.isNotEmpty(spans)) {
-			input = TraceTreeData.buildModel(spans, invocations);
+		if (traceId != null) {
+			// calculate the invocation trees to show
+			spanTree = new InvocationTreeBuilder().setTraceId(traceId).setSpanService(spanService).setInvocationService(invocationDataAccessService).setMode(Mode.ONLY_SPANS_WITH_SDK).build();
+			InvocationTreeBuilder builder = new InvocationTreeBuilder().setTraceId(traceId).setSpanService(spanService).setInvocationService(invocationDataAccessService).setMode(Mode.ALL);
+			final InvocationTreeElement fullTree = builder.build();
 
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
@@ -255,7 +263,7 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					IWorkbenchPage page = window.getActivePage();
 					IRootEditor rootEditor = (IRootEditor) page.getActiveEditor();
-					rootEditor.setDataInput(Collections.singletonList(input));
+					rootEditor.setDataInput(Collections.singletonList(fullTree));
 				}
 			});
 		}
@@ -268,7 +276,7 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 	 */
 	@Override
 	public Object getTreeInput() {
-		return input;
+		return spanTree;
 	}
 
 	/**
@@ -279,7 +287,8 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 		if (CollectionUtils.isEmpty(data)) {
 			return true;
 		}
-		return false;
+		Object inputObject = data.get(0);
+		return (inputObject instanceof Span);
 	}
 
 	/**
@@ -287,7 +296,7 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 	 */
 	@Override
 	public IContentProvider getContentProvider() {
-		return new TraceDetailContentProvider();
+		return contentProvider;
 	}
 
 	/**
@@ -322,6 +331,16 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 	public void doubleClick(DoubleClickEvent event) {
 		StructuredSelection selection = (StructuredSelection) event.getSelection();
 		if (!selection.isEmpty()) {
+			Object clickedObject = selection.getFirstElement();
+			if (clickedObject instanceof Span) {
+				if (((Span) clickedObject).getPropagationType() == null) {
+					// Span is SDK span
+					return;
+				}
+			} else if (clickedObject instanceof SpanIdent) {
+				return;
+			}
+
 			// open trace details view
 			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
 			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
@@ -358,30 +377,7 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 	 */
 	@Override
 	public Object[] getObjectsToSearch(Object treeInput) {
-		TraceTreeData data = (TraceTreeData) treeInput;
-		if (null != data) {
-			List<Span> allObjects = new ArrayList<>();
-			extractAllChildren(allObjects, data);
-			return allObjects.toArray();
-		}
-		return new Object[0];
-
-	}
-
-	/**
-	 * Extracts all children from {@link TraceTreeData} in all objects list.
-	 *
-	 * @param allObjects
-	 *            List to extract children.
-	 * @param data
-	 *            trace data
-	 */
-	private void extractAllChildren(List<Span> allObjects, TraceTreeData data) {
-		allObjects.add(data.getSpan());
-
-		for (TraceTreeData child : data.getChildren()) {
-			extractAllChildren(allObjects, child);
-		}
+		return InvocationTreeUtil.getDataElements(spanTree, false).toArray();
 	}
 
 	/**
@@ -394,7 +390,8 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 	 * @return {@link StyledString}
 	 */
 	private StyledString getStyledTextForColumn(Span span, Column column) {
-		TraceTreeData data = TraceTreeData.getForSpanIdent(input, span.getSpanIdent());
+		InvocationTreeElement ite = InvocationTreeUtil.lookupTreeElement(contentProvider.getLookupMap(), span);
+
 		switch (column) {
 		case DETAILS:
 			return TextFormatter.getSpanDetailsShort(span, cachedDataService);
@@ -406,25 +403,26 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 			return new StyledString(NumberFormatter.formatTimeWithMillis(span.getTimeStamp()));
 		case DURATION:
 			StyledString durationString = new StyledString(NumberFormatter.formatDouble(span.getDuration(), timeDecimalPlaces));
-			if (data.isConsideredAsync()) {
+			if (InvocationTreeUtil.isConsideredAsync(ite)) {
 				durationString.append(TextFormatter.getWarningSign());
 			}
 			return durationString;
 		case EXCLUSIVE:
 			StyledString exclusive = new StyledString();
-			exclusive.append(NumberFormatter.formatDouble(data.getExclusiveDuration(), timeDecimalPlaces));
+			exclusive.append(NumberFormatter.formatDouble(InvocationTreeUtil.calculateSpanExclusiveDuration(ite), timeDecimalPlaces));
 			exclusive.append(" (", StyledString.COUNTER_STYLER);
-			int percentage = (int) ((data.getExclusivePercentage()) * 100);
+			int percentage = Math.round((float) InvocationTreeUtil.calculateSpanExclusivePercentage(ite) * 100);
 			exclusive.append(NumberFormatter.formatInteger(percentage), StyledString.COUNTER_STYLER);
 			exclusive.append("%)", StyledString.COUNTER_STYLER);
-			if (data.isConsideredAsync()) {
+			if (InvocationTreeUtil.isConsideredAsync(ite)) {
 				exclusive.append(TextFormatter.getWarningSign());
 			}
 			return exclusive;
 		case APPLICATION:
-			if (CollectionUtils.isNotEmpty(data.getInvocations())) {
+			Collection<InvocationSequenceData> sequences = InvocationTreeUtil.getInvocationSequences(ite);
+			if (CollectionUtils.isNotEmpty(sequences)) {
 				Set<Integer> applicationIds = new HashSet<>(1);
-				for (InvocationSequenceData invoc : data.getInvocations()) {
+				for (InvocationSequenceData invoc : sequences) {
 					applicationIds.add(invoc.getApplicationId());
 				}
 				if (applicationIds.size() > 1) {
@@ -439,10 +437,11 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 			}
 			return EMPTY_STYLED_STRING;
 		case BUSINESS_TRANSACTION:
-			if (CollectionUtils.isNotEmpty(data.getInvocations())) {
+			Collection<InvocationSequenceData> sequences2 = InvocationTreeUtil.getInvocationSequences(ite);
+			if (CollectionUtils.isNotEmpty(sequences2)) {
 				Set<Integer> transationsIds = new HashSet<>(1);
 				Set<Integer> applicationIds = new HashSet<>(1);
-				for (InvocationSequenceData invoc : data.getInvocations()) {
+				for (InvocationSequenceData invoc : sequences2) {
 					applicationIds.add(invoc.getApplicationId());
 					transationsIds.add(invoc.getBusinessTransactionId());
 				}
@@ -464,95 +463,6 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 	}
 
 	/**
-	 * Content provider.
-	 *
-	 * @author Ivan Senic
-	 *
-	 */
-	private final class TraceDetailContentProvider implements ITreeContentProvider {
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public Object[] getElements(Object inputElement) {
-			// INPORTANT: We always return spans as the elements for the tree, so that all command
-			// like search and locate can work
-			if (inputElement instanceof TraceTreeData) {
-				return new Object[] { ((TraceTreeData) inputElement).getSpan() };
-			}
-			return new Object[] {};
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public Object[] getChildren(Object parentElement) {
-			if (parentElement instanceof Span) {
-				Span span = (Span) parentElement;
-				TraceTreeData data = TraceTreeData.getForSpanIdent(input, span.getSpanIdent());
-				if (null != data) {
-					Object[] children = new Object[data.getChildren().size()];
-					for (int i = 0; i < children.length; i++) {
-						children[i] = data.getChildren().get(i).getSpan();
-					}
-					return children;
-				}
-			}
-			return new Object[0];
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public Object getParent(Object element) {
-			if (element instanceof Span) {
-				Span span = (Span) element;
-				TraceTreeData data = TraceTreeData.getForSpanIdent(input, span.getSpanIdent());
-				if (null != data) {
-					TraceTreeData parent = data.getParent();
-					if (null != parent) {
-						return parent.getSpan();
-					}
-				}
-			}
-			return null;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public boolean hasChildren(Object element) {
-			if (element instanceof Span) {
-				Span span = (Span) element;
-				TraceTreeData data = TraceTreeData.getForSpanIdent(input, span.getSpanIdent());
-				if (null != data) {
-					return CollectionUtils.isNotEmpty(data.getChildren());
-				}
-			}
-			return false;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void dispose() {
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		}
-
-	}
-
-	/**
 	 * Label provider.
 	 *
 	 * @author Ivan Senic
@@ -570,10 +480,22 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 		 */
 		@Override
 		protected StyledString getStyledText(Object element, int index) {
-			Span span = (Span) element;
 			Column enumId = Column.fromOrd(index);
+			if (element instanceof Span) {
+				Span span = (Span) element;
 
-			return getStyledTextForColumn(span, enumId);
+				return getStyledTextForColumn(span, enumId);
+			} else if (element instanceof SpanIdent) {
+				StyledString missingSpanString = new StyledString();
+
+				if (enumId == Column.DETAILS) {
+					missingSpanString.append("Unknown Span", StyledString.QUALIFIER_STYLER);
+				}
+
+				return missingSpanString;
+			}
+
+			return super.getStyledText(element, index);
 		}
 
 		/**
@@ -581,40 +503,50 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 		 */
 		@Override
 		protected Image getColumnImage(Object element, int index) {
-			Span span = (Span) element;
-			TraceTreeData data = TraceTreeData.getForSpanIdent(input, span.getSpanIdent());
 			Column enumId = Column.fromOrd(index);
 
-			switch (enumId) {
-			case DETAILS:
-				return ImageFormatter.getSpanImage(span, resourceManager);
-			case TYPE:
-				if (span.isCaller()) {
-					return InspectIT.getDefault().getImage(InspectITImages.IMG_CHECKMARK);
+			if (element instanceof Span) {
+				Span span = (Span) element;
+				InvocationTreeElement treeElement = InvocationTreeUtil.lookupTreeElement(contentProvider.getLookupMap(), span);
+
+				switch (enumId) {
+				case DETAILS:
+					return ImageFormatter.getSpanImage(span, resourceManager);
+				case TYPE:
+					if (span.isCaller()) {
+						return InspectIT.getDefault().getImage(InspectITImages.IMG_CHECKMARK);
+					}
+					break;
+				case ERROR:
+					boolean error = MapUtils.getBoolean(span.getTags(), Tags.ERROR.getKey(), false);
+					if (error) {
+						return InspectIT.getDefault().getImage(InspectITImages.IMG_ERROR_CIRCLE_FRAME);
+					}
+					break;
+				case NESTED_DATA:
+					if (treeElement.hasNestedSqls() && treeElement.hasNestedExceptions()) {
+						return ImageFormatter.getCombinedImage(resourceManager, SWT.HORIZONTAL, InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_DATABASE),
+								InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_EXCEPTION_SENSOR));
+					} else if (treeElement.hasNestedSqls()) {
+						return InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE);
+					} else if (treeElement.hasNestedExceptions()) {
+						return InspectIT.getDefault().getImage(InspectITImages.IMG_EXCEPTION_SENSOR);
+					}
+					break;
+				case PROPAGATION:
+					return ImageFormatter.getPropagationImage(span.getPropagationType());
+				case ORIGIN:
+					return ImageFormatter.getSpanOriginImage(span, cachedDataService.getPlatformIdentForId(span.getPlatformIdent()));
+				default:
+					return super.getColumnImage(element, index);
 				}
-				break;
-			case ERROR:
-				boolean error = MapUtils.getBoolean(span.getTags(), Tags.ERROR.getKey(), false);
-				if (error) {
-					return InspectIT.getDefault().getImage(InspectITImages.IMG_ERROR_CIRCLE_FRAME);
+			} else if (element instanceof SpanIdent) {
+				switch (enumId) {
+				case DETAILS:
+					return InspectIT.getDefault().getImage(InspectITImages.IMG_DISCOVERY_QUESTION);
+				default:
+					return super.getColumnImage(element, index);
 				}
-				break;
-			case NESTED_DATA:
-				if (data.hasSqlsInInvocations() && data.hasExceptionsInInvocations()) {
-					return ImageFormatter.getCombinedImage(resourceManager, SWT.HORIZONTAL, InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_DATABASE),
-							InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_EXCEPTION_SENSOR));
-				} else if (data.hasSqlsInInvocations()) {
-					return InspectIT.getDefault().getImage(InspectITImages.IMG_DATABASE);
-				} else if (data.hasExceptionsInInvocations()) {
-					return InspectIT.getDefault().getImage(InspectITImages.IMG_EXCEPTION_SENSOR);
-				}
-				break;
-			case PROPAGATION:
-				return ImageFormatter.getPropagationImage(span.getPropagationType());
-			case ORIGIN:
-				return ImageFormatter.getSpanOriginImage(span, cachedDataService.getPlatformIdentForId(span.getPlatformIdent()));
-			default:
-				return super.getColumnImage(element, index);
 			}
 			return super.getColumnImage(element, index);
 		}
@@ -624,14 +556,20 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 		 */
 		@Override
 		public String getToolTipText(Object element, int index) {
+			if (!(element instanceof Span)) {
+				return super.getToolTipText(element);
+			}
+
 			Span span = (Span) element;
-			TraceTreeData data = TraceTreeData.getForSpanIdent(input, span.getSpanIdent());
+
+			InvocationTreeElement treeElement = InvocationTreeUtil.lookupTreeElement(contentProvider.getLookupMap(), span);
+
 			Column enumId = Column.fromOrd(index);
 
 			switch (enumId) {
 			case NESTED_DATA:
-				boolean hasSqlsInInvocations = data.hasSqlsInInvocations();
-				boolean hasExceptionsInInvocations = data.hasExceptionsInInvocations();
+				boolean hasSqlsInInvocations = treeElement.hasNestedSqls();
+				boolean hasExceptionsInInvocations = treeElement.hasNestedExceptions();
 				if (hasSqlsInInvocations || hasExceptionsInInvocations) {
 					StringBuilder toolTip = new StringBuilder("This trace span contains:");
 					if (hasSqlsInInvocations) {
@@ -646,12 +584,12 @@ public class TraceDetailsTreeInputController extends AbstractTreeInputController
 			case TIME:
 				return "Start times are reported by the clock on specific agent, thus differences can occur.";
 			case DURATION:
-				if (data.isConsideredAsync()) {
+				if (InvocationTreeUtil.isConsideredAsync(treeElement)) {
 					return "This span is considered asynchrouns to it's parent.\nIt's duration can not be used in reference to it's parent.";
 				}
 				break;
 			case EXCLUSIVE:
-				if (data.isConsideredAsync()) {
+				if (InvocationTreeUtil.isConsideredAsync(treeElement)) {
 					return "This span is considered asynchrouns to it's parent.\nIt's exclusive duration only reflects this span and it's children.";
 				}
 				break;

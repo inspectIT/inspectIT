@@ -35,6 +35,8 @@ import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorE
 import rocks.inspectit.shared.cs.communication.comparator.ExceptionSensorDataComparatorEnum;
 import rocks.inspectit.shared.cs.communication.comparator.IDataComparator;
 import rocks.inspectit.shared.cs.communication.comparator.MethodSensorDataComparatorEnum;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeElement;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeUtil;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.ExceptionDataAggregator;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.ExceptionDataAggregator.ExceptionAggregationType;
@@ -45,7 +47,6 @@ import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
-import rocks.inspectit.ui.rcp.editor.tree.util.TraceTreeData;
 import rocks.inspectit.ui.rcp.editor.viewers.RawAggregatedResultComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
@@ -81,7 +82,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 	 * @author Eduard Tudenhoefner
 	 *
 	 */
-	private static enum Column {
+	private enum Column {
 		/** The timestamp column. */
 		TIMESTAMP("Timestamp", 150, InspectITImages.IMG_TIMESTAMP, false, true, DefaultDataComparatorEnum.TIMESTAMP),
 		/** The fqn column. */
@@ -127,7 +128,7 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 		 *            Comparator for the column.
 		 *
 		 */
-		private Column(String name, int width, String imageName, boolean showInAggregatedMode, boolean showInRawMode, IDataComparator<? super AggregatedExceptionSensorData> dataComparator) {
+		Column(String name, int width, String imageName, boolean showInAggregatedMode, boolean showInRawMode, IDataComparator<? super AggregatedExceptionSensorData> dataComparator) {
 			this.name = name;
 			this.width = width;
 			this.image = InspectIT.getDefault().getImage(imageName);
@@ -324,8 +325,8 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 			return true;
 		}
 
-		// or one trace data
-		if (data.get(0) instanceof TraceTreeData) {
+		// or one InvocationTreeElement
+		if (data.get(0) instanceof InvocationTreeElement) {
 			return true;
 		}
 
@@ -366,8 +367,9 @@ public class ExceptionSensorInvocInputController extends AbstractTableInputContr
 			}
 
 			List<InvocationSequenceData> invocationSequenceDataList;
-			if (input.get(0) instanceof TraceTreeData) {
-				invocationSequenceDataList = TraceTreeData.collectInvocations((TraceTreeData) input.get(0), new ArrayList<InvocationSequenceData>());
+			if (input.get(0) instanceof InvocationTreeElement) {
+				InvocationTreeElement tree = (InvocationTreeElement) input.get(0);
+				invocationSequenceDataList = InvocationTreeUtil.getInvocationSequences(tree);
 			} else {
 				invocationSequenceDataList = (List<InvocationSequenceData>) inputElement;
 			}

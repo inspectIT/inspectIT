@@ -30,6 +30,8 @@ import rocks.inspectit.shared.cs.communication.comparator.DefaultDataComparatorE
 import rocks.inspectit.shared.cs.communication.comparator.IDataComparator;
 import rocks.inspectit.shared.cs.communication.comparator.MethodSensorDataComparatorEnum;
 import rocks.inspectit.shared.cs.communication.comparator.TimerDataComparatorEnum;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeElement;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeUtil;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.AggregationPerformer;
 import rocks.inspectit.shared.cs.indexing.aggregation.impl.TimerDataAggregator;
 import rocks.inspectit.ui.rcp.InspectIT;
@@ -39,7 +41,6 @@ import rocks.inspectit.ui.rcp.editor.preferences.IPreferenceGroup;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceEventCallback.PreferenceEvent;
 import rocks.inspectit.ui.rcp.editor.preferences.PreferenceId;
 import rocks.inspectit.ui.rcp.editor.table.TableViewerComparator;
-import rocks.inspectit.ui.rcp.editor.tree.util.TraceTreeData;
 import rocks.inspectit.ui.rcp.editor.viewers.RawAggregatedResultComparator;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
 import rocks.inspectit.ui.rcp.formatter.NumberFormatter;
@@ -62,7 +63,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 	 * @author Patrice Bouillet
 	 *
 	 */
-	private static enum Column {
+	private enum Column {
 		/** The timestamp column. */
 		TIMESTAMP("Timestamp", 130, InspectITImages.IMG_TIMESTAMP, false, true, DefaultDataComparatorEnum.TIMESTAMP),
 		/** The package column. */
@@ -128,7 +129,7 @@ public class MethodInvocInputController extends AbstractTableInputController {
 		 *            Comparator for the column.
 		 *
 		 */
-		private Column(String name, int width, String imageName, boolean showInAggregatedMode, boolean showInRawMode, IDataComparator<? super TimerData> dataComparator) {
+		Column(String name, int width, String imageName, boolean showInAggregatedMode, boolean showInRawMode, IDataComparator<? super TimerData> dataComparator) {
 			this.name = name;
 			this.width = width;
 			this.image = InspectIT.getDefault().getImage(imageName);
@@ -324,8 +325,8 @@ public class MethodInvocInputController extends AbstractTableInputController {
 			return true;
 		}
 
-		// or one trace data
-		if (data.get(0) instanceof TraceTreeData) {
+		// or one InvocationTreeElement
+		if (data.get(0) instanceof InvocationTreeElement) {
 			return true;
 		}
 
@@ -353,8 +354,9 @@ public class MethodInvocInputController extends AbstractTableInputController {
 			}
 
 			List<InvocationSequenceData> invocationSequenceDataList;
-			if (input.get(0) instanceof TraceTreeData) {
-				invocationSequenceDataList = TraceTreeData.collectInvocations((TraceTreeData) input.get(0), new ArrayList<InvocationSequenceData>());
+			if (input.get(0) instanceof InvocationTreeElement) {
+				InvocationTreeElement tree = (InvocationTreeElement) input.get(0);
+				invocationSequenceDataList = InvocationTreeUtil.getInvocationSequences(tree);
 			} else {
 				invocationSequenceDataList = (List<InvocationSequenceData>) inputElement;
 			}
