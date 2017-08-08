@@ -131,6 +131,8 @@ public class DefineNewStorageWizzardPage extends WizardPage {
 		if (index != -1) {
 			cmrRepositoryCombo.select(index);
 			cmrRepositoryCombo.setEnabled(false);
+		} else {
+			cmrRepositoryCombo.select(0);
 		}
 
 		Label nameLabel = new Label(main, SWT.LEFT);
@@ -216,6 +218,15 @@ public class DefineNewStorageWizzardPage extends WizardPage {
 	 */
 	public boolean isAutoFinalize() {
 		return autoFinalize.getSelection();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		nameBox.setFocus();
 	}
 
 }
