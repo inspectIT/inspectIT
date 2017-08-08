@@ -17,6 +17,7 @@ import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
@@ -177,6 +178,10 @@ public class EMailSender implements IExternalService {
 		}
 		if (!connected) {
 			log.warn("Failed sending e-mail! E-Mail service cannot connect to the SMTP server. Check the connection settings!");
+			return false;
+		}
+		if (CollectionUtils.isEmpty(recipients)) {
+			log.warn("Failed sending e-mail! No recipients are defined.");
 			return false;
 		}
 		try {
