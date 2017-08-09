@@ -28,6 +28,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -66,6 +67,7 @@ import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.tree.DeferredTreeViewer;
 import rocks.inspectit.ui.rcp.editor.viewers.StyledCellIndexLabelProvider;
+import rocks.inspectit.ui.rcp.form.AgentPropertyForm;
 import rocks.inspectit.ui.rcp.form.CmrRepositoryPropertyForm;
 import rocks.inspectit.ui.rcp.formatter.ImageFormatter;
 import rocks.inspectit.ui.rcp.formatter.TextFormatter;
@@ -139,9 +141,9 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 	private Composite messageComposite;
 
 	/**
-	 * CMR property form.
+	 * Property form.
 	 */
-	private CmrRepositoryPropertyForm cmrPropertyForm;
+	private AbstractPropertyForm propertyForm;
 
 	/**
 	 * Views main composite.
@@ -158,6 +160,11 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 	 * refreshed.
 	 */
 	private DeferredAgentsComposite lastSelectedRepository = null;
+
+	/**
+	 * Last selected agent, so that the selection can be maintained after the view is refreshed.
+	 */
+	private AgentLeaf lastSelectedAgentLeaf = null;
 
 	/**
 	 * Defines if agents are shown in the tree which have not sent any data since the CMR was
@@ -250,21 +257,22 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 			}
 		});
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				StructuredSelection structuredSelection = (StructuredSelection) event.getSelection();
 				if (structuredSelection.getFirstElement() instanceof DeferredAgentsComposite) {
 					lastSelectedRepository = (DeferredAgentsComposite) structuredSelection.getFirstElement();
+				} else if (structuredSelection.getFirstElement() instanceof AgentLeaf) {
+					lastSelectedAgentLeaf = (AgentLeaf) structuredSelection.getFirstElement();
 				}
 			}
 		});
 		treeViewer.addDoubleClickListener(new RepositoryManagerDoubleClickListener());
 		ColumnViewerToolTipSupport.enableFor(treeViewer, ToolTip.NO_RECREATE);
 		treeViewer.setInput(inputList);
-
-		cmrPropertyForm = new CmrRepositoryPropertyForm(mainComposite);
-		cmrPropertyForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		treeViewer.addSelectionChangedListener(cmrPropertyForm);
+		PropertyFormChangeListener propertyFormChangeListener = new PropertyFormChangeListener();
+		treeViewer.addSelectionChangedListener(propertyFormChangeListener);
 
 		MenuManager menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
@@ -338,6 +346,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 				StructuredSelection ss = new StructuredSelection(lastSelectedRepository);
 				treeViewer.setSelection(ss, true);
 			}
+
 		} else {
 			displayMessage("No CMR repository present. Please add the CMR repository via 'Add CMR repository' action.", Display.getDefault().getSystemImage(SWT.ICON_INFORMATION));
 		}
@@ -554,8 +563,8 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 						treeViewer.setSelection(StructuredSelection.EMPTY);
 						StructuredSelection ss = new StructuredSelection(finalToUpdate);
 						treeViewer.setSelection(ss, true);
-						if ((null != cmrPropertyForm) && !cmrPropertyForm.isDisposed()) {
-							cmrPropertyForm.refresh();
+						if ((null != propertyForm) && !propertyForm.isDisposed()) {
+							propertyForm.refresh();
 						}
 					}
 				}
@@ -605,10 +614,22 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 			}
 		}
 		if (null != toUpdate) {
+			StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
 			treeViewer.refresh(toUpdate, true);
+
+			if (null != lastSelectedAgentLeaf && !selection.isEmpty() && selection.getFirstElement() instanceof AgentLeaf) {
+				for (DeferredAgentsComposite composite : inputList) {
+					if (composite.getChildren().contains(lastSelectedAgentLeaf)) {
+						treeViewer.expandToObjectAndSelect(lastSelectedAgentLeaf, 0);
+						propertyForm.refresh();
+						break;
+					}
+				}
+			}
+
 			if (ObjectUtils.equals(toUpdate, lastSelectedRepository)) {
-				if ((null != cmrPropertyForm) && !cmrPropertyForm.isDisposed()) {
-					cmrPropertyForm.refresh();
+				if ((null != propertyForm) && !propertyForm.isDisposed()) {
+					propertyForm.refresh();
 				}
 			}
 		}
@@ -631,23 +652,26 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 	public void setShowProperties(boolean show) {
 		if (show) {
 			CmrRepositoryDefinition cmrRepositoryDefinition = null;
+			AgentLeaf agentLeaf = null;
+
 			StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
 			if (!selection.isEmpty()) {
 				if (selection.getFirstElement() instanceof ICmrRepositoryProvider) {
 					cmrRepositoryDefinition = ((ICmrRepositoryProvider) selection.getFirstElement()).getCmrRepositoryDefinition();
+					propertyForm = new CmrRepositoryPropertyForm(mainComposite, cmrRepositoryDefinition);
+					propertyForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+				} else if (selection.getFirstElement() instanceof AgentLeaf) {
+					agentLeaf = ((AgentLeaf) selection.getFirstElement());
+					propertyForm = new AgentPropertyForm(mainComposite, agentLeaf);
+					propertyForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 				}
 			}
-
-			cmrPropertyForm = new CmrRepositoryPropertyForm(mainComposite, cmrRepositoryDefinition);
-			cmrPropertyForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-			treeViewer.addSelectionChangedListener(cmrPropertyForm);
 			mainComposite.setWeights(new int[] { 2, 3 });
 			mainComposite.layout();
 		} else {
-			if ((null != cmrPropertyForm) && !cmrPropertyForm.isDisposed()) {
-				treeViewer.removeSelectionChangedListener(cmrPropertyForm);
-				cmrPropertyForm.dispose();
-				cmrPropertyForm = null; // NOPMD
+			if ((null != propertyForm) && !propertyForm.isDisposed()) {
+				propertyForm.dispose();
+				propertyForm = null; // NOPMD
 			}
 			mainComposite.setWeights(new int[] { 1 });
 			mainComposite.layout();
@@ -926,8 +950,8 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 		 * Updates the agent status for each CMR and updates the displayed CMR repository.
 		 */
 		private void updateAgentsAndCmrStatus() {
-			if ((null != cmrPropertyForm) && !cmrPropertyForm.isDisposed()) {
-				cmrPropertyForm.refresh();
+			if ((null != propertyForm) && !propertyForm.isDisposed()) {
+				propertyForm.refresh();
 			}
 			if (null != inputList) {
 				final List<Object> toUpdate = new ArrayList<>();
@@ -989,4 +1013,63 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 		}
 	}
 
+	/**
+	 * Updates the properties of the {@link AbstractPropertyForm} and switches between
+	 * {@link AgentPropertyForm} and {@link CmrRepositoryPropertyForm}.
+	 * 
+	 * @author Tobias Angerstein
+	 *
+	 */
+	private class PropertyFormChangeListener implements ISelectionChangedListener {
+		/**
+		 * Default constructor.
+		 */
+		public PropertyFormChangeListener() {
+			// initally show cmr repository properties.
+			propertyForm = new CmrRepositoryPropertyForm(mainComposite);
+			propertyForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		}
+
+		@Override
+		public void selectionChanged(SelectionChangedEvent event) {
+			ISelection selection = event.getSelection();
+			if (!selection.isEmpty() && (selection instanceof StructuredSelection)) {
+				StructuredSelection structuredSelection = (StructuredSelection) selection;
+				Object firstElement = structuredSelection.getFirstElement();
+				if (!(firstElement instanceof Component)) {
+					// it is possible that the PendingAdapterUpdate is in the selection because it
+					// is still loading the agents
+					return;
+				}
+
+				if (firstElement instanceof ICmrRepositoryProvider) {
+					if (propertyForm instanceof CmrRepositoryPropertyForm) {
+						if (!ObjectUtils.equals(((CmrRepositoryPropertyForm) propertyForm).getCmrRepositoryDefinition(), ((ICmrRepositoryProvider) firstElement).getCmrRepositoryDefinition())) {
+							((CmrRepositoryPropertyForm) propertyForm).setCmrRepositoryDefinition(((ICmrRepositoryProvider) firstElement).getCmrRepositoryDefinition());
+							((CmrRepositoryPropertyForm) propertyForm).refresh();
+						}
+					} else {
+						propertyForm.dispose();
+						propertyForm = new CmrRepositoryPropertyForm(mainComposite, ((ICmrRepositoryProvider) firstElement).getCmrRepositoryDefinition());
+						propertyForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+						mainComposite.setWeights(new int[] { 2, 3 });
+						propertyForm.form.getParent().layout(true);
+					}
+				} else if (firstElement instanceof AgentLeaf) {
+					if (propertyForm instanceof AgentPropertyForm) {
+						if (!ObjectUtils.equals(((AgentPropertyForm) propertyForm).getAgentLeaf(), (AgentLeaf) firstElement)) {
+							((AgentPropertyForm) propertyForm).setAgentLeaf((AgentLeaf) firstElement);
+							((AgentPropertyForm) propertyForm).refresh();
+						}
+					} else {
+						propertyForm.dispose();
+						propertyForm = new AgentPropertyForm(mainComposite, (AgentLeaf) firstElement);
+						propertyForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+						mainComposite.setWeights(new int[] { 2, 3 });
+						propertyForm.form.getParent().layout(true);
+					}
+				}
+			}
+		}
+	}
 }
