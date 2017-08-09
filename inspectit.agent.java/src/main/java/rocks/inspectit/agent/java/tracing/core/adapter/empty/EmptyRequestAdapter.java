@@ -41,7 +41,7 @@ public final class EmptyRequestAdapter implements ServerRequestAdapter<TextMap>,
 	 */
 	@Override
 	public boolean startClientSpan() {
-		return true;
+		return false;
 	}
 
 	/**

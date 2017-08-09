@@ -11,7 +11,7 @@ import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.error.ThrowableAwareResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpResponseAdapter;
-import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
+import rocks.inspectit.agent.java.tracing.core.adapter.http.data.ClientHttpRequest;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpResponse;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl.UrlConnectionHttpClientRequestResponse;
 
@@ -46,7 +46,7 @@ public class UrlConnectionSensor extends RemoteClientSensor implements ClientAda
 	public ClientRequestAdapter<TextMap> getClientRequestAdapter(Object object, Object[] parameters, RegisteredSensorConfig rsc) {
 		Object urlConnection = object;
 		if (urlConnection instanceof HttpURLConnection) {
-			HttpRequest request = new UrlConnectionHttpClientRequestResponse((HttpURLConnection) urlConnection);
+			ClientHttpRequest request = new UrlConnectionHttpClientRequestResponse((HttpURLConnection) urlConnection);
 			return new HttpClientRequestAdapter(request);
 		} else {
 			return null;

@@ -3,7 +3,6 @@ package rocks.inspectit.agent.java.sensor.method.remote.client.http;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -67,20 +66,9 @@ public class ApacheHttpClientV40SensorTest extends TestBase {
 
 		@Test
 		public void spanStarting() {
-			when(httpRequest.containsHeader(anyString())).thenReturn(false);
-
 			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { null, httpRequest }, rsc);
 
 			assertThat(adapter.startClientSpan(), is(true));
-		}
-
-		@Test
-		public void spanStartingContainsHeader() {
-			when(httpRequest.containsHeader(anyString())).thenReturn(true);
-
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(object, new Object[] { null, httpRequest }, rsc);
-
-			assertThat(adapter.startClientSpan(), is(false));
 		}
 
 		@Test

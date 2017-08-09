@@ -13,19 +13,6 @@ import io.opentracing.propagation.TextMap;
 public interface HttpRequest extends TextMap {
 
 	/**
-	 * Defines if the request can be traced at this point of time and new span should be started.
-	 * The reasons not to start can be that the trace information is already set, or connection has
-	 * already been made.
-	 * <p>
-	 * If returned <code>true</code> it's expected that http request does not yet have tracing
-	 * information in the headers and that headers can be inserted.
-	 *
-	 * @return <code>true</code> if interceptor should start new request, <code>false</code>
-	 *         otherwise.
-	 */
-	boolean startClientSpan();
-
-	/**
 	 * Returns URL of the request.
 	 *
 	 * @return Returns URL of the request.

@@ -52,14 +52,6 @@ public class JavaHttpServerRequest implements HttpRequest, SpanContextStore {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean startClientSpan() {
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public String getUrl() {
 		Object url = cache.invokeMethod(httpServletRequest.getClass(), "getRequestURL", new Class<?>[] {}, httpServletRequest, new Object[] {}, null, JAVAX_SERVLET_HTTP_SERVLET_REQUEST_CLASS);
 		if (null != url) {
