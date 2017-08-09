@@ -3,7 +3,7 @@ package rocks.inspectit.agent.java.tracing.core.adapter.http;
 import io.opentracing.References;
 import io.opentracing.propagation.TextMap;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
-import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
+import rocks.inspectit.agent.java.tracing.core.adapter.http.data.ClientHttpRequest;
 
 /**
  * The {@link ClientRequestAdapter} for all synchronous HTTP client requests.
@@ -13,17 +13,17 @@ import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
 public class HttpClientRequestAdapter extends HttpRequestAdapter implements ClientRequestAdapter<TextMap> {
 
 	/**
-	 * Http request providing data we need.
+	 * Client http request providing data we need.
 	 */
-	private HttpRequest httpRequest;
+	private ClientHttpRequest httpRequest;
 
 	/**
 	 * Default constructor.
 	 *
 	 * @param httpRequest
-	 *            HTTP request from which we can read data.
+	 *            Client HTTP request from which we can read data.
 	 */
-	public HttpClientRequestAdapter(HttpRequest httpRequest) {
+	public HttpClientRequestAdapter(ClientHttpRequest httpRequest) {
 		super(httpRequest);
 		this.httpRequest = httpRequest;
 	}

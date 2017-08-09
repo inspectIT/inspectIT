@@ -9,6 +9,7 @@ import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.error.ThrowableAwareResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpResponseAdapter;
+import rocks.inspectit.agent.java.tracing.core.adapter.http.data.ClientHttpRequest;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpResponse;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl.SpringRestTemplateHttpClientRequest;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl.SpringRestTemplateHttpResponse;
@@ -40,7 +41,7 @@ public class SpringRestTemplateClientSensor extends RemoteClientSensor implement
 	@Override
 	public ClientRequestAdapter<TextMap> getClientRequestAdapter(Object object, Object[] parameters, RegisteredSensorConfig rsc) {
 		Object request = object;
-		SpringRestTemplateHttpClientRequest clientRequest = new SpringRestTemplateHttpClientRequest(request, CACHE);
+		ClientHttpRequest clientRequest = new SpringRestTemplateHttpClientRequest(request, CACHE);
 		return new HttpClientRequestAdapter(clientRequest);
 	}
 

@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import rocks.inspectit.agent.java.sdk.opentracing.internal.constants.PropagationConstants;
-import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
+import rocks.inspectit.agent.java.tracing.core.adapter.http.data.ClientHttpRequest;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpResponse;
 
 /**
@@ -17,7 +17,7 @@ import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpResponse;
  * @author Ivan Senic
  *
  */
-public class UrlConnectionHttpClientRequestResponse implements HttpRequest, HttpResponse {
+public class UrlConnectionHttpClientRequestResponse implements ClientHttpRequest, HttpResponse {
 
 	/**
 	 * Http url connection, instance of java.net.HttpURLConnection.

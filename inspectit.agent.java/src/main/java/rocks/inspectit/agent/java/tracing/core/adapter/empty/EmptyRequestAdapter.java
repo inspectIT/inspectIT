@@ -23,7 +23,7 @@ import rocks.inspectit.shared.all.tracing.data.PropagationType;
  * @author Ivan Senic
  *
  */
-public final class EmptyRequestAdapter implements ServerRequestAdapter<TextMap>, ClientRequestAdapter<TextMap> {
+public final class EmptyRequestAdapter implements ServerRequestAdapter<TextMap> {
 
 	/**
 	 * Static instance for usage.
@@ -34,14 +34,6 @@ public final class EmptyRequestAdapter implements ServerRequestAdapter<TextMap>,
 	 * Private constructor, use {@link #INSTANCE}.
 	 */
 	private EmptyRequestAdapter() {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean startClientSpan() {
-		return true;
 	}
 
 	/**

@@ -7,7 +7,7 @@ import org.apache.commons.lang.ArrayUtils;
 
 import rocks.inspectit.agent.java.proxy.IRuntimeLinker;
 import rocks.inspectit.agent.java.tracing.core.adapter.SpanStoreAdapter;
-import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
+import rocks.inspectit.agent.java.tracing.core.adapter.http.data.ClientHttpRequest;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.proxy.JettyEventListenerProxy;
 import rocks.inspectit.agent.java.tracing.core.async.SpanStore;
 import rocks.inspectit.agent.java.util.ReflectionCache;
@@ -19,7 +19,7 @@ import rocks.inspectit.agent.java.util.ReflectionCache;
  * @author Ivan Senic
  *
  */
-public class JettyHttpClientV61HttpClientRequest implements HttpRequest, SpanStoreAdapter {
+public class JettyHttpClientV61HttpClientRequest implements ClientHttpRequest, SpanStoreAdapter {
 
 	/**
 	 * Reflection cache to use for method invocation.
@@ -55,8 +55,7 @@ public class JettyHttpClientV61HttpClientRequest implements HttpRequest, SpanSto
 	 */
 	@Override
 	public boolean startClientSpan() {
-		// http exchange does not provide easy way to find out if our headers have already be
-		// inserted, so we assume it's true always
+		// always start span when jetty http exchange sending is fired
 		return true;
 	}
 

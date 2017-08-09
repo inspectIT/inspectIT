@@ -3,8 +3,7 @@ package rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import rocks.inspectit.agent.java.sdk.opentracing.internal.constants.PropagationConstants;
-import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
+import rocks.inspectit.agent.java.tracing.core.adapter.http.data.ClientHttpRequest;
 import rocks.inspectit.agent.java.util.ReflectionCache;
 
 /**
@@ -14,7 +13,7 @@ import rocks.inspectit.agent.java.util.ReflectionCache;
  * @author Ivan Senic
  *
  */
-public class SpringRestTemplateHttpClientRequest implements HttpRequest {
+public class SpringRestTemplateHttpClientRequest implements ClientHttpRequest {
 
 	/**
 	 * FQN of the org.springframework.http.HttpMessage.
@@ -52,12 +51,7 @@ public class SpringRestTemplateHttpClientRequest implements HttpRequest {
 	 */
 	@Override
 	public boolean startClientSpan() {
-		Object headers = getHttpHeaders();
-		if (null != headers) {
-			Object containsKey = cache.invokeMethod(headers.getClass(), "containsKey", new Class[] { Object.class }, headers, new Object[] { PropagationConstants.SPAN_ID }, null);
-			// make sure we return true if the contains key is null
-			return (null == containsKey) || Boolean.FALSE.equals(containsKey);
-		}
+		// always start span when creating new http request
 		return true;
 	}
 

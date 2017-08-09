@@ -3,8 +3,7 @@ package rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import rocks.inspectit.agent.java.sdk.opentracing.internal.constants.PropagationConstants;
-import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
+import rocks.inspectit.agent.java.tracing.core.adapter.http.data.ClientHttpRequest;
 import rocks.inspectit.agent.java.util.ReflectionCache;
 
 /**
@@ -14,7 +13,7 @@ import rocks.inspectit.agent.java.util.ReflectionCache;
  * @author Ivan Senic
  *
  */
-public class ApacheHttpClientV40HttpClientRequest implements HttpRequest {
+public class ApacheHttpClientV40HttpClientRequest implements ClientHttpRequest {
 
 	/**
 	 * FQN of the org.apache.http.HttpMessage.
@@ -57,9 +56,8 @@ public class ApacheHttpClientV40HttpClientRequest implements HttpRequest {
 	 */
 	@Override
 	public boolean startClientSpan() {
-		Object containsHeader = cache.invokeMethod(apacheHttpRequest.getClass(), "containsHeader", new Class<?>[] { String.class }, apacheHttpRequest, new Object[] { PropagationConstants.SPAN_ID }, null, ORG_APACHE_HTTP_HTTP_MESSAGE_FQN);
-		// make sure we return true if the contains key is null
-		return (null == containsHeader) || Boolean.FALSE.equals(containsHeader);
+		// always start new span with apache http client
+		return true;
 	}
 
 	/**
