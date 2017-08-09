@@ -35,13 +35,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
@@ -75,7 +72,7 @@ import rocks.inspectit.ui.rcp.view.impl.StorageManagerView;
  * @author Ivan Senic
  *
  */
-public class StorageDataPropertyForm implements ISelectionChangedListener {
+public class StorageDataPropertyForm extends AbstractPropertyForm {
 
 	/**
 	 * Number of max characters displayed for storage description.
@@ -91,21 +88,6 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 	 * Leaf that is displayed currently.
 	 */
 	private IStorageDataProvider storageDataProvider;
-
-	/**
-	 * Toolkit used to create widgets.
-	 */
-	private final FormToolkit toolkit;
-
-	/**
-	 * {@link ManagedForm}.
-	 */
-	private final ManagedForm managedForm;
-
-	/**
-	 * Form that will be created.
-	 */
-	private final ScrolledForm form;
 
 	/**
 	 * Label for ID.
@@ -148,11 +130,6 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 	private Button removeLabels;
 
 	/**
-	 * Main composite where widgets are.
-	 */
-	private Composite mainComposite;
-
-	/**
 	 * {@link TableViewerColumn} for label values. Needed for editing support.
 	 */
 	private TableViewerColumn valueViewerColumn;
@@ -176,10 +153,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 	 *            {@link IStorageDataProvider} to display.
 	 */
 	public StorageDataPropertyForm(Composite parent, IStorageDataProvider storageDataProvider) {
-		this.managedForm = new ManagedForm(parent);
-		this.toolkit = managedForm.getToolkit();
-		this.form = managedForm.getForm();
-		this.storageDataProvider = storageDataProvider;
+		super(parent);
 		if (null != storageDataProvider) {
 			this.storageData = storageDataProvider.getStorageData();
 		}
@@ -197,9 +171,7 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 	 *            {@link IStorageData} to display. Can be <code>null</code>.
 	 */
 	public StorageDataPropertyForm(Composite parent, IStorageDataProvider storageDataProvider, IStorageData storageData) {
-		this.managedForm = new ManagedForm(parent);
-		this.toolkit = managedForm.getToolkit();
-		this.form = managedForm.getForm();
+		super(parent);
 		this.storageDataProvider = storageDataProvider;
 		this.storageData = storageData;
 		initWidget();
@@ -589,18 +561,8 @@ public class StorageDataPropertyForm implements ISelectionChangedListener {
 		return null != storageDataProvider;
 	}
 
-	/**
-	 * @return If form is disposed.
-	 */
-	public boolean isDisposed() {
-		return form.isDisposed();
+	@Override
+	public void refresh() {
+		refreshData();
 	}
-
-	/**
-	 * Disposes the form.
-	 */
-	public void dispose() {
-		form.dispose();
-	}
-
 }
