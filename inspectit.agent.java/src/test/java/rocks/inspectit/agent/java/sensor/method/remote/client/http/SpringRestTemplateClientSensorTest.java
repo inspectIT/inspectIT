@@ -3,7 +3,6 @@ package rocks.inspectit.agent.java.sensor.method.remote.client.http;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -60,28 +59,6 @@ public class SpringRestTemplateClientSensorTest extends TestBase {
 
 		@Test
 		public void spanStarting() {
-			when(httpRequest.getHeaders()).thenReturn(headers);
-			when(headers.containsKey(anyObject())).thenReturn(false);
-
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(httpRequest, null, rsc);
-
-			assertThat(adapter.startClientSpan(), is(true));
-		}
-
-		@Test
-		public void spanStartingContainsHeader() {
-			when(httpRequest.getHeaders()).thenReturn(headers);
-			when(headers.containsKey(anyObject())).thenReturn(true);
-
-			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(httpRequest, null, rsc);
-
-			assertThat(adapter.startClientSpan(), is(false));
-		}
-
-		@Test
-		public void spanStartingHeadersNull() {
-			when(httpRequest.getHeaders()).thenReturn(null);
-
 			ClientRequestAdapter<TextMap> adapter = sensor.getClientRequestAdapter(httpRequest, null, rsc);
 
 			assertThat(adapter.startClientSpan(), is(true));

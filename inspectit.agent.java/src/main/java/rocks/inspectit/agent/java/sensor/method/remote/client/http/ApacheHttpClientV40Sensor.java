@@ -9,7 +9,7 @@ import rocks.inspectit.agent.java.tracing.core.adapter.ResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.error.ThrowableAwareResponseAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.HttpResponseAdapter;
-import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
+import rocks.inspectit.agent.java.tracing.core.adapter.http.data.ClientHttpRequest;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpResponse;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl.ApacheHttpClientV40HttpClientRequest;
 import rocks.inspectit.agent.java.tracing.core.adapter.http.data.impl.ApacheHttpClientV40HttpResponse;
@@ -36,7 +36,7 @@ public class ApacheHttpClientV40Sensor extends RemoteClientSensor implements Cli
 	public ClientRequestAdapter<TextMap> getClientRequestAdapter(Object object, Object[] parameters, RegisteredSensorConfig rsc) {
 		// Apache HTTP request is second parameter
 		Object httpRequest = parameters[1];
-		HttpRequest request = new ApacheHttpClientV40HttpClientRequest(httpRequest, CACHE);
+		ClientHttpRequest request = new ApacheHttpClientV40HttpClientRequest(httpRequest, CACHE);
 		return new HttpClientRequestAdapter(request);
 	}
 

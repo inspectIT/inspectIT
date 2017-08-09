@@ -5,7 +5,7 @@ import io.opentracing.propagation.TextMap;
 import rocks.inspectit.agent.java.tracing.core.adapter.AsyncClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.ClientRequestAdapter;
 import rocks.inspectit.agent.java.tracing.core.adapter.SpanStoreAdapter;
-import rocks.inspectit.agent.java.tracing.core.adapter.http.data.HttpRequest;
+import rocks.inspectit.agent.java.tracing.core.adapter.http.data.ClientHttpRequest;
 
 /**
  * The {@link ClientRequestAdapter} for all asynchronous HTTP client requests.
@@ -24,12 +24,12 @@ public class AsyncHttpClientRequestAdapter extends HttpClientRequestAdapter impl
 	 * Default constructor.
 	 *
 	 * @param httpClientRequest
-	 *            HTTP request from which we can read data.
+	 *            Client HTTP request from which we can read data.
 	 * @param spanStoreAdapter
 	 *            As this is asynchronous request we must provide {@link SpanStoreAdapter} for being
 	 *            able to start/stop span in later point of time.
 	 */
-	public AsyncHttpClientRequestAdapter(HttpRequest httpClientRequest, SpanStoreAdapter spanStoreAdapter) {
+	public AsyncHttpClientRequestAdapter(ClientHttpRequest httpClientRequest, SpanStoreAdapter spanStoreAdapter) {
 		super(httpClientRequest);
 		this.spanStoreAdapter = spanStoreAdapter;
 	}
