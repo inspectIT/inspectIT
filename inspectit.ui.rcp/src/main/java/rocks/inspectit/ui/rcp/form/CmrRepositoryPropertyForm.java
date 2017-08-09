@@ -421,11 +421,34 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 	 *
 	 * @param cmrStatusData
 	 *            Status data.
+	 * @param cmrRepositoryDefinition
+	 *            Cmr Repository Definition
 	 */
-	private void updateCmrManagementData(CmrStatusData cmrStatusData) {
+	private void updateCmrManagementData(CmrStatusData cmrStatusData, CmrRepositoryDefinition cmrRepositoryDefinition) {
 		boolean dataLoaded = false;
 		if (null != cmrStatusData) {
 			dataLoaded = true;
+			address.setText(cmrRepositoryDefinition.getIp() + ":" + cmrRepositoryDefinition.getPort());
+			version.setText(cmrRepositoryDefinition.getVersion());
+			String desc = cmrRepositoryDefinition.getDescription();
+			if (null != desc) {
+				if (desc.length() > MAX_DESCRIPTION_LENGTH) {
+					description.setText("<form><p>" + desc.substring(0, MAX_DESCRIPTION_LENGTH) + ".. <a href=\"More\">[More]</a></p></form>", true, false);
+				} else {
+					description.setText(desc, false, false);
+				}
+			} else {
+				description.setText("", false, false);
+			}
+			final OnlineStatus onlineStatus = cmrRepositoryDefinition.getOnlineStatus();
+			status.setText(onlineStatus.toString());
+			if (onlineStatus == OnlineStatus.ONLINE) {
+				form.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SERVER_ONLINE_SMALL));
+			} else if (onlineStatus == OnlineStatus.CHECKING) {
+				form.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SERVER_REFRESH_SMALL));
+			} else {
+				form.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SERVER_OFFLINE_SMALL));
+			}
 			// Transfer to MB right away
 			double bufferMaxOccupancy = (double) cmrStatusData.getMaxBufferSize() / (1024 * 1024);
 			double bufferCurrentOccupancy = (double) cmrStatusData.getCurrentBufferSize() / (1024 * 1024);
@@ -504,6 +527,10 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 		}
 
 		if (!dataLoaded) {
+			address.setText("");
+			version.setText("");
+			description.setText("", false, false);
+			status.setText("");
 			bufferDate.setText("");
 			bufferBar.setMaximum(Integer.MAX_VALUE);
 			bufferBar.setSelection(0);
@@ -514,6 +541,8 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 			spaceLeftLabel.setText("");
 			uptimeLabel.setText("");
 			databaseSizeLabel.setText("");
+
+			form.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SERVER_OFFLINE_SMALL));
 
 			for (Entry<ExternalServiceType, Pair<Label, Label>> serviceEntry : externalServiceLabelMap.entrySet()) {
 				serviceEntry.getValue().getFirst().setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_RECORD_GRAY));
@@ -632,29 +661,9 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 						form.setBusy(true);
 						form.setText(cmrRepositoryDefinition.getName());
 						form.setMessage(null, IMessageProvider.NONE);
-						address.setText(cmrRepositoryDefinition.getIp() + ":" + cmrRepositoryDefinition.getPort());
-						version.setText(cmrRepositoryDefinition.getVersion());
-						String desc = cmrRepositoryDefinition.getDescription();
-						if (null != desc) {
-							if (desc.length() > MAX_DESCRIPTION_LENGTH) {
-								description.setText("<form><p>" + desc.substring(0, MAX_DESCRIPTION_LENGTH) + ".. <a href=\"More\">[More]</a></p></form>", true, false);
-							} else {
-								description.setText(desc, false, false);
-							}
-						} else {
-							description.setText("", false, false);
-						}
-						status.setText(onlineStatus.toString());
-						if (onlineStatus == OnlineStatus.ONLINE) {
-							form.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SERVER_ONLINE_SMALL));
-						} else if (onlineStatus == OnlineStatus.CHECKING) {
-							form.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SERVER_REFRESH_SMALL));
-						} else {
-							form.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_SERVER_OFFLINE_SMALL));
-						}
 
 						updateRecordingData(recordingData);
-						updateCmrManagementData(cmrStatusData);
+						updateCmrManagementData(cmrStatusData, cmrRepositoryDefinition);
 
 						mainComposite.setVisible(true);
 						form.getBody().layout(true, true);
@@ -674,7 +683,7 @@ public class CmrRepositoryPropertyForm implements ISelectionChangedListener {
 						mainComposite.setVisible(false);
 
 						updateRecordingData(null);
-						updateCmrManagementData(null);
+						updateCmrManagementData(null, null);
 
 						mainComposite.setVisible(true);
 						form.getBody().layout(true, true);

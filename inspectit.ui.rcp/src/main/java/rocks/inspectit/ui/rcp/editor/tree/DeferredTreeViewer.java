@@ -12,6 +12,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
@@ -262,6 +264,7 @@ public class DeferredTreeViewer extends TreeViewer {
 				}
 			}
 		}
+		this.fireSelectionChanged(new SelectionChangedEvent(this, new StructuredSelection(elementOrTreePath)));
 	}
 
 	/**
