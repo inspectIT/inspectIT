@@ -26,6 +26,14 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteUrlConnectionClient
 public abstract class AbstractRemoteSensorConfig implements IMethodSensorConfig {
 
 	/**
+	 * If this remote senor config is for a server side remote sensor.
+	 *
+	 * @return Returns <code>true</code> if this remote senor config is for a server side remote
+	 *         sensor, <code>false</code> otherwise.
+	 */
+	public abstract boolean isServerSide();
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override

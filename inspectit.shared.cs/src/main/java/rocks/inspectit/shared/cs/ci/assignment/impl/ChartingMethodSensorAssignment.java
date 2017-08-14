@@ -24,7 +24,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.impl.TimerSensorConfig;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "charting-method-sensor-assignment")
-public class ChartingMethodSensorAssignment extends MethodSensorAssignment {
+public class ChartingMethodSensorAssignment extends InvocationStartMethodSensorAssignment {
 
 	/**
 	 * If it is charting.
@@ -39,13 +39,25 @@ public class ChartingMethodSensorAssignment extends MethodSensorAssignment {
 	}
 
 	/**
-	 * Default constructor.
+	 * Default constructor. Same as calling {@link #ChartingMethodSensorAssignment(Class, false)}.
 	 *
 	 * @param sensorConfig
 	 *            Method sensor config class begin assigned.
 	 */
 	public ChartingMethodSensorAssignment(Class<? extends IMethodSensorConfig> sensorConfig) {
-		super(sensorConfig);
+		this(sensorConfig, false);
+	}
+
+	/**
+	 * Secondary constructor.
+	 *
+	 * @param sensorConfig
+	 *            Method sensor config class begin assigned.
+	 * @param startsInvocation
+	 *            Initial value for {@link #startsInvocation}.
+	 */
+	public ChartingMethodSensorAssignment(Class<? extends IMethodSensorConfig> sensorConfig, boolean startsInvocation) {
+		super(sensorConfig, startsInvocation);
 
 		// currently only supported by Timer & Http sensor
 		if (!(Objects.equals(TimerSensorConfig.class, sensorConfig) || Objects.equals(HttpSensorConfig.class, sensorConfig))) {

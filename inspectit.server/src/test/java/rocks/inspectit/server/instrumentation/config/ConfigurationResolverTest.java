@@ -26,6 +26,7 @@ import org.testng.annotations.Test;
 import rocks.inspectit.server.ci.ConfigurationInterfaceManager;
 import rocks.inspectit.server.instrumentation.config.applier.ExceptionSensorInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
+import rocks.inspectit.server.instrumentation.config.applier.InvocationStartMethodSensorInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.JmxMonitoringApplier;
 import rocks.inspectit.server.instrumentation.config.applier.MethodSensorInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.SpecialInstrumentationApplier;
@@ -37,6 +38,7 @@ import rocks.inspectit.shared.cs.ci.AgentMappings;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.InvocationStartMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.JmxBeanSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
@@ -296,6 +298,25 @@ public class ConfigurationResolverTest extends TestBase {
 			IInstrumentationApplier applier = appliers.iterator().next();
 			assertThat(applier, is(instanceOf(TimerMethodSensorInstrumentationApplier.class)));
 			assertThat((TimerMethodSensorAssignment) applier.getSensorAssignment(), is(assignment));
+
+			verify(functionalAssignmentFactory).getSpecialAssignments(environment);
+		}
+
+		@Test
+		public void invocationStartsSensorAssignment() throws BusinessException {
+			InvocationStartMethodSensorAssignment assignment = mock(InvocationStartMethodSensorAssignment.class);
+			when(environment.getProfileIds()).thenReturn(Collections.singleton(PROFILE_ID));
+			when(configurationInterfaceManager.getProfile(PROFILE_ID)).thenReturn(profile);
+			doReturn(sensorAssignmentProfileData).when(profile).getProfileData();
+			doReturn(Collections.singletonList(assignment)).when(sensorAssignmentProfileData).getData(SensorAssignmentProfileData.class);
+			when(profile.isActive()).thenReturn(true);
+
+			Collection<IInstrumentationApplier> appliers = configurationResolver.getInstrumentationAppliers(environment);
+
+			assertThat(appliers, hasSize(1));
+			IInstrumentationApplier applier = appliers.iterator().next();
+			assertThat(applier, is(instanceOf(InvocationStartMethodSensorInstrumentationApplier.class)));
+			assertThat((InvocationStartMethodSensorAssignment) applier.getSensorAssignment(), is(assignment));
 
 			verify(functionalAssignmentFactory).getSpecialAssignments(environment);
 		}

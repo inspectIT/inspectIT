@@ -6,7 +6,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.AbstractRemoteSensorConfig;
 
 /**
  * Remote manual serner sensor config.
- * 
+ *
  * @author Ivan Senic
  *
  */
@@ -22,6 +22,14 @@ public class RemoteManualServerSensorConfig extends AbstractRemoteSensorConfig {
 	 * Implementing class name.
 	 */
 	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.remote.server.manual.ManualRemoteServerSensor";
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isServerSide() {
+		return true;
+	}
 
 	/**
 	 * {@inheritDoc}

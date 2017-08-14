@@ -261,20 +261,22 @@ public final class InvocationSequenceDataHelper {
 	 * @return the duration starting from this invocation sequence data element.
 	 */
 	public static double calculateDuration(InvocationSequenceData data, ISpanService spanService) {
-		double duration = -1.0d;
 		if (InvocationSequenceDataHelper.hasTimerData(data)) {
-			duration = data.getTimerData().getDuration();
+			return data.getTimerData().getDuration();
 		} else if (InvocationSequenceDataHelper.hasSQLData(data)) {
-			duration = data.getSqlStatementData().getDuration();
-		} else if (InvocationSequenceDataHelper.isRootElementInSequence(data)) {
-			duration = data.getDuration();
+			return data.getSqlStatementData().getDuration();
 		} else if ((null != spanService) && hasSpanIdent(data)) {
 			Span span = spanService.get(data.getSpanIdent());
 			if ((span != null) && !References.FOLLOWS_FROM.equals(span.getReferenceType())) {
 				return span.getDuration();
 			}
 		}
-		return duration;
+
+		if (InvocationSequenceDataHelper.isRootElementInSequence(data)) {
+			return data.getDuration();
+		}
+
+		return -1.0d;
 	}
 
 	/**

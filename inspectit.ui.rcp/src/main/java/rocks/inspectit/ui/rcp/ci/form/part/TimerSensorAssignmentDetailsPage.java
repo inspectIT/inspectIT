@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -25,7 +24,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
@@ -78,16 +76,6 @@ public class TimerSensorAssignmentDetailsPage extends ChartingMethodSensorAssign
 	 * Remove capture button.
 	 */
 	private Button removeCaptureButton;
-
-	/**
-	 * Selection for the invocation to be started or not.
-	 */
-	private Button startInvocationButton;
-
-	/**
-	 * Text box for the minimum time of the invocation to be send to the CMR.
-	 */
-	private Text minDurationText;
 
 	/**
 	 * Constructor.
@@ -216,50 +204,9 @@ public class TimerSensorAssignmentDetailsPage extends ChartingMethodSensorAssign
 			}
 		});
 
-		// starts invocation
-		toolkit.createLabel(mainComposite, "Starts invocation:");
-		startInvocationButton = toolkit.createButton(mainComposite, "Yes", SWT.CHECK);
-		toolkit.createLabel(mainComposite, "Min duration:", SWT.RIGHT).setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		minDurationText = toolkit.createText(mainComposite, "", SWT.BORDER | SWT.RIGHT);
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1);
-		gd.widthHint = 50;
-		minDurationText.setLayoutData(gd);
-		toolkit.createLabel(mainComposite, "");
-		createInfoLabel(mainComposite, toolkit,
-				"Defines if method should start an invocation. Minimum duration defines the minimum time in milliseconds an invocation has to consume in order to be saved and transmitted to the server.");
-		// validation
-		// method validation
-		final ValidationControlDecoration<Text> minDurationValidationDecoration = new ValidationControlDecoration<Text>(minDurationText, null, this) {
-			@Override
-			protected boolean validate(Text control) {
-				if (StringUtils.isNotEmpty(control.getText())) {
-					try {
-						return Long.parseLong(control.getText()) > 0;
-					} catch (NumberFormatException e) {
-						return false;
-					}
-				} else {
-					return true;
-				}
-			}
-		};
-		minDurationValidationDecoration.setDescriptionText("Value must be positive amount of milliseconds.");
-		minDurationValidationDecoration.registerListener(SWT.Modify);
-		addValidationControlDecoration(minDurationValidationDecoration);
-
-		// listener
-		startInvocationButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				minDurationText.setEnabled(startInvocationButton.getSelection());
-				minDurationValidationDecoration.executeValidation();
-			}
-		});
 
 		// dirty listener
 		captureContextButton.addListener(SWT.Selection, getMarkDirtyListener());
-		startInvocationButton.addListener(SWT.Selection, getMarkDirtyListener());
-		minDurationText.addListener(SWT.Modify, getMarkDirtyListener());
 
 		if (!isCanEdit()) {
 			setEnabled(mainComposite, false);
@@ -341,9 +288,6 @@ public class TimerSensorAssignmentDetailsPage extends ChartingMethodSensorAssign
 	protected void updateFromInput() {
 		super.updateFromInput();
 		captureContextButton.setSelection(false);
-		startInvocationButton.setSelection(false);
-		minDurationText.setEnabled(false);
-		minDurationText.setText("");
 		contextCaptures.clear();
 		if (null != assignment) {
 			if (CollectionUtils.isNotEmpty(assignment.getContextCaptures())) {
@@ -357,13 +301,6 @@ public class TimerSensorAssignmentDetailsPage extends ChartingMethodSensorAssign
 				captureContextTableViewer.getTable().setEnabled(false);
 				addCaptureButton.setEnabled(false);
 				removeCaptureButton.setEnabled(false);
-			}
-			if (assignment.isStartsInvocation()) {
-				startInvocationButton.setSelection(true);
-				minDurationText.setEnabled(isCanEdit());
-				if (0 != assignment.getMinInvocationDuration()) {
-					minDurationText.setText(String.valueOf(assignment.getMinInvocationDuration()));
-				}
 			}
 		}
 		captureContextTableViewer.refresh();
@@ -379,19 +316,6 @@ public class TimerSensorAssignmentDetailsPage extends ChartingMethodSensorAssign
 			assignment.setContextCaptures(new ArrayList<>(contextCaptures));
 		} else {
 			assignment.setContextCaptures(null);
-		}
-		assignment.setStartsInvocation(startInvocationButton.getSelection());
-		if (startInvocationButton.getSelection()) {
-			String minDuration = minDurationText.getText();
-			if (StringUtils.isNotBlank(minDuration)) {
-				try {
-					assignment.setMinInvocationDuration(Long.parseLong(minDuration));
-				} catch (NumberFormatException e) {
-					assignment.setMinInvocationDuration(0L);
-				}
-			} else {
-				assignment.setMinInvocationDuration(0L);
-			}
 		}
 	}
 

@@ -26,6 +26,7 @@ import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ChartingMethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.InvocationStartMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
@@ -504,6 +505,15 @@ public final class ImageFormatter {
 			descs.add(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_ANNOTATION));
 		}
 
+		if (assignment instanceof InvocationStartMethodSensorAssignment) {
+			InvocationStartMethodSensorAssignment invocStartAssignment = ((InvocationStartMethodSensorAssignment) assignment);
+
+			if (invocStartAssignment.isStartsInvocation()) {
+				descs.add(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_INVOCATION));
+			}
+
+		}
+
 		if (assignment instanceof ChartingMethodSensorAssignment) {
 			ChartingMethodSensorAssignment chartingAssignment = (ChartingMethodSensorAssignment) assignment;
 
@@ -514,10 +524,6 @@ public final class ImageFormatter {
 
 		if (assignment instanceof TimerMethodSensorAssignment) {
 			TimerMethodSensorAssignment timerAssignment = (TimerMethodSensorAssignment) assignment;
-
-			if (timerAssignment.isStartsInvocation()) {
-				descs.add(InspectIT.getDefault().getImageDescriptor(InspectITImages.IMG_INVOCATION));
-			}
 
 			boolean paramsCapture = false, returnCapture = false, fieldsCapture = false;
 			if (CollectionUtils.isNotEmpty(timerAssignment.getContextCaptures())) {

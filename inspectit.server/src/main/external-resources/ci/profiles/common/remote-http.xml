@@ -7,7 +7,7 @@
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig" class-name="org.apache.http.impl.client.CloseableHttpClient" method-name="doExecute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" superclass="true" />
 
 		<!-- Client sensor for  Apache HttpClient 4.0 - 4.2.x-->
-		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig" class-name="org.apache.http.client.HttpClient" method-name="execute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" interface="true"/>
+		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig" class-name="org.apache.http.client.HttpClient" method-name="execute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" interface="true" />
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteApacheHttpClientV40SensorConfig" class-name="org.apache.http.client.RequestDirector" method-name="execute" parameters="org.apache.http.HttpHost org.apache.http.HttpRequest org.apache.http.protocol.HttpContext" interface="true" />
 
 		<!-- Client sensor for Java HttpURLConnection-->
@@ -22,9 +22,9 @@
 		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteSpringRestTemplateClientSensorConfig" class-name="org.springframework.http.client.ClientHttpRequest" method-name="execute" parameters="" interface="true" />
 
 		<!-- Server sensor for all http -->
-		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig" class-name="javax.servlet.Filter" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" />
-		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig" class-name="javax.servlet.FilterChain" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" />
-		<method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig" class-name="javax.servlet.Servlet" method-name="service" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse" interface="true" />
+		<invocation-start-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig" class-name="javax.servlet.Filter" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" starts-invocation="true" />
+		<invocation-start-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig" class-name="javax.servlet.FilterChain" method-name="doFilter" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse javax.servlet.FilterChain" interface="true" starts-invocation="true" />
+		<invocation-start-method-sensor-assignment sensor-config-class="rocks.inspectit.shared.cs.ci.sensor.method.impl.RemoteJavaHttpServerSensorConfig" class-name="javax.servlet.Servlet" method-name="service" parameters="javax.servlet.ServletRequest javax.servlet.ServletResponse" interface="true" starts-invocation="true" />
 	</sensor-assignment-profile-data>
 
 </profile>

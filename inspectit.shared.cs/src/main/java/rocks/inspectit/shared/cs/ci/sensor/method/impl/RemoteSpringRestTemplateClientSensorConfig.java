@@ -6,7 +6,7 @@ import rocks.inspectit.shared.cs.ci.sensor.method.AbstractRemoteSensorConfig;
 
 /**
  * Remote Spring REST Template sensor config.
- * 
+ *
  * @author Ivan Senic
  *
  */
@@ -22,6 +22,14 @@ public class RemoteSpringRestTemplateClientSensorConfig extends AbstractRemoteSe
 	 * Implementing class name.
 	 */
 	public static final String CLASS_NAME = "rocks.inspectit.agent.java.sensor.method.remote.client.http.SpringRestTemplateClientSensor";
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isServerSide() {
+		return false;
+	}
 
 	/**
 	 * {@inheritDoc}
