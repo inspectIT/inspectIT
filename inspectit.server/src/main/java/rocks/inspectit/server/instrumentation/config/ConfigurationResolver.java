@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import rocks.inspectit.server.ci.ConfigurationInterfaceManager;
 import rocks.inspectit.server.instrumentation.config.applier.ExceptionSensorInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.IInstrumentationApplier;
+import rocks.inspectit.server.instrumentation.config.applier.InvocationStartMethodSensorInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.JmxMonitoringApplier;
 import rocks.inspectit.server.instrumentation.config.applier.MethodSensorInstrumentationApplier;
 import rocks.inspectit.server.instrumentation.config.applier.SpecialInstrumentationApplier;
@@ -31,6 +32,7 @@ import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.ISensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ExceptionSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.InvocationStartMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.JmxBeanSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.SpecialMethodSensorAssignment;
@@ -143,6 +145,8 @@ public class ConfigurationResolver {
 		Class<?> sensorAssigmentClass = sensorAssignment.getClass();
 		if (TimerMethodSensorAssignment.class.isAssignableFrom(sensorAssigmentClass)) {
 			return new TimerMethodSensorInstrumentationApplier((TimerMethodSensorAssignment) sensorAssignment, environment, registrationService);
+		} else if (InvocationStartMethodSensorAssignment.class.isAssignableFrom(sensorAssigmentClass)) {
+			return new InvocationStartMethodSensorInstrumentationApplier((InvocationStartMethodSensorAssignment) sensorAssignment, environment, registrationService);
 		} else if (ExceptionSensorAssignment.class.isAssignableFrom(sensorAssigmentClass)) {
 			return new ExceptionSensorInstrumentationApplier((ExceptionSensorAssignment) sensorAssignment, environment, registrationService);
 		} else if (SpecialMethodSensorAssignment.class.isAssignableFrom(sensorAssigmentClass)) {

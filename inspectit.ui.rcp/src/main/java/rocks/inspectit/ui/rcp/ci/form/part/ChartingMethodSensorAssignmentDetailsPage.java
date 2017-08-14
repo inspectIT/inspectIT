@@ -4,14 +4,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ChartingMethodSensorAssignment;
@@ -24,7 +20,7 @@ import rocks.inspectit.ui.rcp.validation.AbstractValidationManager;
  * @author Ivan Senic
  *
  */
-public class ChartingMethodSensorAssignmentDetailsPage extends MethodSensorAssignmentDetailsPage {
+public class ChartingMethodSensorAssignmentDetailsPage extends InvocationStartSensorAssignmentDetailsPage {
 
 	/**
 	 * Element being displayed.
@@ -35,11 +31,6 @@ public class ChartingMethodSensorAssignmentDetailsPage extends MethodSensorAssig
 	 * Selection for if charting should be active.
 	 */
 	private Button chartingButton;
-
-	/**
-	 * Composite for the sensor options.
-	 */
-	private Composite sensorOptionsComposite;
 
 	/**
 	 * Constructor.
@@ -69,43 +60,17 @@ public class ChartingMethodSensorAssignmentDetailsPage extends MethodSensorAssig
 	 */
 	@Override
 	protected void createContents(Composite parent, boolean finish) {
-		TableWrapLayout parentLayout = new TableWrapLayout();
-		parentLayout.topMargin = 5;
-		parentLayout.leftMargin = 5;
-		parentLayout.rightMargin = 2;
-		parentLayout.bottomMargin = 2;
-		parentLayout.numColumns = 2;
-		parentLayout.makeColumnsEqualWidth = true;
-		parent.setLayout(parentLayout);
-
-		FormToolkit toolkit = managedForm.getToolkit();
-
 		// abstract method definition
 		super.createContents(parent, false);
-
-		// special sensor definitions
-		// section
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
-		section.setText("Sensor specific options");
-		section.marginWidth = 10;
-		section.marginHeight = 5;
-		TableWrapData td = new TableWrapData(TableWrapData.FILL, TableWrapData.TOP);
-		td.grabHorizontal = true;
-		section.setLayoutData(td);
-
 		// main composite
-		sensorOptionsComposite = toolkit.createComposite(section);
-		GridLayout layout = new GridLayout(7, false);
-		layout.marginHeight = 5;
-		layout.marginWidth = 5;
-		sensorOptionsComposite.setLayout(layout);
-		section.setClient(sensorOptionsComposite);
+		Composite mainComposite = super.getSensorOptionsComposite();
 
+		FormToolkit toolkit = managedForm.getToolkit();
 		// charting
-		toolkit.createLabel(sensorOptionsComposite, "Charting:");
-		chartingButton = toolkit.createButton(sensorOptionsComposite, "Yes", SWT.CHECK);
+		toolkit.createLabel(mainComposite, "Charting:");
+		chartingButton = toolkit.createButton(mainComposite, "Yes", SWT.CHECK);
 		chartingButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 5, 1));
-		createInfoLabel(sensorOptionsComposite, toolkit,
+		createInfoLabel(mainComposite, toolkit,
 				"With the charting option it is possible to define what data should be considered as the long-term data available for charting in inspectIT User interface. This data is additionally saved to the database, thus even when the CMR is shutdown or buffer is cleared the data will be available via charts.");
 
 		// listener
@@ -119,7 +84,7 @@ public class ChartingMethodSensorAssignmentDetailsPage extends MethodSensorAssig
 		}
 
 		if (!isCanEdit()) {
-			setEnabled(sensorOptionsComposite, false);
+			setEnabled(mainComposite, false);
 		}
 	}
 
@@ -163,15 +128,6 @@ public class ChartingMethodSensorAssignmentDetailsPage extends MethodSensorAssig
 		} else {
 			assignment = null; // NOPMD
 		}
-	}
-
-	/**
-	 * Gets {@link #sensorOptionsComposite}.
-	 *
-	 * @return {@link #sensorOptionsComposite}
-	 */
-	protected Composite getSensorOptionsComposite() {
-		return sensorOptionsComposite;
 	}
 
 }

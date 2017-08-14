@@ -67,6 +67,8 @@
 
   <xs:element name="invocation-sequence-sensor-config" type="invocationSequenceSensorConfig"/>
 
+  <xs:element name="invocation-start-method-sensor-assignment" type="invocationStartMethodSensorAssignment"/>
+
   <xs:element name="jmx-bean-assignment" type="jmxBeanSensorAssignment"/>
 
   <xs:element name="jmx-definition-profile-data" type="jmxDefinitionProfileData"/>
@@ -798,6 +800,7 @@
             <xs:element ref="method-sensor-assignment"/>
             <xs:element ref="timer-method-sensor-assignment"/>
             <xs:element ref="charting-method-sensor-assignment"/>
+            <xs:element ref="invocation-start-method-sensor-assignment"/>
           </xs:choice>
           <xs:element ref="exception-sensor-assignment" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
@@ -857,17 +860,25 @@
             </xs:complexType>
           </xs:element>
         </xs:sequence>
-        <xs:attribute name="starts-invocation" type="xs:boolean"/>
-        <xs:attribute name="min-invocation-duration" type="xs:long"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="chartingMethodSensorAssignment">
     <xs:complexContent>
-      <xs:extension base="methodSensorAssignment">
+      <xs:extension base="invocationStartMethodSensorAssignment">
         <xs:sequence/>
         <xs:attribute name="charting" type="xs:boolean"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="invocationStartMethodSensorAssignment">
+    <xs:complexContent>
+      <xs:extension base="methodSensorAssignment">
+        <xs:sequence/>
+        <xs:attribute name="starts-invocation" type="xs:boolean"/>
+        <xs:attribute name="min-invocation-duration" type="xs:long"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

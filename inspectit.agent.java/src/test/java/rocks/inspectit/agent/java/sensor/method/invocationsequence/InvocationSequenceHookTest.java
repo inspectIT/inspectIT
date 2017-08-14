@@ -681,7 +681,7 @@ public class InvocationSequenceHookTest extends TestBase {
 	}
 
 	/**
-	 * No removing done due to the wrapped SQLs, because there is SQL object.
+	 * No removing done due to the added timer.
 	 */
 	@Test
 	public void noRemoveWrappedSql() {

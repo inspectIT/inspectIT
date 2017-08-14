@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Table;
 
 import rocks.inspectit.shared.cs.ci.assignment.AbstractClassSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.ChartingMethodSensorAssignment;
+import rocks.inspectit.shared.cs.ci.assignment.impl.InvocationStartMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.MethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
@@ -243,6 +244,14 @@ public class SensorAssignmentTableProvider {
 						}
 					}
 
+					if (element instanceof InvocationStartMethodSensorAssignment) {
+						InvocationStartMethodSensorAssignment assignment = (InvocationStartMethodSensorAssignment) element;
+
+						if (assignment.isStartsInvocation()) {
+							stringBuilder.append("Starts invocation = ON\n");
+						}
+					}
+
 					if (element instanceof ChartingMethodSensorAssignment) {
 						ChartingMethodSensorAssignment assignment = (ChartingMethodSensorAssignment) element;
 
@@ -254,9 +263,6 @@ public class SensorAssignmentTableProvider {
 					if (element instanceof TimerMethodSensorAssignment) {
 						TimerMethodSensorAssignment assignment = (TimerMethodSensorAssignment) element;
 
-						if (assignment.isStartsInvocation()) {
-							stringBuilder.append("Starts invocation = ON\n");
-						}
 						if (CollectionUtils.isNotEmpty(assignment.getContextCaptures())) {
 							for (AbstractContextCapture contextCapture : assignment.getContextCaptures()) {
 								if (contextCapture instanceof ReturnContextCapture) {

@@ -27,6 +27,14 @@ public class RemoteJmsClientSensorConfig extends AbstractRemoteSensorConfig {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public boolean isServerSide() {
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}
