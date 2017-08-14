@@ -27,6 +27,14 @@ public class RemoteJavaHttpServerSensorConfig extends AbstractRemoteSensorConfig
 	 * {@inheritDoc}
 	 */
 	@Override
+	public boolean isServerSide() {
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getClassName() {
 		return CLASS_NAME;
 	}

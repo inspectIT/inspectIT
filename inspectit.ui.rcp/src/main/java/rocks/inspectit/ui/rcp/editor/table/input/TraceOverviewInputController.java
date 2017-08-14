@@ -475,7 +475,7 @@ public class TraceOverviewInputController extends AbstractTableInputController i
 		case PROPAGATION:
 			return TextFormatter.getPropagationStyled(data.getPropagationType());
 		case DETAILS:
-			return TextFormatter.getSpanDetailsFull(data, cachedDataService);
+			return TextFormatter.getSpanDetailsShort(data, cachedDataService);
 		case ORIGIN:
 			return TextFormatter.getSpanOriginStyled(data, cachedDataService.getPlatformIdentForId(data.getPlatformIdent()));
 		case TRACE_ID:

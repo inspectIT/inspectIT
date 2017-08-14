@@ -3,13 +3,10 @@ package rocks.inspectit.server.instrumentation.config.applier;
 import org.apache.commons.collections.CollectionUtils;
 
 import rocks.inspectit.shared.all.instrumentation.config.impl.AgentConfig;
-import rocks.inspectit.shared.all.instrumentation.config.impl.MethodSensorTypeConfig;
 import rocks.inspectit.shared.all.instrumentation.config.impl.SensorInstrumentationPoint;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.shared.cs.ci.assignment.impl.TimerMethodSensorAssignment;
 import rocks.inspectit.shared.cs.ci.context.AbstractContextCapture;
-import rocks.inspectit.shared.cs.ci.sensor.method.IMethodSensorConfig;
-import rocks.inspectit.shared.cs.ci.sensor.method.impl.InvocationSequenceSensorConfig;
 import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
 
 /**
@@ -18,7 +15,7 @@ import rocks.inspectit.shared.cs.cmr.service.IRegistrationService;
  * @author Ivan Senic
  *
  */
-public class TimerMethodSensorInstrumentationApplier extends MethodSensorInstrumentationApplier {
+public class TimerMethodSensorInstrumentationApplier extends InvocationStartMethodSensorInstrumentationApplier {
 
 	/**
 	 * {@link TimerMethodSensorAssignment} that defines instrumentation configuration.
@@ -47,17 +44,6 @@ public class TimerMethodSensorInstrumentationApplier extends MethodSensorInstrum
 	protected void applyAssignment(AgentConfig agentConfiguration, SensorInstrumentationPoint registeredSensorConfig) {
 		// call super first
 		super.applyAssignment(agentConfiguration, registeredSensorConfig);
-
-		// check for invocation starts
-		if (timerAssignment.isStartsInvocation()) {
-			// find the id of invocation sensor and only mark if one is found
-			IMethodSensorConfig invocationSensorConfig = environment.getMethodSensorTypeConfig(InvocationSequenceSensorConfig.class);
-			if (null != invocationSensorConfig) {
-				MethodSensorTypeConfig invocationSensorTypeConfig = agentConfiguration.getMethodSensorTypeConfig(invocationSensorConfig.getClassName());
-				registeredSensorConfig.addSensorId(invocationSensorTypeConfig.getId(), invocationSensorTypeConfig.getPriority());
-				registeredSensorConfig.setStartsInvocation(true);
-			}
-		}
 
 		// deal with context captures
 		if (CollectionUtils.isNotEmpty(timerAssignment.getContextCaptures())) {
