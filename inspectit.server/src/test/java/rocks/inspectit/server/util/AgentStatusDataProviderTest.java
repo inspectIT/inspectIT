@@ -88,7 +88,7 @@ public class AgentStatusDataProviderTest extends TestBase {
 
 	}
 
-	public class registerDisconnected extends AgentStatusDataProviderTest {
+	public class RegisterDisconnected extends AgentStatusDataProviderTest {
 
 		@Test
 		public void neverConnected() {
@@ -143,9 +143,9 @@ public class AgentStatusDataProviderTest extends TestBase {
 		@Test
 		public void neverConnected() {
 			long platformIdent = 10L;
+			long currentTimeMillis = System.currentTimeMillis();
 
 			agentStatusDataProvider.handleKeepAliveSignal(platformIdent);
-			long currentTimeMillis = System.currentTimeMillis();
 
 			AgentStatusData agentStatusData = agentStatusDataProvider.getAgentStatusDataMap().get(platformIdent);
 			assertThat(agentStatusData.getAgentConnection(), is(AgentConnection.CONNECTED));
