@@ -334,6 +334,17 @@ subprojects {
 		reportsDir = file(buildQAAnalysisCheckstyle)
 		toolVersion = '5.9'
 	}
+	
+	tasks.withType(Checkstyle).each { checkstyleTask ->
+    	checkstyleTask.doLast {
+        	reports.all { report ->
+            	def outputFile = report.destination
+           		if (outputFile.exists() && outputFile.text.contains("<error ")) {
+                	throw new GradleException("There were checkstyle warnings! For more info check $outputFile")
+            	}
+        	}
+    	}
+	}
 
 	task checkstyleHtmlReport {
 		doLast {
