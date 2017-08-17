@@ -333,6 +333,7 @@ subprojects {
 		configFile = file(checkstyleConfigFile)
 		reportsDir = file(buildQAAnalysisCheckstyle)
 		toolVersion = '5.9'
+		maxWarnings = 0
 	}
 
 	task checkstyleHtmlReport {
