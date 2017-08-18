@@ -119,6 +119,7 @@ public class PageLoadRequestPointBuilder extends AbstractEUMRequestPointBuilder<
 
 		} else {
 			builder.time(pageLoadRequest.getOwningSpan().getTimeStamp().getTime(), TimeUnit.MILLISECONDS);
+			builder.addField(Series.EumPageLoad.FIELD_NAVIGATION_START, (double) pageLoadRequest.getOwningSpan().getTimeStamp().getTime());
 		}
 
 		return Collections.singleton(builder);

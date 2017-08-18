@@ -181,7 +181,7 @@ public class PageLoadRequestPointBuilderTest extends AbstractEUMRequestPointBuil
 			assertThat(tags.get(Series.EUMBasicRequestSeries.TAG_DEVICE), equalTo(DEVICE));
 			// nav timings specific data
 			assertThat(time, equalTo((long) NAV_START));
-			assertThat(fields.get(Series.EumPageLoad.FIELD_NAVIGATION_START), equalTo(null));
+			assertThat(fields.get(Series.EumPageLoad.FIELD_NAVIGATION_START), equalTo((Object) NAV_START));
 			assertThat(fields.get(Series.EumPageLoad.FIELD_UNLOAD_EVENT_START), equalTo(null));
 			assertThat(fields.get(Series.EumPageLoad.FIELD_UNLOAD_EVENT_END), equalTo(null));
 			assertThat(fields.get(Series.EumPageLoad.FIELD_REDIRECT_START), equalTo(null));
