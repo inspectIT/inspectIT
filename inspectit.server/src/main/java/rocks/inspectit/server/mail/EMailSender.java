@@ -337,7 +337,9 @@ public class EMailSender implements IExternalService {
 		HtmlEmail email = objectFactory.createHtmlEmail();
 		email.setHostName(smtpHost);
 		email.setSmtpPort(smtpPort);
-		email.setAuthentication(smtpUser, smtpPassword);
+		if (StringUtils.isNotEmpty(smtpUser) && StringUtils.isNotEmpty(smtpPassword)) {
+			email.setAuthentication(smtpUser, smtpPassword);
+		}
 		email.setFrom(senderAddress, senderName);
 
 		if ((additionalProperties != null) && !additionalProperties.isEmpty()) {
