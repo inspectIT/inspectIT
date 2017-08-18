@@ -208,29 +208,43 @@ public class InfluxDBDao implements InfluxAvailabilityListener, IExternalService
 			if (log.isErrorEnabled()) {
 				log.error("InfluxDB client is null. Please check your configuration settings and try again.");
 			}
+			return;
 		} else if (!executeWriteTest()) {
-			if (log.isWarnEnabled()) {
-				log.warn("The InfluxDB test-write failed. Please check the provided credentials and user permissions.");
-			}
-		} else {
-			enableBatching();
-
-			connected = isAvailable();
-
-			if (connected) {
-				if (log.isInfoEnabled()) {
-					log.info("|-InfluxDB Service active and connected...");
+			if (!isDatabaseAvailable(database)) {
+				if (!createDatabase(database)) {
+					// Connection fails, because database is not available/ visible and can't be
+					// created (Read only users influxDB 1.2.x / 1.3.x).
+					if (log.isWarnEnabled()) {
+						log.warn("The InfluxDB test-write failed. Please check the provided credentials and user permissions.");
+					}
+					return;
 				}
-
-				createDatabaseIfNotExistent();
 			} else {
+				// Connection fails, because writing test fails, but database is available/ visible
+				// (Read only users influxDB 1.3.x).
 				if (log.isWarnEnabled()) {
-					log.warn("|-InfluxDB Service was not able to connect! Check connection settings!");
+					log.warn(
+							"The InfluxDB test-write failed. The database user only has read privileges to the database " + database + ". Please check the provided credentials and user permissions.");
 				}
+				return;
+			}
+		}
+		enableBatching();
+
+		connected = isAvailable();
+
+		if (connected) {
+			if (log.isInfoEnabled()) {
+				log.info("|-InfluxDB Service active and connected...");
 			}
 
-			activateAvailabilityChecker();
+		} else {
+			if (log.isWarnEnabled()) {
+				log.warn("|-InfluxDB Service was not able to connect! Check connection settings!");
+			}
 		}
+
+		activateAvailabilityChecker();
 	}
 
 	/**
@@ -275,10 +289,49 @@ public class InfluxDBDao implements InfluxAvailabilityListener, IExternalService
 	 * Creates the configured database in influx if it does not exist yet.
 	 */
 	private void createDatabaseIfNotExistent() {
-		List<String> dbNames = influxDB.describeDatabases();
-		if (!dbNames.contains(database)) {
-			influxDB.createDatabase(database);
+		if (!isDatabaseAvailable(database)) {
+			createDatabase(database);
 		}
+	}
+
+	/**
+	 * Checks whether database exists.
+	 * 
+	 * @param database
+	 *            database
+	 * @return Returns true if database is available, false if database is not available or the user
+	 *         has not the rights to "SHOW DATABASES".
+	 */
+	private boolean isDatabaseAvailable(String database) {
+		try {
+			List<String> dbNames = influxDB.describeDatabases();
+			return dbNames.contains(database);
+		} catch (Exception ex) {
+			if (log.isDebugEnabled()) {
+				log.debug("Database availability check failed with the following message: " + ex.getMessage());
+			}
+			return false;
+		}
+
+	}
+
+	/**
+	 * Creates a database.
+	 * 
+	 * @param database
+	 *            database
+	 * @return Returns true if the creation was successful
+	 */
+	private boolean createDatabase(String database) {
+		try {
+			influxDB.createDatabase(database);
+		} catch (Exception ex) {
+			if (log.isDebugEnabled()) {
+				log.debug("Creating database failed with the following message: " + ex.getMessage());
+			}
+			return false;
+		}
+		return true;
 	}
 
 	/**
