@@ -1,5 +1,8 @@
 package rocks.inspectit.ui.rcp.ci.wizard;
 
+import java.util.Collection;
+import java.util.concurrent.Callable;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -9,11 +12,13 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
 import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.ci.AbstractCiData;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.ci.job.OpenEnvironmentJob;
 import rocks.inspectit.ui.rcp.ci.wizard.page.DefineNameAndDescriptionWizardPage;
 import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
+import rocks.inspectit.ui.rcp.job.BlockingJob;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
@@ -63,7 +68,15 @@ public class CreateEnvironmentWizard extends Wizard implements INewWizard {
 	 */
 	@Override
 	public void addPages() {
-		defineNameAndDescriptionWizardPage = new DefineNameAndDescriptionWizardPage(TITLE, MESSAGE);
+		BlockingJob<Collection<Environment>> job = new BlockingJob<>("Fetching environments..", new Callable<Collection<Environment>>() {
+			@Override
+			public Collection<Environment> call() throws Exception {
+				return cmrRepositoryDefinition.getConfigurationInterfaceService().getAllEnvironments();
+			}
+		});
+
+		Collection<Environment> environments = job.scheduleAndJoin();
+		defineNameAndDescriptionWizardPage = new DefineNameAndDescriptionWizardPage(TITLE, MESSAGE, AbstractCiData.toNames(environments));
 		addPage(defineNameAndDescriptionWizardPage);
 	}
 

@@ -1,5 +1,7 @@
 package rocks.inspectit.shared.cs.ci;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -214,6 +216,22 @@ public abstract class AbstractCiData extends AbstractSchemaVersionAware {
 	 */
 	public void setRevision(int revision) {
 		this.revision = Integer.valueOf(revision);
+	}
+
+	/**
+	 * Converts a given collection of {@link AbstractCiData} into a collection of names.
+	 * 
+	 * @param abstractCiDataElements
+	 *            Collection of {@link AbstractCiData}
+	 * 
+	 * @return Collection of names.
+	 */
+	public static Collection<String> toNames(Collection<? extends AbstractCiData> abstractCiDataElements) {
+		Collection<String> names = new ArrayList<String>();
+		for (AbstractCiData abstractCiData : abstractCiDataElements) {
+			names.add(abstractCiData.getName());
+		}
+		return names;
 	}
 
 	/**
