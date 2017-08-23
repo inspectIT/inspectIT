@@ -154,7 +154,7 @@ public class ConfigurationStorageTest extends TestBase {
 		}
 
 		@Test
-		public void agentNameIsCorrectIfThePatternIsAtTheBegginingOfTheNameAndItIsNotRecognize() throws Exception {
+		public void agentNameIsCorrectIfThePatternIsAtTheBeginningOfTheNameAndItIsNotRecognize() throws Exception {
 			Properties properties = System.getProperties();
 			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "${test}_agentName");
 			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
@@ -165,7 +165,7 @@ public class ConfigurationStorageTest extends TestBase {
 		}
 
 		@Test
-		public void agentNameIsCorrectIfThePatternIsAtTheBegginingOfTheNameAndItIsFromSystemProperties() throws Exception {
+		public void agentNameIsCorrectIfThePatternIsAtTheBeginningOfTheNameAndItIsFromSystemProperties() throws Exception {
 			Properties properties = System.getProperties();
 			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "${systemProperty}_agentName");
 			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
@@ -177,7 +177,7 @@ public class ConfigurationStorageTest extends TestBase {
 		}
 
 		@Test
-		public void agentNameIsCorrectIfThePatternIsAtTheBegginingOfTheNameAndThereIsMoreThanOnePatternInTheArgumentWhenThePropertyIsTheFirstFound() throws Exception {
+		public void agentNameIsCorrectIfThePatternIsAtTheBeginningOfTheNameAndThereIsMoreThanOnePatternInTheArgumentWhenThePropertyIsTheFirstFound() throws Exception {
 			Properties properties = System.getProperties();
 			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "${systemProperty}_agent_${systemProperty}_Name_${test}");
 			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
@@ -189,7 +189,7 @@ public class ConfigurationStorageTest extends TestBase {
 		}
 
 		@Test
-		public void agentNameIsCorrectIfThePatternIsAtTheBegginingOfTheNameAndThereIsMoreThanOnePatternInTheArgumentWhenThePropertyIsNotTheFirstFound() throws Exception {
+		public void agentNameIsCorrectIfThePatternIsAtTheBeginningOfTheNameAndThereIsMoreThanOnePatternInTheArgumentWhenThePropertyIsNotTheFirstFound() throws Exception {
 			Properties properties = System.getProperties();
 			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "${test}_agentName_${systemProperty}");
 			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
@@ -199,6 +199,39 @@ public class ConfigurationStorageTest extends TestBase {
 
 			assertThat(configurationStorage.getAgentName(), is(("NA_agentName_${systemProperty}")));
 		}
+
+		@Test
+		public void carriageReturnIsRemovedFromAgentName() throws Exception {
+			Properties properties = System.getProperties();
+			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "ag\rentNam\re");
+			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
+
+			configurationStorage.afterPropertiesSet();
+
+			assertThat(configurationStorage.getAgentName(), is(("agentName")));
+		}
+
+		@Test
+		public void lineFeedIsRemovedFromAgentName() throws Exception {
+			Properties properties = System.getProperties();
+			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "age\nntName\n");
+			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
+			configurationStorage.afterPropertiesSet();
+
+			assertThat(configurationStorage.getAgentName(), is(("agentName")));
+		}
+
+		@Test
+		public void lineFeedAndCarriageReturnIsRemovedFromAgentName() throws Exception {
+			Properties properties = System.getProperties();
+			properties.put(ConfigurationStorage.AGENT_NAME_PROPERTY, "agent\n\rName");
+			properties.put(ConfigurationStorage.REPOSITORY_PROPERTY, "localhost:8000");
+
+			configurationStorage.afterPropertiesSet();
+
+			assertThat(configurationStorage.getAgentName(), is(("agentName")));
+		}
+
 	}
 
 	public class GetAgentName extends ConfigurationStorageTest {
