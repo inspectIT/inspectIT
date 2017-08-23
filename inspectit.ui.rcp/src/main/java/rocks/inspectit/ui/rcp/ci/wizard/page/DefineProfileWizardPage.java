@@ -1,5 +1,7 @@
 package rocks.inspectit.ui.rcp.ci.wizard.page;
 
+import java.util.Collection;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
@@ -39,9 +41,11 @@ public class DefineProfileWizardPage extends DefineNameAndDescriptionWizardPage 
 	 *            Default message for the page.
 	 * @param duplicateProfile
 	 *            Duplicate profile instance if duplicate action is on.
+	 * @param existingNames
+	 *            Already existing profile names.
 	 */
-	public DefineProfileWizardPage(String title, String defaultMessage, Profile duplicateProfile) {
-		super(title, defaultMessage);
+	public DefineProfileWizardPage(String title, String defaultMessage, Profile duplicateProfile, Collection<String> existingNames) {
+		super(title, defaultMessage, existingNames);
 		this.duplicateProfile = duplicateProfile;
 	}
 

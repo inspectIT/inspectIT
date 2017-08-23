@@ -1,5 +1,8 @@
 package rocks.inspectit.shared.cs.ci;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -184,6 +187,21 @@ public class Profile extends AbstractCiData {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Converts a given collection of profiles into a collection of profile names.
+	 * 
+	 * @param profiles
+	 *            Collection of profiles
+	 * @return Collection of all profile names
+	 */
+	public static Collection<String> convertProfileListToNameStringList(Collection<Profile> profiles) {
+		Collection<String> profileNames = new ArrayList<String>();
+		for (Profile profile : profiles) {
+			profileNames.add(profile.getName());
+		}
+		return profileNames;
 	}
 
 }

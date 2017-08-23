@@ -1,5 +1,8 @@
 package rocks.inspectit.ui.rcp.ci.wizard;
 
+import java.util.Collection;
+import java.util.concurrent.Callable;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -16,6 +19,7 @@ import rocks.inspectit.ui.rcp.ci.job.OpenProfileJob;
 import rocks.inspectit.ui.rcp.ci.wizard.page.DefineNameAndDescriptionWizardPage;
 import rocks.inspectit.ui.rcp.ci.wizard.page.DefineProfileWizardPage;
 import rocks.inspectit.ui.rcp.dialog.ProgressDialog;
+import rocks.inspectit.ui.rcp.job.BlockingJob;
 import rocks.inspectit.ui.rcp.provider.ICmrRepositoryProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition.OnlineStatus;
@@ -92,7 +96,15 @@ public class CreateProfileWizard extends Wizard implements INewWizard {
 	 */
 	@Override
 	public void addPages() {
-		defineProfileWizardPage = new DefineProfileWizardPage(getTitle(), MESSAGE, duplicateProfile);
+		BlockingJob<Collection<Profile>> job = new BlockingJob<>("Fetching profiles..", new Callable<Collection<Profile>>() {
+			@Override
+			public Collection<Profile> call() throws Exception {
+				return cmrRepositoryDefinition.getConfigurationInterfaceService().getAllProfiles();
+			}
+		});
+
+		Collection<Profile> profiles = job.scheduleAndJoin();
+		defineProfileWizardPage = new DefineProfileWizardPage(getTitle(), MESSAGE, duplicateProfile, Profile.convertProfileListToNameStringList(profiles));
 		addPage(defineProfileWizardPage);
 	}
 

@@ -1,5 +1,8 @@
 package rocks.inspectit.ui.rcp.ci.handler;
 
+import java.util.Collection;
+import java.util.concurrent.Callable;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -13,6 +16,7 @@ import rocks.inspectit.shared.all.exception.BusinessException;
 import rocks.inspectit.shared.cs.ci.Profile;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.dialog.EditNameDescriptionDialog;
+import rocks.inspectit.ui.rcp.job.BlockingJob;
 import rocks.inspectit.ui.rcp.provider.IProfileProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
@@ -38,10 +42,19 @@ public class EditProfileHandler extends AbstractHandler implements IHandler {
 		if (selected instanceof IProfileProvider) {
 			IProfileProvider profileProvider = (IProfileProvider) selected;
 			Profile profile = profileProvider.getProfile();
-			CmrRepositoryDefinition repositoryDefinition = profileProvider.getCmrRepositoryDefinition();
+			final CmrRepositoryDefinition repositoryDefinition = profileProvider.getCmrRepositoryDefinition();
+
+			BlockingJob<Collection<Profile>> job = new BlockingJob<>("Fetching profiles..", new Callable<Collection<Profile>>() {
+				@Override
+				public Collection<Profile> call() throws Exception {
+					return repositoryDefinition.getConfigurationInterfaceService().getAllProfiles();
+				}
+			});
+
+			Collection<Profile> profiles = job.scheduleAndJoin();
 
 			EditNameDescriptionDialog dialog = new EditNameDescriptionDialog(HandlerUtil.getActiveShell(event), profile.getName(), profile.getDescription(), "Edit Profile",
-					"Enter new profile name and/or description");
+					"Enter new profile name and/or description", Profile.convertProfileListToNameStringList(profiles).toArray(new String[profiles.size()]));
 			if (Window.OK == dialog.open()) {
 				profile.setName(dialog.getName());
 				if (StringUtils.isNotBlank(dialog.getDescription())) {

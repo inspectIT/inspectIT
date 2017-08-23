@@ -1,5 +1,7 @@
 package rocks.inspectit.shared.cs.ci;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -252,6 +254,22 @@ public class Environment extends AbstractCiData {
 	 */
 	public void setEumConfig(EndUserMonitoringConfig eumConfig) {
 		this.eumConfig = eumConfig;
+	}
+
+	/**
+	 * Converts a given collection of environments into a collection of environment names.
+	 * 
+	 * @param environments
+	 *            Collection of environments
+	 * 
+	 * @return Collection of all environment names.
+	 */
+	public static Collection<String> convertEnvironmentListToNameStringList(Collection<Environment> environments) {
+		Collection<String> environmentNames = new ArrayList<String>();
+		for (Environment environment : environments) {
+			environmentNames.add(environment.getName());
+		}
+		return environmentNames;
 	}
 
 	/**
