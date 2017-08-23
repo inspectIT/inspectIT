@@ -375,7 +375,7 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 		// agent name
 		String agentName = System.getProperty(AGENT_NAME_PROPERTY);
 		if (StringUtils.isNotBlank(agentName)) {
-			String newAgentName = checkPatternAgentName(agentName);
+			String newAgentName = checkPatternAgentName(agentName).replaceAll("(\r|\n)", "");
 			try {
 				log.info("Agent name found in the JVM parameters: AgentName=" + newAgentName);
 				setAgentName(newAgentName);
