@@ -10,6 +10,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
+import rocks.inspectit.shared.all.util.ObjectUtils;
+
 /**
  * Wizard page for defining name and description. Can be used in multiple wizards.
  *
@@ -49,6 +51,11 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 	protected Composite main;
 
 	/**
+	 * Existing names.
+	 */
+	private String[] existingNames;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param title
@@ -70,18 +77,39 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 	 *            Title of the page.
 	 * @param defaultMessage
 	 *            Default message for the page.
+	 * @param existingNames
+	 *            existing names which are not allowed to use
+	 */
+	public DefineNameAndDescriptionWizardPage(String title, String defaultMessage, String[] existingNames) {
+		super(title);
+		setTitle(title);
+		setMessage(defaultMessage);
+		this.defaultMessage = defaultMessage;
+		this.existingNames = existingNames;
+	}
+
+	/**
+	 * Default constructor.
+	 *
+	 * @param title
+	 *            Title of the page.
+	 * @param defaultMessage
+	 *            Default message for the page.
 	 * @param initialName
 	 *            initial name
 	 * @param initialDescription
 	 *            description
+	 * @param existingNames
+	 *            existing names which are not allowed to use
 	 */
-	public DefineNameAndDescriptionWizardPage(String title, String defaultMessage, String initialName, String initialDescription) {
+	public DefineNameAndDescriptionWizardPage(String title, String defaultMessage, String initialName, String initialDescription, String[] existingNames) {
 		super(title);
 		this.initialName = initialName;
 		this.initialDescription = initialDescription;
 		setTitle(title);
 		setMessage(defaultMessage);
 		this.defaultMessage = defaultMessage;
+		this.existingNames = existingNames;
 	}
 
 	/**
@@ -126,7 +154,17 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 	 */
 	@Override
 	public boolean isPageComplete() {
-		return !nameBox.getText().isEmpty();
+		if (nameBox.getText().isEmpty()) {
+			return false;
+		} else if (null != existingNames) {
+			for (String existingName : existingNames) {
+				if (ObjectUtils.equals(existingName, nameBox.getText().trim())) {
+					setMessage("This name already exists!", ERROR);
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -136,6 +174,13 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 		if (nameBox.getText().isEmpty()) {
 			setMessage("No value for the name entered", ERROR);
 			return;
+		} else if (null != existingNames) {
+			for (String existingName : existingNames) {
+				if (ObjectUtils.equals(existingName, nameBox.getText().trim())) {
+					setMessage("This name already exists!", ERROR);
+					return;
+				}
+			}
 		}
 		setMessage(defaultMessage);
 	}
