@@ -1,5 +1,8 @@
 package rocks.inspectit.ui.rcp.ci.handler;
 
+import java.util.Collection;
+import java.util.concurrent.Callable;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -10,9 +13,11 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import rocks.inspectit.shared.all.exception.BusinessException;
+import rocks.inspectit.shared.cs.ci.AbstractCiData;
 import rocks.inspectit.shared.cs.ci.Environment;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.dialog.EditNameDescriptionDialog;
+import rocks.inspectit.ui.rcp.job.BlockingJob;
 import rocks.inspectit.ui.rcp.provider.IEnvironmentProvider;
 import rocks.inspectit.ui.rcp.repository.CmrRepositoryDefinition;
 
@@ -38,10 +43,18 @@ public class EditEnvironmentHandler extends AbstractHandler implements IHandler 
 		if (selected instanceof IEnvironmentProvider) {
 			IEnvironmentProvider environmentProvider = (IEnvironmentProvider) selected;
 			Environment environment = environmentProvider.getEnvironment();
-			CmrRepositoryDefinition repositoryDefinition = environmentProvider.getCmrRepositoryDefinition();
+			final CmrRepositoryDefinition repositoryDefinition = environmentProvider.getCmrRepositoryDefinition();
 
+			BlockingJob<Collection<Environment>> job = new BlockingJob<>("Fetching environments..", new Callable<Collection<Environment>>() {
+				@Override
+				public Collection<Environment> call() throws Exception {
+					return repositoryDefinition.getConfigurationInterfaceService().getAllEnvironments();
+				}
+			});
+
+			Collection<Environment> environments = job.scheduleAndJoin();
 			EditNameDescriptionDialog dialog = new EditNameDescriptionDialog(HandlerUtil.getActiveShell(event), environment.getName(), environment.getDescription(), "Edit Environment",
-					"Enter new environment name and/or description");
+					"Enter new environment name and/or description", AbstractCiData.toNames(environments).toArray(new String[environments.size()]));
 			if (Window.OK == dialog.open()) {
 				environment.setName(dialog.getName());
 				if (StringUtils.isNotBlank(dialog.getDescription())) {

@@ -1,5 +1,8 @@
 package rocks.inspectit.ui.rcp.ci.wizard.page;
 
+import java.util.Collection;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -11,7 +14,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * Wizard page for defining name and description. Can be used in multiple wizards.
+ * Wizard page for defining name and description. Can be used in multiple wizards. Already existing
+ * and forbidden names can be defined.
  *
  * @author Ivan Senic, Alexander Wert
  *
@@ -49,6 +53,11 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 	protected Composite main;
 
 	/**
+	 * Existing names.
+	 */
+	private Collection<String> existingNames;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param title
@@ -70,18 +79,39 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 	 *            Title of the page.
 	 * @param defaultMessage
 	 *            Default message for the page.
+	 * @param existingNames
+	 *            existing names which are not allowed to use
+	 */
+	public DefineNameAndDescriptionWizardPage(String title, String defaultMessage, Collection<String> existingNames) {
+		super(title);
+		setTitle(title);
+		setMessage(defaultMessage);
+		this.defaultMessage = defaultMessage;
+		this.existingNames = existingNames;
+	}
+
+	/**
+	 * Default constructor.
+	 *
+	 * @param title
+	 *            Title of the page.
+	 * @param defaultMessage
+	 *            Default message for the page.
 	 * @param initialName
 	 *            initial name
 	 * @param initialDescription
 	 *            description
+	 * @param existingNames
+	 *            existing names which are not allowed to use
 	 */
-	public DefineNameAndDescriptionWizardPage(String title, String defaultMessage, String initialName, String initialDescription) {
+	public DefineNameAndDescriptionWizardPage(String title, String defaultMessage, String initialName, String initialDescription, Collection<String> existingNames) {
 		super(title);
 		this.initialName = initialName;
 		this.initialDescription = initialDescription;
 		setTitle(title);
 		setMessage(defaultMessage);
 		this.defaultMessage = defaultMessage;
+		this.existingNames = existingNames;
 	}
 
 	/**
@@ -126,7 +156,14 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 	 */
 	@Override
 	public boolean isPageComplete() {
-		return !nameBox.getText().isEmpty();
+		if (nameBox.getText().isEmpty()) {
+			return false;
+		} else if (CollectionUtils.isNotEmpty(existingNames)) {
+			if (existingNames.contains(nameBox.getText().trim())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -136,7 +173,13 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 		if (nameBox.getText().isEmpty()) {
 			setMessage("No value for the name entered", ERROR);
 			return;
+		} else if (CollectionUtils.isNotEmpty(existingNames)) {
+			if (existingNames.contains(nameBox.getText().trim())) {
+				setMessage("This name already exists!", ERROR);
+				return;
+			}
 		}
+
 		setMessage(defaultMessage);
 	}
 
