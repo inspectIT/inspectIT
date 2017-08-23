@@ -44,7 +44,7 @@ public class CreateEnvironmentWizard extends Wizard implements INewWizard {
 	/**
 	 * {@link DefineNameAndDescriptionWizardPage}.
 	 */
-	private DefineNameAndDescriptionWizardPage defineNameAndDescriptionWizardPage;
+	private DefineNewEnvironmentWizardPage defineNewEnvironmentWizardPage;
 
 	/**
 	 * The workbench for wizard.
@@ -63,8 +63,8 @@ public class CreateEnvironmentWizard extends Wizard implements INewWizard {
 	 */
 	@Override
 	public void addPages() {
-		defineNameAndDescriptionWizardPage = new DefineNameAndDescriptionWizardPage(TITLE, MESSAGE);
-		addPage(defineNameAndDescriptionWizardPage);
+		defineNewEnvironmentWizardPage = new DefineNewEnvironmentWizardPage(TITLE, MESSAGE, cmrRepositoryDefinition.getConfigurationInterfaceService().getAllEnvironments());
+		addPage(defineNewEnvironmentWizardPage);
 	}
 
 	/**
@@ -84,8 +84,8 @@ public class CreateEnvironmentWizard extends Wizard implements INewWizard {
 	 */
 	@Override
 	public boolean performFinish() {
-		String name = defineNameAndDescriptionWizardPage.getName();
-		String description = defineNameAndDescriptionWizardPage.getDescription();
+		String name = defineNewEnvironmentWizardPage.getName();
+		String description = defineNewEnvironmentWizardPage.getDescription();
 		final Environment environment = new Environment();
 		environment.setName(name);
 		if (StringUtils.isNotBlank(description)) {

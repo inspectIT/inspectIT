@@ -21,12 +21,12 @@ public class DefineNameAndDescriptionWizardPage extends WizardPage {
 	/**
 	 * Default message.
 	 */
-	private final String defaultMessage;
+	protected final String defaultMessage;
 
 	/**
 	 * Name box.
 	 */
-	private Text nameBox;
+	protected Text nameBox;
 
 	/**
 	 * Description box.
