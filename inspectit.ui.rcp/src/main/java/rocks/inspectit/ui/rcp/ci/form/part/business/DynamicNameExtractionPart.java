@@ -34,6 +34,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import rocks.inspectit.shared.cs.ci.business.expression.impl.NameExtractionExpression;
 import rocks.inspectit.shared.cs.ci.business.impl.BusinessTransactionDefinition;
 import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.AgentNameValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpParameterValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpQueryStringValueSource;
@@ -988,6 +989,8 @@ public class DynamicNameExtractionPart extends SectionPart { // NOPMD
 			return new HttpServerPortValueSource();
 		case HTTP_URI:
 			return new HttpUriValueSource();
+		case AGENT:
+			return new AgentNameValueSource();
 		default:
 			throw new RuntimeException("Unsupported value source type!");
 		}

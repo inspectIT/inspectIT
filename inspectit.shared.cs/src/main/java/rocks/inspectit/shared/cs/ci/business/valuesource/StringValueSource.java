@@ -9,13 +9,14 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 import rocks.inspectit.shared.all.cmr.service.ICachedDataService;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.AgentNameValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpParameterValueSource;
-import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpServerPortValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpQueryStringValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpRequestMethodValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpSchemeValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpServerNameValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpServerPortValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUriValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpUrlValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodParameterValueSource;
@@ -30,7 +31,7 @@ import rocks.inspectit.shared.cs.ci.business.valuesource.impl.MethodSignatureVal
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ HttpUrlValueSource.class, HttpParameterValueSource.class, MethodSignatureValueSource.class, MethodParameterValueSource.class, HostValueSource.class, HttpRequestMethodValueSource.class,
-	HttpServerPortValueSource.class, HttpQueryStringValueSource.class, HttpSchemeValueSource.class, HttpServerNameValueSource.class, HttpUriValueSource.class })
+		HttpServerPortValueSource.class, HttpQueryStringValueSource.class, HttpSchemeValueSource.class, HttpServerNameValueSource.class, HttpUriValueSource.class, AgentNameValueSource.class })
 public abstract class StringValueSource {
 	/**
 	 * Retrieves the string values for the given {@link InvocationSequenceData} instance according
