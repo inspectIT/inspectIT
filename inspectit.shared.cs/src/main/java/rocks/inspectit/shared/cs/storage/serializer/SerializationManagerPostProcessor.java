@@ -35,6 +35,7 @@ import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
 import rocks.inspectit.shared.cs.ci.business.impl.BusinessTransactionDefinition;
 import rocks.inspectit.shared.cs.ci.business.valuesource.PatternMatchingType;
 import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.AgentNameValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpParameterValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpQueryStringValueSource;
@@ -352,7 +353,8 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(HttpServerNameValueSource.class, new FieldSerializer<HttpServerNameValueSource>(kryo, HttpServerNameValueSource.class), nextRegistrationId++);
 		kryo.register(HttpServerPortValueSource.class, new FieldSerializer<HttpServerPortValueSource>(kryo, HttpServerPortValueSource.class), nextRegistrationId++);
 		kryo.register(HttpQueryStringValueSource.class, new FieldSerializer<HttpQueryStringValueSource>(kryo, HttpQueryStringValueSource.class), nextRegistrationId++);
-
+		// INSPECTIT-2191
+		kryo.register(AgentNameValueSource.class, new FieldSerializer<AgentNameValueSource>(kryo, AgentNameValueSource.class), nextRegistrationId++);
 		// INSPECTIT-658
 		// this classes are registered with CompatibleFieldSerializer since they can be
 		// exported/imported

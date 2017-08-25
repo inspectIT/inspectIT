@@ -73,7 +73,7 @@ public class ApplicationDefinitionEditor extends AbstractConfigurationInterfaceF
 	 */
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		monitor.beginTask("Saving appplication definition..", IProgressMonitor.UNKNOWN);
+		monitor.beginTask("Saving application definition..", IProgressMonitor.UNKNOWN);
 
 		if (!checkValid()) {
 			monitor.done();
@@ -88,7 +88,7 @@ public class ApplicationDefinitionEditor extends AbstractConfigurationInterfaceF
 			try {
 				commitPages(true);
 
-				ProgressDialog<ApplicationDefinition> dialog = new ProgressDialog<ApplicationDefinition>("Saving appplication definition..", IProgressMonitor.UNKNOWN) {
+				ProgressDialog<ApplicationDefinition> dialog = new ProgressDialog<ApplicationDefinition>("Saving application definition..", IProgressMonitor.UNKNOWN) {
 					@Override
 					public ApplicationDefinition execute(IProgressMonitor monitor) throws BusinessException {
 						return cmrRepositoryDefinition.getConfigurationInterfaceService().updateApplicationDefinition(applicationDefinition);
