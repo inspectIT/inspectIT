@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
+  <xs:element name="agent" type="agentNameValueSource"/>
+
   <xs:element name="agent-mapping" type="agentMapping"/>
 
   <xs:element name="agent-mappings" type="agentMappings"/>
@@ -331,6 +333,7 @@
           <xs:element ref="http-scheme"/>
           <xs:element ref="http-server-name"/>
           <xs:element ref="http-uri"/>
+          <xs:element ref="agent"/>
         </xs:choice>
         <xs:attribute name="matching-type" type="patternMatchingType" use="required"/>
         <xs:attribute name="snippet" type="xs:string" use="required"/>
@@ -435,6 +438,14 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="agentNameValueSource">
+    <xs:complexContent>
+      <xs:extension base="stringValueSource">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <xs:complexType name="booleanExpression">
     <xs:complexContent>
       <xs:extension base="abstractExpression">
@@ -473,6 +484,7 @@
       <xs:element ref="http-scheme"/>
       <xs:element ref="http-server-name"/>
       <xs:element ref="http-uri"/>
+      <xs:element ref="agent"/>
     </xs:choice>
     <xs:attribute name="regularExpression" type="xs:string" use="required"/>
     <xs:attribute name="targetNamePattern" type="xs:string" use="required"/>
