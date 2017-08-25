@@ -35,6 +35,7 @@ import rocks.inspectit.shared.cs.ci.business.impl.ApplicationDefinition;
 import rocks.inspectit.shared.cs.ci.business.impl.BusinessTransactionDefinition;
 import rocks.inspectit.shared.cs.ci.business.valuesource.PatternMatchingType;
 import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.AgentNameValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpParameterValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpQueryStringValueSource;
@@ -352,7 +353,6 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(HttpServerNameValueSource.class, new FieldSerializer<HttpServerNameValueSource>(kryo, HttpServerNameValueSource.class), nextRegistrationId++);
 		kryo.register(HttpServerPortValueSource.class, new FieldSerializer<HttpServerPortValueSource>(kryo, HttpServerPortValueSource.class), nextRegistrationId++);
 		kryo.register(HttpQueryStringValueSource.class, new FieldSerializer<HttpQueryStringValueSource>(kryo, HttpQueryStringValueSource.class), nextRegistrationId++);
-
 		// INSPECTIT-658
 		// this classes are registered with CompatibleFieldSerializer since they can be
 		// exported/imported
@@ -376,8 +376,7 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		kryo.register(ConnectionSensorConfig.class, new FieldSerializer<ConnectionSensorConfig>(kryo, ConnectionSensorConfig.class), nextRegistrationId++);
 		kryo.register(HttpSensorConfig.class, new FieldSerializer<HttpSensorConfig>(kryo, HttpSensorConfig.class), nextRegistrationId++);
 		kryo.register(InvocationSequenceSensorConfig.class, new FieldSerializer<InvocationSequenceSensorConfig>(kryo, InvocationSequenceSensorConfig.class), nextRegistrationId++);
-		kryo.register(PreparedStatementParameterSensorConfig.class, new FieldSerializer<PreparedStatementParameterSensorConfig>(kryo, PreparedStatementParameterSensorConfig.class),
-				nextRegistrationId++);
+		kryo.register(PreparedStatementParameterSensorConfig.class, new FieldSerializer<PreparedStatementParameterSensorConfig>(kryo, PreparedStatementParameterSensorConfig.class), nextRegistrationId++);
 		kryo.register(PreparedStatementSensorConfig.class, new FieldSerializer<PreparedStatementSensorConfig>(kryo, PreparedStatementSensorConfig.class), nextRegistrationId++);
 		kryo.register(StatementSensorConfig.class, new FieldSerializer<StatementSensorConfig>(kryo, StatementSensorConfig.class), nextRegistrationId++);
 		kryo.register(TimerSensorConfig.class, new FieldSerializer<TimerSensorConfig>(kryo, TimerSensorConfig.class), nextRegistrationId++);
@@ -452,6 +451,9 @@ public class SerializationManagerPostProcessor implements BeanPostProcessor {
 		// INSPECTIT-2432
 		kryo.register(ExecutorIntercepterSensorConfig.class, new FieldSerializer<>(kryo, ExecutorIntercepterSensorConfig.class), nextRegistrationId++);
 		kryo.register(ExecutorClientSensorConfig.class, new FieldSerializer<>(kryo, ExecutorClientSensorConfig.class), nextRegistrationId++);
+
+		// INSPECTIT-2192
+		kryo.register(AgentNameValueSource.class, new FieldSerializer<AgentNameValueSource>(kryo, AgentNameValueSource.class), nextRegistrationId++);
 	}
 
 }

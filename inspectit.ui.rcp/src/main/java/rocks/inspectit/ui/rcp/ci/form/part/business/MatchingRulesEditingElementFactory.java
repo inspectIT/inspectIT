@@ -12,6 +12,7 @@ import rocks.inspectit.shared.cs.ci.business.expression.impl.OrExpression;
 import rocks.inspectit.shared.cs.ci.business.expression.impl.StringMatchingExpression;
 import rocks.inspectit.shared.cs.ci.business.valuesource.PatternMatchingType;
 import rocks.inspectit.shared.cs.ci.business.valuesource.StringValueSource;
+import rocks.inspectit.shared.cs.ci.business.valuesource.impl.AgentNameValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HostValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpParameterValueSource;
 import rocks.inspectit.shared.cs.ci.business.valuesource.impl.HttpQueryStringValueSource;
@@ -131,6 +132,9 @@ public final class MatchingRulesEditingElementFactory {
 		case HTTP_REQUEST_METHOD:
 			ruleComposite = new HttpRequestMethodRuleEditingElement(expression, editable, upstreamValidationManager);
 			break;
+		case AGENT:
+			ruleComposite = new AgentRuleEditingElement(expression, editable, upstreamValidationManager);
+			break;
 		default:
 			throw new RuntimeException("Unsupported type!");
 		}
@@ -218,6 +222,9 @@ public final class MatchingRulesEditingElementFactory {
 		case HTTP_REQUEST_METHOD:
 			expression.setStringValueSource(new HttpRequestMethodValueSource());
 			expression.setSnippet(HttpMethod.GET.toString());
+			break;
+		case AGENT:
+			expression.setStringValueSource(new AgentNameValueSource());
 			break;
 		default:
 			throw new RuntimeException("Unsupported type!");
@@ -308,6 +315,8 @@ public final class MatchingRulesEditingElementFactory {
 			return MatchingRuleType.METHOD_PARAMETER;
 		} else if (source instanceof HttpRequestMethodValueSource) {
 			return MatchingRuleType.HTTP_REQUEST_METHOD;
+		} else if (source instanceof AgentNameValueSource) {
+			return MatchingRuleType.AGENT;
 		}
 
 		throw new IllegalArgumentException("Unsupported string value source!");
@@ -408,7 +417,12 @@ public final class MatchingRulesEditingElementFactory {
 		/**
 		 * Matching of an IP address.
 		 */
-		IP;
+		IP,
+
+		/**
+		 * Matching of an agent.
+		 */
+		AGENT;
 
 		@Override
 		public String toString() {
@@ -435,6 +449,8 @@ public final class MatchingRulesEditingElementFactory {
 				return "Method Signature Matching";
 			case METHOD_PARAMETER:
 				return "Method Parameter Matching";
+			case AGENT:
+				return "Agent Matching";
 			default:
 				throw new RuntimeException("Unsupported type!");
 			}
@@ -468,6 +484,8 @@ public final class MatchingRulesEditingElementFactory {
 				return InspectITImages.IMG_METHOD;
 			case METHOD_PARAMETER:
 				return InspectITImages.IMG_METHOD_PARAMETER;
+			case AGENT:
+				return InspectITImages.IMG_AGENT;
 			default:
 				throw new RuntimeException("Unsupported type!");
 			}
