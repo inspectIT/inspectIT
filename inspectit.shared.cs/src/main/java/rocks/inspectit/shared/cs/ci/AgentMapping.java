@@ -46,6 +46,12 @@ public class AgentMapping {
 	private String environmentId;
 
 	/**
+	 * Priority of the agent mapping.
+	 */
+	@XmlAttribute(name = "priority")
+	private int priority;
+
+	/**
 	 * No-args constructor.
 	 */
 	public AgentMapping() {
@@ -158,6 +164,25 @@ public class AgentMapping {
 	 */
 	public void setEnvironmentId(String environmentId) {
 		this.environmentId = environmentId;
+	}
+
+	/**
+	 * Gets priority of the mapping.
+	 * 
+	 * @return priority
+	 */
+	public int getPriority() {
+		return priority;
+	}
+
+	/**
+	 * Sets the priority of the mapping.
+	 * 
+	 * @param priority
+	 *            priority
+	 */
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 
 	/**

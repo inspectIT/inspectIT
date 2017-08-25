@@ -2,6 +2,8 @@ package rocks.inspectit.ui.rcp.ci.form.part;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -109,6 +111,16 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 	private Button editButton;
 
 	/**
+	 * Move selected mapping up button.
+	 */
+	private Button moveUpButton;
+
+	/**
+	 * Move selected mapping down button.
+	 */
+	private Button moveDownButton;
+
+	/**
 	 *
 	 * @param formPage
 	 *            {@link FormPage} creating the part.
@@ -129,6 +141,14 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 
 		if (CollectionUtils.isNotEmpty(agentMappings.getMappings())) {
 			inputList.addAll(agentMappings.getMappings());
+			Comparator<AgentMapping> comparator = new Comparator<AgentMapping>() {
+				@Override
+				public int compare(AgentMapping left, AgentMapping right) {
+					return left.getPriority() - right.getPriority();
+				}
+			};
+			// Sort mappings based on priority
+			Collections.sort((ArrayList<AgentMapping>) inputList, comparator);
 		}
 
 		createPart(parent, toolkit);
@@ -234,6 +254,30 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 			}
 		});
 
+		moveUpButton = toolkit.createButton(buttonComposite, "", SWT.PUSH);
+		moveUpButton.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_PREVIOUS));
+		moveUpButton.setToolTipText("Move up");
+		moveUpButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		moveUpButton.setEnabled(false);
+		moveUpButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				fireMove(true);
+			}
+		});
+
+		moveDownButton = toolkit.createButton(buttonComposite, "", SWT.PUSH);
+		moveDownButton.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_NEXT));
+		moveDownButton.setToolTipText("Move down");
+		moveDownButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		moveDownButton.setEnabled(false);
+		moveDownButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				fireMove(false);
+			}
+		});
+
 		Button testButton = toolkit.createButton(buttonComposite, "", SWT.PUSH);
 		testButton.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_TEST_MAPPINGS));
 		testButton.setToolTipText("Test Mappings");
@@ -275,6 +319,9 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 		super.commit(onSave);
 
 		if (onSave) {
+			for (int i = 0; i < inputList.size(); i++) {
+				((ArrayList<AgentMapping>) inputList).get(i).setPriority(i + 1);
+			}
 			agentMappings.setMappings(inputList);
 		}
 	}
@@ -305,6 +352,26 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 			}
 		}
 
+	}
+
+	/**
+	 * Fires move.
+	 * 
+	 * @param up
+	 *            true if move direction is up
+	 */
+	private void fireMove(boolean up) {
+		StructuredSelection selection = (StructuredSelection) tableViewer.getSelection();
+		Object selected = selection.getFirstElement();
+		if (selected instanceof AgentMapping) {
+			int index = ((ArrayList<AgentMapping>) inputList).indexOf((AgentMapping) selected);
+			if (up) {
+				Collections.swap((ArrayList<AgentMapping>) inputList, index, index - 1);
+			} else {
+				Collections.swap((ArrayList<AgentMapping>) inputList, index, index + 1);
+			}
+			updateInternal(true);
+		}
 	}
 
 	/**
@@ -387,9 +454,13 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 		if (structuredSelection.isEmpty()) {
 			removeButton.setEnabled(false);
 			editButton.setEnabled(false);
+			moveUpButton.setEnabled(false);
+			moveDownButton.setEnabled(false);
 		} else {
 			removeButton.setEnabled(true);
 			editButton.setEnabled(structuredSelection.size() == 1);
+			moveUpButton.setEnabled(structuredSelection.size() == 1);
+			moveDownButton.setEnabled(structuredSelection.size() == 1);
 		}
 	}
 
@@ -551,7 +622,8 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 		} else {
 			tableViewer.getTable().setEnabled(true);
 			addButton.setEnabled(true);
-			managedForm.getForm().setMessage("Define agent mapping properties for the '" + cmrRepositoryDefinition.getName() + "' repository.", IMessageProvider.NONE);
+			managedForm.getForm().setMessage("Define agent mapping properties for the '" + cmrRepositoryDefinition.getName() + "' repository. Pay attention to the order of the agent mappings!",
+					IMessageProvider.NONE);
 		}
 
 	}

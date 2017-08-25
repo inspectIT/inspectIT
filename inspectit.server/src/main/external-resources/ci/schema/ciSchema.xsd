@@ -160,6 +160,7 @@
     <xs:attribute name="ip-address" type="xs:string" use="required"/>
     <xs:attribute name="description" type="xs:string"/>
     <xs:attribute name="environment-id" type="xs:string"/>
+    <xs:attribute name="priority" type="xs:int" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="agentMappings">

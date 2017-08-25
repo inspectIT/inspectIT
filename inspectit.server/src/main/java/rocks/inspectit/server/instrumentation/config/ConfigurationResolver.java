@@ -3,6 +3,7 @@ package rocks.inspectit.server.instrumentation.config;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -283,7 +284,6 @@ public class ConfigurationResolver {
 		stringBuilder.append("|-enhanced exception sensor: " + environment.getExceptionSensorConfig().isEnhanced() + "\n"); // NOPMD
 		stringBuilder.append("|-retransformation strategy: " + environment.getRetransformationStrategy().toString() + "\n"); // NOPMD
 
-
 		EndUserMonitoringConfig eumConfig = environment.getEumConfig();
 		stringBuilder.append("|-end user monitoring: " + eumConfig.isEumEnabled()); // NOPMD
 		if (eumConfig.isEumEnabled()) {
@@ -329,24 +329,17 @@ public class ConfigurationResolver {
 		}
 
 		List<AgentMapping> mappings = new ArrayList<>(agentMappings.getMappings());
-
+		// Sort list based on priority (ascending)
+		mappings.sort(Comparator.comparing(AgentMapping::getPriority));
 		for (Iterator<AgentMapping> it = mappings.iterator(); it.hasNext();) {
 			AgentMapping agentMapping = it.next();
-			if (!agentMapping.isActive() || !matches(agentMapping, definedIPs, agentName)) {
-				it.remove();
+			if (agentMapping.isActive() && matches(agentMapping, definedIPs, agentName)) {
+				return configurationInterfaceManager.getEnvironment(agentMapping.getEnvironmentId());
 			}
 		}
 
-		if (CollectionUtils.isEmpty(mappings)) {
-			throw new BusinessException("Determine an environment to use for the agent with name '" + agentName + "' and IP adress(es): " + definedIPs,
-					ConfigurationInterfaceErrorCodeEnum.ENVIRONMENT_FOR_AGENT_NOT_FOUND);
-		} else if (mappings.size() > 1) {
-			throw new BusinessException("Determine an environment to use for the agent with name '" + agentName + "' and IP adress(es): " + definedIPs,
-					ConfigurationInterfaceErrorCodeEnum.MORE_THAN_ONE_ENVIRONMENT_FOR_AGENT_FOUND);
-		} else {
-			String environmentId = mappings.get(0).getEnvironmentId();
-			return configurationInterfaceManager.getEnvironment(environmentId);
-		}
+		throw new BusinessException("Determine an environment to use for the agent with name '" + agentName + "' and IP adress(es): " + definedIPs,
+				ConfigurationInterfaceErrorCodeEnum.ENVIRONMENT_FOR_AGENT_NOT_FOUND);
 	}
 
 	/**

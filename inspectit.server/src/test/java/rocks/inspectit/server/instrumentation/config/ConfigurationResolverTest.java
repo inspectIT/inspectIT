@@ -153,7 +153,7 @@ public class ConfigurationResolverTest extends TestBase {
 			configurationResolver.getEnvironmentForAgent(definedIPs, agentName);
 		}
 
-		@Test(expectedExceptions = { BusinessException.class })
+		@Test
 		public void twoMatchingMappings() throws BusinessException {
 			AgentMapping mapping1 = mock(AgentMapping.class);
 			AgentMapping mapping2 = mock(AgentMapping.class);
@@ -162,13 +162,26 @@ public class ConfigurationResolverTest extends TestBase {
 			mappings.add(mapping2);
 			when(agentMappings.getMappings()).thenReturn(mappings);
 
-			when(mapping1.getAgentName()).thenReturn("*");
+			when(mapping1.getAgentName()).thenReturn("inspectit");
 			when(mapping1.isActive()).thenReturn(true);
-			when(mapping1.getIpAddress()).thenReturn("*");
+			when(mapping1.getIpAddress()).thenReturn("127.0.0.1");
+			when(mapping1.getPriority()).thenReturn(1);
+			when(mapping1.getEnvironmentId()).thenReturn("env1");
 			when(mapping2.getAgentName()).thenReturn("*");
 			when(mapping2.getIpAddress()).thenReturn("*");
 			when(mapping2.isActive()).thenReturn(true);
+			when(mapping2.getPriority()).thenReturn(2);
+			when(mapping2.getEnvironmentId()).thenReturn("env2");
+
+			Environment environment1 = mock(Environment.class);
+			Environment environment2 = mock(Environment.class);
+
+			when(configurationInterfaceManager.getEnvironment("env1")).thenReturn(environment1);
+			when(configurationInterfaceManager.getEnvironment("env2")).thenReturn(environment2);
+
 			configurationResolver.getEnvironmentForAgent(definedIPs, agentName);
+
+			assertThat(configurationResolver.getEnvironmentForAgent(definedIPs, agentName), is(environment1));
 		}
 
 		@Test

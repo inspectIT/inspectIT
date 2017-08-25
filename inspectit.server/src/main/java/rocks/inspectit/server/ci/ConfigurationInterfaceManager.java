@@ -1061,6 +1061,7 @@ public class ConfigurationInterfaceManager {
 					// we expect only one mapping here - the default one
 					AgentMapping mapping = new AgentMapping("*", "*");
 					mapping.setEnvironmentId(environment.getId());
+					mapping.setPriority(1);
 					Collection<AgentMapping> mappings = new ArrayList<>();
 					mappings.add(mapping);
 					agentMappings.setMappings(mappings);
