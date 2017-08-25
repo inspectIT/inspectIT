@@ -2,6 +2,7 @@ package rocks.inspectit.ui.rcp.ci.form.part;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -107,6 +108,16 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 	 * Edit selected mapping button.
 	 */
 	private Button editButton;
+
+	/**
+	 * Move selected mapping up button.
+	 */
+	private Button moveUpButton;
+
+	/**
+	 * Move selected mapping down button.
+	 */
+	private Button moveDownButton;
 
 	/**
 	 *
@@ -234,6 +245,30 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 			}
 		});
 
+		moveUpButton = toolkit.createButton(buttonComposite, "", SWT.PUSH);
+		moveUpButton.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_PREVIOUS));
+		moveUpButton.setToolTipText("Move up");
+		moveUpButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		moveUpButton.setEnabled(false);
+		moveUpButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				fireMove(true);
+			}
+		});
+
+		moveDownButton = toolkit.createButton(buttonComposite, "", SWT.PUSH);
+		moveDownButton.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_NEXT));
+		moveDownButton.setToolTipText("Move down");
+		moveDownButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		moveDownButton.setEnabled(false);
+		moveDownButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				fireMove(false);
+			}
+		});
+
 		Button testButton = toolkit.createButton(buttonComposite, "", SWT.PUSH);
 		testButton.setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_TEST_MAPPINGS));
 		testButton.setToolTipText("Test Mappings");
@@ -308,6 +343,26 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 	}
 
 	/**
+	 * Fires move.
+	 * 
+	 * @param up
+	 *            true if move direction is up
+	 */
+	private void fireMove(boolean up) {
+		StructuredSelection selection = (StructuredSelection) tableViewer.getSelection();
+		Object selected = selection.getFirstElement();
+		if (selected instanceof AgentMapping) {
+			int index = ((ArrayList<AgentMapping>) inputList).indexOf((AgentMapping) selected);
+			if (up) {
+				Collections.swap((ArrayList<AgentMapping>) inputList, index, index - 1);
+			} else {
+				Collections.swap((ArrayList<AgentMapping>) inputList, index, index + 1);
+			}
+			updateInternal(true);
+		}
+	}
+
+	/**
 	 * Performs the internal update by executing following tasks.
 	 * <ul>
 	 * <li>refreshing the table view
@@ -349,8 +404,7 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 		ipColumn.getColumn().setResizable(true);
 		ipColumn.getColumn().setWidth(150);
 		ipColumn.getColumn().setText("IP Address");
-		ipColumn.getColumn()
-				.setToolTipText("IP address of the agent. Use wild-card '*' for matching several IPs with one mapping. For example, 192.168.* will match all IP addresses in starting with 192.168.");
+		ipColumn.getColumn().setToolTipText("IP address of the agent. Use wild-card '*' for matching several IPs with one mapping. For example, 192.168.* will match all IP addresses in starting with 192.168.");
 		ipColumn.getColumn().setImage(InspectIT.getDefault().getImage(InspectITImages.IMG_INFORMATION));
 
 		TableViewerColumn environmentColumn = new TableViewerColumn(tableViewer, SWT.NONE);
@@ -387,10 +441,46 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 		if (structuredSelection.isEmpty()) {
 			removeButton.setEnabled(false);
 			editButton.setEnabled(false);
+			moveUpButton.setEnabled(false);
+			moveDownButton.setEnabled(false);
 		} else {
 			removeButton.setEnabled(true);
 			editButton.setEnabled(structuredSelection.size() == 1);
+			moveUpButton.setEnabled(structuredSelection.size() == 1 && !selectionIsAtTheTopOfTheList(structuredSelection));
+			moveDownButton.setEnabled(structuredSelection.size() == 1 && !selectionIsAtTheBottomOfTheList(structuredSelection));
 		}
+	}
+
+	/**
+	 * Checks, if selection is at the bottom of the list.
+	 * 
+	 * @param structuredSelection
+	 *            the selection
+	 * @return true if selection is at the bottom
+	 */
+	private boolean selectionIsAtTheBottomOfTheList(StructuredSelection structuredSelection) {
+		if (!structuredSelection.isEmpty() && structuredSelection.getFirstElement() instanceof AgentMapping) {
+			if (((AgentMapping) structuredSelection.getFirstElement()).equals(((ArrayList<AgentMapping>) inputList).get(inputList.size() - 1))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks, if selection is at the top of the list.
+	 * 
+	 * @param structuredSelection
+	 *            the selection
+	 * @return true if selection is at the top
+	 */
+	private boolean selectionIsAtTheTopOfTheList(StructuredSelection structuredSelection) {
+		if (!structuredSelection.isEmpty() && structuredSelection.getFirstElement() instanceof AgentMapping) {
+			if (((AgentMapping) structuredSelection.getFirstElement()).equals(((ArrayList<AgentMapping>) inputList).get(0))) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -551,7 +641,7 @@ public class AgentMappingPart extends AbstractFormPart implements IEnvironmentCh
 		} else {
 			tableViewer.getTable().setEnabled(true);
 			addButton.setEnabled(true);
-			managedForm.getForm().setMessage("Define agent mapping properties for the '" + cmrRepositoryDefinition.getName() + "' repository.", IMessageProvider.NONE);
+			managedForm.getForm().setMessage("Define agent mapping properties for the '" + cmrRepositoryDefinition.getName() + "' repository. Pay attention to the order of the agent mappings!", IMessageProvider.NONE);
 		}
 
 	}

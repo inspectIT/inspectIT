@@ -283,7 +283,6 @@ public class ConfigurationResolver {
 		stringBuilder.append("|-enhanced exception sensor: " + environment.getExceptionSensorConfig().isEnhanced() + "\n"); // NOPMD
 		stringBuilder.append("|-retransformation strategy: " + environment.getRetransformationStrategy().toString() + "\n"); // NOPMD
 
-
 		EndUserMonitoringConfig eumConfig = environment.getEumConfig();
 		stringBuilder.append("|-end user monitoring: " + eumConfig.isEumEnabled()); // NOPMD
 		if (eumConfig.isEumEnabled()) {
@@ -324,8 +323,7 @@ public class ConfigurationResolver {
 		AgentMappings agentMappings = configurationInterfaceManager.getAgentMappings();
 
 		if (CollectionUtils.isEmpty(agentMappings.getMappings())) {
-			throw new BusinessException("Determine an environment to use for the agent with name '" + agentName + "' and IP adress(es): " + definedIPs,
-					ConfigurationInterfaceErrorCodeEnum.NO_MAPPING_DEFINED);
+			throw new BusinessException("Determine an environment to use for the agent with name '" + agentName + "' and IP adress(es): " + definedIPs, ConfigurationInterfaceErrorCodeEnum.NO_MAPPING_DEFINED);
 		}
 
 		List<AgentMapping> mappings = new ArrayList<>(agentMappings.getMappings());
@@ -341,12 +339,11 @@ public class ConfigurationResolver {
 			throw new BusinessException("Determine an environment to use for the agent with name '" + agentName + "' and IP adress(es): " + definedIPs,
 					ConfigurationInterfaceErrorCodeEnum.ENVIRONMENT_FOR_AGENT_NOT_FOUND);
 		} else if (mappings.size() > 1) {
-			throw new BusinessException("Determine an environment to use for the agent with name '" + agentName + "' and IP adress(es): " + definedIPs,
-					ConfigurationInterfaceErrorCodeEnum.MORE_THAN_ONE_ENVIRONMENT_FOR_AGENT_FOUND);
-		} else {
-			String environmentId = mappings.get(0).getEnvironmentId();
-			return configurationInterfaceManager.getEnvironment(environmentId);
+			log.info("Multiple agent mappings for agent '" + agentName + "' were found. The agent is now using the mapping with the highest priority.");
+
 		}
+		String environmentId = mappings.get(0).getEnvironmentId();
+		return configurationInterfaceManager.getEnvironment(environmentId);
 	}
 
 	/**
