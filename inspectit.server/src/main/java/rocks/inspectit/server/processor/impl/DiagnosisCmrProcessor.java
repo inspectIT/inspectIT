@@ -1,25 +1,13 @@
 package rocks.inspectit.server.processor.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
 import javax.persistence.EntityManager;
 
-import org.influxdb.dto.Point.Builder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-import rocks.inspectit.server.diagnosis.service.DiagnosisService;
 import rocks.inspectit.server.diagnosis.service.IDiagnosisService;
-import rocks.inspectit.server.influx.builder.ProblemOccurrencePointBuilder;
-import rocks.inspectit.server.influx.dao.InfluxDBDao;
 import rocks.inspectit.server.processor.AbstractCmrDataProcessor;
 import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
-import rocks.inspectit.shared.cs.communication.data.diagnosis.ProblemOccurrence;
 
 /**
  * This processor starts the {@link #diagnosisService} and stores the results in
@@ -28,25 +16,11 @@ import rocks.inspectit.shared.cs.communication.data.diagnosis.ProblemOccurrence;
  * @author Claudio Waldvogel, Christian Voegele
  *
  */
-@Configuration
-public class DiagnosisCmrProcessor extends AbstractCmrDataProcessor implements Consumer<ProblemOccurrence> {
-
+public class DiagnosisCmrProcessor extends AbstractCmrDataProcessor {
 	/**
 	 * Diagnosis service interface.
 	 */
-	private IDiagnosisService diagnosisService;
-
-	/**
-	 * Builder needed to store the resulting ProblemOccurrence into influx.
-	 */
-	@Autowired
-	ProblemOccurrencePointBuilder problemOccurrencePointBuilder;
-
-	/**
-	 * {@link InfluxDBDao} to write to.
-	 */
-	@Autowired
-	InfluxDBDao influxDBDao;
+	IDiagnosisService diagnosisService;
 
 	/**
 	 * The value of the baseline defined in the configuration.
@@ -67,30 +41,11 @@ public class DiagnosisCmrProcessor extends AbstractCmrDataProcessor implements C
 	private boolean influxActive;
 
 	/**
-	 * Gets the diagnosis service initializing it with the configurations established.
-	 *
-	 * @param processor
-	 *            Diagnosis CMR processor.
-	 * @return Returns the diagnosis service.
-	 */
-	@Bean
-	@Autowired
-	public IDiagnosisService getDiagnosisService(DiagnosisCmrProcessor processor) {
-		List<String> rulesPackages = new ArrayList<>();
-		rulesPackages.add("rocks.inspectit.server.diagnosis.service.rules.impl");
-		IDiagnosisService diagnosisService = new DiagnosisService(this, rulesPackages, 2, 10L, 2);
-		processor.setDiagnosisService(diagnosisService);
-		return diagnosisService;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected void processData(DefaultData defaultData, EntityManager entityManager) {
-		if (diagnosisEnabled && influxActive) {
-			diagnosisService.diagnose((InvocationSequenceData) defaultData, baseline);
-		}
+		diagnosisService.diagnose((InvocationSequenceData) defaultData, baseline);
 	}
 
 	/**
@@ -102,19 +57,67 @@ public class DiagnosisCmrProcessor extends AbstractCmrDataProcessor implements C
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void accept(ProblemOccurrence problemOccurrence) {
-		Builder builder = problemOccurrencePointBuilder.getBuilder(problemOccurrence);
-		influxDBDao.insert(builder.build());
-	}
-
-	/**
 	 * @param diagnosisService
 	 *            Sets the diagnosis service.
 	 */
 	void setDiagnosisService(IDiagnosisService diagnosisService) {
 		this.diagnosisService = diagnosisService;
+	}
+
+	/**
+	 * Gets {@link #baseline}.
+	 *
+	 * @return {@link #baseline}
+	 */
+	public double getBaseline() {
+		return this.baseline;
+	}
+
+	/**
+	 * Sets {@link #baseline}.
+	 *
+	 * @param baseline
+	 *            New value for {@link #baseline}
+	 */
+	public void setBaseline(double baseline) {
+		this.baseline = baseline;
+	}
+
+	/**
+	 * Gets {@link #diagnosisEnabled}.
+	 *
+	 * @return {@link #diagnosisEnabled}
+	 */
+	public boolean isDiagnosisEnabled() {
+		return this.diagnosisEnabled;
+	}
+
+	/**
+	 * Sets {@link #diagnosisEnabled}.
+	 *
+	 * @param diagnosisEnabled
+	 *            New value for {@link #diagnosisEnabled}
+	 */
+	public void setDiagnosisEnabled(boolean diagnosisEnabled) {
+		this.diagnosisEnabled = diagnosisEnabled;
+	}
+
+	/**
+	 * Gets {@link #influxActive}.
+	 *
+	 * @return {@link #influxActive}
+	 */
+	public boolean isInfluxActive() {
+		return this.influxActive;
+	}
+
+	/**
+	 * Sets {@link #influxActive}.
+	 *
+	 * @param influxActive
+	 *            New value for {@link #influxActive}
+	 */
+	public void setInfluxActive(boolean influxActive) {
+		this.influxActive = influxActive;
 	}
 }

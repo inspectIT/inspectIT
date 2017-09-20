@@ -405,11 +405,10 @@
 	</section>
 	<section name="Diagnosis">
 		<properties>
-			<boolean-property name="Diagnosis enabled" default-value="false" server-restart-required="true" logical-name="diagnosis.enabled" advanced="false" description="If activated, the diagnosis functionality is active and executes the diagnosis service. If influx is active it will store the data as well." />
-			<long-property name="Baseline" default-value="1000" server-restart-required="true" logical-name="diagnosis.baseline" advanced="false" description="Baseline of the diagnosis service.">
+			<boolean-property name="Diagnosis enabled" default-value="false" server-restart-required="false" logical-name="diagnosis.enabled" advanced="false" description="If activated, every invocation will be diagnose in order to find performance problems. If influx is active it will store the results." />
+			<long-property name="Baseline" default-value="1000" server-restart-required="false" logical-name="diagnosis.baseline" advanced="false" description="Baseline value for diagnose. All the invocations over this value will be evaluated.">
 				<validators>
 					<isPositive />
-					<isGreaterOrEqual than="1000"/>
 				</validators>
 			</long-property>
 		</properties>

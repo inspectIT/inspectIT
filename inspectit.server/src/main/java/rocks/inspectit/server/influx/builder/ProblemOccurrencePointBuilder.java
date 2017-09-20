@@ -47,9 +47,9 @@ public class ProblemOccurrencePointBuilder {
 		builder.tag(Series.ProblemOccurrenceInformation.TAG_APPLICATION_NAME, cachedDataService.getApplicationForId(data.getApplicationNameIdent()).getName());
 		builder.tag(Series.ProblemOccurrenceInformation.TAG_BUSINESS_TRANSACTION_NAME,
 				cachedDataService.getBusinessTransactionForId(data.getApplicationNameIdent(), data.getBusinessTransactionNameIdent()).getName());
-		builder.tag(Series.ProblemOccurrenceInformation.TAG_GLOBAL_CONTEXT_METHOD_NAME, cachedDataService.getMethodIdentForId(data.getGlobalContext().getMethodIdent()).getMethodName());
-		builder.tag(Series.ProblemOccurrenceInformation.TAG_PROBLEM_CONTEXT_METHOD_NAME, cachedDataService.getMethodIdentForId(data.getProblemContext().getMethodIdent()).getMethodName());
-		builder.tag(Series.ProblemOccurrenceInformation.TAG_ROOTCAUSE_METHOD_NAME, cachedDataService.getMethodIdentForId(data.getRootCause().getMethodIdent()).getMethodName());
+		builder.tag(Series.ProblemOccurrenceInformation.TAG_PROBLEM_CONTEXT_METHOD_NAME,
+				cachedDataService.getMethodIdentForId(data.getProblemContext().getMethodIdent()).getFullyQualifiedMethodSignature());
+		builder.tag(Series.ProblemOccurrenceInformation.TAG_ROOTCAUSE_METHOD_NAME, cachedDataService.getMethodIdentForId(data.getRootCause().getMethodIdent()).getFullyQualifiedMethodSignature());
 		builder.tag(Series.ProblemOccurrenceInformation.TAG_CAUSESTRUCTURE_CAUSE_TYPE, data.getCauseType().toString());
 		builder.tag(Series.ProblemOccurrenceInformation.TAG_CAUSESTRUCTURE_SOURCE_TYPE, data.getSourceType().toString());
 	}
@@ -65,9 +65,7 @@ public class ProblemOccurrencePointBuilder {
 	protected void addFields(ProblemOccurrence data, Builder builder) {
 		builder.addField(Series.ProblemOccurrenceInformation.FIELD_INVOCATION_ROOT_DURATION, data.getRequestRoot().getDiagnosisTimerData().getDuration());
 		builder.addField(Series.ProblemOccurrenceInformation.FIELD_GLOBAL_CONTEXT_METHOD_EXCLUSIVE_TIME, data.getGlobalContext().getDiagnosisTimerData().getExclusiveDuration());
-		builder.addField(Series.ProblemOccurrenceInformation.FIELD_PROBLEM_CONTEXT_METHOD_EXCLUSIVE_TIME, data.getProblemContext().getDiagnosisTimerData().getExclusiveDuration());
 		builder.addField(Series.ProblemOccurrenceInformation.FIELD_ROOTCAUSE_METHOD_EXCLUSIVE_TIME, data.getRootCause().getAggregatedDiagnosisTimerData().getExclusiveDuration());
-		builder.addField(Series.ProblemOccurrenceInformation.FIELD_ROOTCAUSE_METHOD_EXCLUSIVE_COUNT, data.getRootCause().getAggregatedDiagnosisTimerData().getExclusiveCount());
 	}
 
 	/**

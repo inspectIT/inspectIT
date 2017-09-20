@@ -244,26 +244,15 @@ public interface Series {
 		 */
 		String FIELD_INVOCATION_ROOT_DURATION = "invocationSequenceRootDuration";
 
-
 		/**
 		 * GlobalContext exclusiveTime.
 		 */
 		String FIELD_GLOBAL_CONTEXT_METHOD_EXCLUSIVE_TIME = "globalContextMethodExclusiveTime";
 
 		/**
-		 * ProblemContext exclusiveTime.
-		 */
-		String FIELD_PROBLEM_CONTEXT_METHOD_EXCLUSIVE_TIME = "problemContextMethodExclusiveTime";
-
-		/**
 		 * RootCause exclusiveTime.
 		 */
 		String FIELD_ROOTCAUSE_METHOD_EXCLUSIVE_TIME = "rootCauseMethodExclusiveTime";
-
-		/**
-		 * RootCause exclusiveCount.
-		 */
-		String FIELD_ROOTCAUSE_METHOD_EXCLUSIVE_COUNT = "rootCauseMethodExclusiveCount";
 
 		/**
 		 * ApplicationName of ProblemOccurrence.
@@ -274,11 +263,6 @@ public interface Series {
 		 * BusinessContext of ProblemOccurrence.
 		 */
 		String TAG_BUSINESS_TRANSACTION_NAME = "businessTxName";
-
-		/**
-		 * Name of GlobalContext method.
-		 */
-		String TAG_GLOBAL_CONTEXT_METHOD_NAME = "globalContextMethodName";
 
 		/**
 		 * Name of ProblemContext method.

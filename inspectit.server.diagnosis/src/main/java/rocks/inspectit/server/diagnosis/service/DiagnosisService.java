@@ -80,7 +80,7 @@ public class DiagnosisService implements IDiagnosisService, Runnable {
 	private int numberOfSessionWorker;
 
 	/**
-	 * Consumer interface to perform the save in influx.
+	 * Consumer interface to perform operations in the problem occurrences after diagnose.
 	 */
 	Consumer<ProblemOccurrence> problemOccurrenceConsumer;
 
