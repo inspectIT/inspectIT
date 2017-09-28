@@ -50,8 +50,11 @@ public class EUMCorrelationCmrProcessor extends AbstractCmrDataProcessor {
 			if (details instanceof PageLoadRequest) {
 				long traceId = frontEndSpan.getSpanIdent().getTraceId();
 				long eumSpanId = frontEndSpan.getSpanIdent().getId();
-				EumSpanCorrelationTask correlationTask = new EumSpanCorrelationTask(traceId, eumSpanId);
-				correlationTask.schedule(true);
+				// if the ids are equal no correlation took place, e.g. because the html was cached.
+				if (traceId != eumSpanId) {
+					EumSpanCorrelationTask correlationTask = new EumSpanCorrelationTask(traceId, eumSpanId);
+					correlationTask.schedule(true);
+				}
 			}
 		}
 	}
