@@ -50,8 +50,12 @@ public class EUMCorrelationCmrProcessor extends AbstractCmrDataProcessor {
 			if (details instanceof PageLoadRequest) {
 				long traceId = frontEndSpan.getSpanIdent().getTraceId();
 				long eumSpanId = frontEndSpan.getSpanIdent().getId();
-				EumSpanCorrelationTask correlationTask = new EumSpanCorrelationTask(traceId, eumSpanId);
-				correlationTask.schedule(true);
+				// if the ids are equal no correlation takes place, e.g. because the html was
+				// cached.
+				if (traceId != eumSpanId) {
+					EumSpanCorrelationTask correlationTask = new EumSpanCorrelationTask(traceId, eumSpanId);
+					correlationTask.schedule(true);
+				}
 			}
 		}
 	}
@@ -71,7 +75,7 @@ public class EUMCorrelationCmrProcessor extends AbstractCmrDataProcessor {
 	}
 
 	/**
-	 * Reoccuring task to correlate EUM Pageload requests with their back end span. Reoccuring
+	 * Recurring task to correlate EUM Pageload requests with their back end span. Reoccuring
 	 * because the updating of the buffer happens async and we don't know hen which span arrives in
 	 * the CMR.
 	 *
@@ -84,8 +88,9 @@ public class EUMCorrelationCmrProcessor extends AbstractCmrDataProcessor {
 		 * Number of seconds to wait between trials of correlation.
 		 */
 		private static final int NUMBER_OF_SECONDS_BETWEEN_TRIALS = 3;
+
 		/**
-		 * The nubmer of retrials until the correlation is aborted for this trace.
+		 * The number of retrials until the correlation is aborted for this trace.
 		 */
 		private int retrialsLeft = 20;
 
