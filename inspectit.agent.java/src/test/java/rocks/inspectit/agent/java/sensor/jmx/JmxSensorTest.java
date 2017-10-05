@@ -19,10 +19,7 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
 
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
 import javax.management.MBeanAttributeInfo;
-import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerNotification;
@@ -31,8 +28,6 @@ import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import javax.management.QueryExp;
-import javax.management.ReflectionException;
-import javax.management.RuntimeMBeanException;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -42,7 +37,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.agent.java.config.IConfigurationStorage;
@@ -208,7 +202,7 @@ public class JmxSensorTest extends TestBase {
 			verify(mBeanServer).addNotificationListener(Matchers.<ObjectName> any(), Matchers.<NotificationListener> any(), Matchers.<NotificationFilter> any(), eq(null));
 			verifyNoMoreInteractions(mBeanServer);
 		}
-		
+
 		@Test
 		public void noClassCacheWarningShouldBeLoggedOnce() throws Exception {
 			when(connection.isConnected()).thenReturn(true);
@@ -361,8 +355,8 @@ public class JmxSensorTest extends TestBase {
 			verifyZeroInteractions(coreService);
 		}
 
-		@Test(dataProvider = "throwableProvider")
-		public void collectDataException(Class<? extends Throwable> throwableClass) throws Exception {
+		@Test
+		public void collectDataException() throws Exception {
 			long sensorType = 13L;
 			long platformIdent = 11L;
 			final long definitionDataIdentId = 17L;
@@ -393,7 +387,7 @@ public class JmxSensorTest extends TestBase {
 					return descriptors;
 				}
 			});
-			when(mBeanServer.getAttribute(objectName, testAttributeName)).thenThrow(throwableClass);
+			when(mBeanServer.getAttribute(objectName, testAttributeName)).thenThrow(Exception.class);
 			jmxSensor.mbeanServerAdded(mBeanServer);
 
 			// update twice
@@ -563,13 +557,6 @@ public class JmxSensorTest extends TestBase {
 			assertThat(valueCaptor.getValue().getJmxSensorDefinitionDataIdentId(), is(equalTo(definitionDataIdentId)));
 			assertThat(valueCaptor.getValue().getValue(), is("[1, 2, 3]"));
 		}
-
-		@DataProvider(name = "throwableProvider")
-		public Object[][] getThrowables() {
-			return new Object[][] { { AttributeNotFoundException.class }, { InstanceNotFoundException.class }, { MBeanException.class }, { ReflectionException.class },
-				{ RuntimeMBeanException.class } };
-		}
-
 	}
 
 	public static class HandleNotification extends JmxSensorTest {
