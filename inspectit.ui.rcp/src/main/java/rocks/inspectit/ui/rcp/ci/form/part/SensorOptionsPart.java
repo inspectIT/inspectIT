@@ -81,6 +81,16 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 	private Combo sessionCaptureCombo;
 
 	/**
+	 * Combo for the HTTP attribute extraction.
+	 */
+	private Combo attributesCaptureCombo;
+
+	/**
+	 * Combo for the HTTP parameter extraction.
+	 */
+	private Combo parametersCaptureCombo;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param formPage
@@ -191,6 +201,8 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 		exceptionSimple.addListener(SWT.Selection, dirtyListener);
 		exceptionEnhanced.addListener(SWT.Selection, dirtyListener);
 		sessionCaptureCombo.addListener(SWT.Selection, dirtyListener);
+		attributesCaptureCombo.addListener(SWT.Selection, dirtyListener);
+		parametersCaptureCombo.addListener(SWT.Selection, dirtyListener);
 	}
 
 	/**
@@ -209,6 +221,13 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 				if (sensorTypeConfig instanceof HttpSensorConfig) {
 					boolean sessionCapture = (boolean) sessionCaptureCombo.getData(sessionCaptureCombo.getText());
 					((HttpSensorConfig) sensorTypeConfig).setSessionCapture(sessionCapture);
+
+					boolean extractAttributes = (boolean) attributesCaptureCombo.getData(attributesCaptureCombo.getText());
+					((HttpSensorConfig) sensorTypeConfig).setAttributesCapture(extractAttributes);
+
+					boolean extractParameters = (boolean) parametersCaptureCombo.getData(parametersCaptureCombo.getText());
+					((HttpSensorConfig) sensorTypeConfig).setParametersCapture(extractParameters);
+
 					break;
 				}
 			}
@@ -261,11 +280,13 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 	 *            {@link FormToolkit}
 	 */
 	private void createHttpSensorConfigOptions(HttpSensorConfig httpSensorConfig, Composite parent, FormToolkit toolkit) {
-		// session capture
-		toolkit.createLabel(parent, "Session Capture:").setLayoutData(getIndentGridData());
-		sessionCaptureCombo = new Combo(parent, SWT.READ_ONLY);
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.horizontalSpan = 2;
+
+		// session capture
+		toolkit.createLabel(parent, "Session Capture:").setLayoutData(getIndentGridData());
+
+		sessionCaptureCombo = new Combo(parent, SWT.READ_ONLY);
 		sessionCaptureCombo.setLayoutData(layoutData);
 		sessionCaptureCombo.add("No");
 		sessionCaptureCombo.add("Yes");
@@ -273,12 +294,34 @@ public class SensorOptionsPart extends SectionPart implements IPropertyListener 
 		sessionCaptureCombo.setData("Yes", Boolean.TRUE);
 		toolkit.adapt(sessionCaptureCombo, false, false);
 		createInfoLabel(parent, toolkit,
-				"The Http sensor can capture information about the HTTP session that is currently associated with the respective request. In the current realization the http sensor always captures the session attributes at the start of the invocation. Session capturing will never open a new http session, but just read data from an existing one.");
-		if (httpSensorConfig.isSessionCapture()) {
-			sessionCaptureCombo.select(1);
-		} else {
-			sessionCaptureCombo.select(0);
-		}
+				"The HTTP sensor can capture information about the HTTP session that is currently associated with the respective request. In the current realization the HTTP sensor always captures the session attributes at the start of the invocation. Session capturing will never open a new http session, but just read data from an existing one.");
+		sessionCaptureCombo.select(httpSensorConfig.isSessionCapture() ? 1 : 0);
+
+		// attribute capture
+		toolkit.createLabel(parent, "Attribute Capture:").setLayoutData(getIndentGridData());
+
+		attributesCaptureCombo = new Combo(parent, SWT.READ_ONLY);
+		attributesCaptureCombo.setLayoutData(layoutData);
+		attributesCaptureCombo.add("No");
+		attributesCaptureCombo.add("Yes");
+		attributesCaptureCombo.setData("No", Boolean.FALSE);
+		attributesCaptureCombo.setData("Yes", Boolean.TRUE);
+		toolkit.adapt(attributesCaptureCombo, false, false);
+		createInfoLabel(parent, toolkit, "This option specifies whether the HTTP sensor should capture the HTTP request attributes.");
+		attributesCaptureCombo.select(httpSensorConfig.isAttributesCapture() ? 1 : 0);
+
+		// parameter capture
+		toolkit.createLabel(parent, "Parameter Capture:").setLayoutData(getIndentGridData());
+
+		parametersCaptureCombo = new Combo(parent, SWT.READ_ONLY);
+		parametersCaptureCombo.setLayoutData(layoutData);
+		parametersCaptureCombo.add("No");
+		parametersCaptureCombo.add("Yes");
+		parametersCaptureCombo.setData("No", Boolean.FALSE);
+		parametersCaptureCombo.setData("Yes", Boolean.TRUE);
+		toolkit.adapt(parametersCaptureCombo, false, false);
+		createInfoLabel(parent, toolkit, "This option specifies whether the HTTP sensor should capture the HTTP request parameters.");
+		parametersCaptureCombo.select(httpSensorConfig.isParametersCapture() ? 1 : 0);
 	}
 
 	/**

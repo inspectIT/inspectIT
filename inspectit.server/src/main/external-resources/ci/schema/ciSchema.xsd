@@ -648,6 +648,8 @@
       <xs:extension base="stringConstraintSensorConfig">
         <xs:sequence/>
         <xs:attribute name="sessionCapture" type="xs:boolean"/>
+        <xs:attribute name="attributesCapture" type="xs:boolean"/>
+        <xs:attribute name="parametersCapture" type="xs:boolean"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
