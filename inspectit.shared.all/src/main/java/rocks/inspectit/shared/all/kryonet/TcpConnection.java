@@ -13,6 +13,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -39,7 +40,7 @@ class TcpConnection {
 	 * Amount of output streams to create in the empty queue.
 	 */
 	// Added by ISE
-	private static final int MAX_OUTPUT_STREAMS = 10;
+	private static final int MAX_OUTPUT_STREAMS = 3;
 
 	/**
 	 * {@link StreamProvider} for creating streams.
@@ -243,27 +244,30 @@ class TcpConnection {
 			}
 
 			// calculate how much we have already written
-			long written = 0;
-			List<ByteBuffer> buffers = outputStream.getAllByteBuffers();
-			for (ByteBuffer buffer : buffers) {
-				written += buffer.position();
-			}
-
-			// then try to write until the end
-			while (written < outputStream.getTotalWriteSize()) {
-				long writeSize = socketChannel.write(buffers.toArray(new ByteBuffer[buffers.size()]));
-				if (0 == writeSize) {
-					// if we can not write any more we go out
-					break outerloop;
+			try {
+				long written = 0;
+				List<ByteBuffer> buffers = outputStream.getAllByteBuffers();
+				for (ByteBuffer buffer : buffers) {
+					written += buffer.position();
 				}
-				written += writeSize;
-			}
 
-			// here we have done with this output stream
-			// remove it from the write queue, prepare for new usage and return to the idle queue
-			writeQueue.remove(outputStream);
-			outputStream.prepare();
-			idleQueue.offer(outputStream);
+				// then try to write until the end
+				while (written < outputStream.getTotalWriteSize()) {
+					long writeSize = socketChannel.write(buffers.toArray(new ByteBuffer[buffers.size()]));
+					if (0 == writeSize) {
+						// if we can not write any more we go out
+						break outerloop;
+					}
+					written += writeSize;
+				}
+			} finally {
+				// here we have done with this output stream
+				// remove it from the write queue, prepare for new usage and return to the idle
+				// queue
+				writeQueue.remove(outputStream);
+				outputStream.prepare();
+				idleQueue.offer(outputStream);
+			}
 		}
 
 		return writeQueue.isEmpty();
@@ -281,14 +285,19 @@ class TcpConnection {
 		// acquire the output stream to write from the queue
 		ExtendedByteBufferOutputStream outputStream = null;
 		try {
-			outputStream = idleQueue.take();
+			outputStream = idleQueue.poll(5, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 			throw new IOException("Sending was interrupted.");
 		}
 
+		if (null == outputStream) {
+			throw new IOException("Sending failed. Timeout acquiring output stream for writing.");
+		}
+
 		// we are locking here as the serialization is not thread-safe
 		writeReentrantLock.lock();
+		boolean streamAddedToWriteQueue = false;
 		try {
 			int lengthLength = serialization.getLengthLength();
 			// make space for the length
@@ -299,7 +308,6 @@ class TcpConnection {
 			try {
 				serialization.write(connection, outputStream, object);
 			} catch (KryoNetException ex) { // NOPMD
-				outputStream.close();
 				throw new KryoNetException("Error serializing object of type: " + object.getClass().getName(), ex);
 			}
 			outputStream.flush(false);
@@ -315,6 +323,10 @@ class TcpConnection {
 			// Write to socket if no data was queued.
 			boolean hasQueuedData = hasQueuedData();
 			writeQueue.add(outputStream);
+
+			// mark as added to write queue
+			streamAddedToWriteQueue = true;
+
 			if (!hasQueuedData && !writeToSocket()) {
 				// A partial write, set OP_WRITE to be notified when more writing can occur.
 				selectionKey.interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
@@ -326,6 +338,10 @@ class TcpConnection {
 			lastWriteTime = System.currentTimeMillis();
 			return (int) writeSize;
 		} finally {
+			if (!streamAddedToWriteQueue) {
+				outputStream.prepare();
+				idleQueue.offer(outputStream);
+			}
 			writeReentrantLock.unlock();
 		}
 	}
