@@ -12,11 +12,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.management.AttributeNotFoundException;
 import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
 import javax.management.MBeanAttributeInfo;
-import javax.management.MBeanException;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerNotification;
 import javax.management.Notification;
@@ -24,7 +22,6 @@ import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
-import javax.management.RuntimeMBeanException;
 
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
@@ -276,22 +273,10 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean {
 				JmxSensorValueData jsvd = new JmxSensorValueData(descriptor.getId(), value, timestamp, platformid, sensorTypeIdent);
 
 				coreService.addDefaultData(jsvd);
-			} catch (AttributeNotFoundException e) {
+			} catch (Exception e) {
 				iterator.remove();
-				log.warn("JMX::AttributeNotFound. Attribute was not found. Maybe currently not available on the server. Attribute removed from the actively read list.", e);
-			} catch (InstanceNotFoundException e) {
-				iterator.remove();
-				log.warn("JMX::Instance not found. MBean may not be registered on the Server. Attribute removed from the actively read list.", e);
-			} catch (MBeanException e) {
-				iterator.remove();
-				log.warn("JMX::MBean. Undefined problem with the MBean. Attribute removed from the actively read list.", e);
-			} catch (ReflectionException e) {
-				iterator.remove();
-				log.warn("JMX::Reflection error. MBean may not be registered on the Server. Attribute removed from the actively read list.", e);
-			} catch (RuntimeMBeanException e) {
-				iterator.remove();
-				log.warn("JMX::Runtime error reading the attribute " + descriptor.getAttributeName() + " from the MBean " + descriptor.getmBeanObjectName()
-						+ ". Attribute removed from the actively read list.", e);
+				log.warn("JMX::Exception. An exception has been thrown during attempt to fetch the attribute " + descriptor.getAttributeName() + " from the MBean " + descriptor.getmBeanObjectName()
+				+ ". Attribute removed from the actively read list.", e);
 			}
 		}
 	}
