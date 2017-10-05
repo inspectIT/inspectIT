@@ -83,6 +83,16 @@ public class HttpHook implements IMethodHook {
 	private final boolean captureSessionData;
 
 	/**
+	 * Configuration setting if request attributes should be captured.
+	 */
+	private final boolean captureAttributes;
+
+	/**
+	 * Configuration setting if request parameters should be captured.
+	 */
+	private final boolean captureParameters;
+
+	/**
 	 * Expected name of the HttpServletRequest interface.
 	 */
 	private static final String HTTP_SERVLET_REQUEST_CLASS = "javax.servlet.http.HttpServletRequest";
@@ -150,6 +160,24 @@ public class HttpHook implements IMethodHook {
 			captureSessionData = true;
 		} else {
 			captureSessionData = false;
+		}
+
+		if ("true".equals(parameters.get("attributescapture"))) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Enabling attribute capturing for the http sensor");
+			}
+			captureAttributes = true;
+		} else {
+			captureAttributes = false;
+		}
+
+		if ("true".equals(parameters.get("parameterscapture"))) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Enabling parameter capturing for the http sensor");
+			}
+			captureParameters = true;
+		} else {
+			captureParameters = false;
 		}
 
 		try {
@@ -299,9 +327,14 @@ public class HttpHook implements IMethodHook {
 					data.getHttpInfo().setServerName(extractor.getServerName(servletRequestClass, httpServletRequest));
 					data.getHttpInfo().setServerPort(extractor.getServerPort(servletRequestClass, httpServletRequest));
 					data.getHttpInfo().setQueryString(extractor.getQueryString(servletRequestClass, httpServletRequest));
-					data.setParameters(extractor.getParameterMap(servletRequestClass, httpServletRequest));
-					data.setAttributes(extractor.getAttributes(servletRequestClass, httpServletRequest));
 					data.setHeaders(extractor.getHeaders(servletRequestClass, httpServletRequest));
+
+					if (captureAttributes) {
+						data.setAttributes(extractor.getAttributes(servletRequestClass, httpServletRequest));
+					}
+					if (captureParameters) {
+						data.setParameters(extractor.getParameterMap(servletRequestClass, httpServletRequest));
+					}
 					if (captureSessionData) {
 						data.setSessionAttributes(extractor.getSessionAttributes(servletRequestClass, httpServletRequest));
 					}

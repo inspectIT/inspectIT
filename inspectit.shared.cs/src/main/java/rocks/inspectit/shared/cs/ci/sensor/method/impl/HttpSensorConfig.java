@@ -35,6 +35,18 @@ public class HttpSensorConfig extends StringConstraintSensorConfig implements IM
 	private Boolean sessionCapture = Boolean.FALSE;
 
 	/**
+	 * Whether attributes should be captured.
+	 */
+	@XmlAttribute(name = "attributesCapture")
+	private Boolean attributesCapture = Boolean.FALSE;
+
+	/**
+	 * Whether parameters should be captured.
+	 */
+	@XmlAttribute(name = "parametersCapture")
+	private Boolean parametersCapture = Boolean.FALSE;
+
+	/**
 	 * No-args constructor.
 	 */
 	public HttpSensorConfig() {
@@ -83,6 +95,12 @@ public class HttpSensorConfig extends StringConstraintSensorConfig implements IM
 		if (sessionCapture) {
 			parameters.put("sessioncapture", "true");
 		}
+		if (attributesCapture) {
+			parameters.put("attributescapture", "true");
+		}
+		if (parametersCapture) {
+			parameters.put("parameterscapture", "true");
+		}
 
 		return parameters;
 	}
@@ -104,6 +122,44 @@ public class HttpSensorConfig extends StringConstraintSensorConfig implements IM
 	 */
 	public void setSessionCapture(boolean sessionCapture) {
 		this.sessionCapture = Boolean.valueOf(sessionCapture);
+	}
+
+	/**
+	 * Gets {@link #attributesCapture}.
+	 *
+	 * @return {@link #attributesCapture}
+	 */
+	public Boolean isAttributesCapture() {
+		return this.attributesCapture;
+	}
+
+	/**
+	 * Sets {@link #attributesCapture}.
+	 *
+	 * @param attributesCapture
+	 *            New value for {@link #attributesCapture}
+	 */
+	public void setAttributesCapture(Boolean attributesCapture) {
+		this.attributesCapture = attributesCapture;
+	}
+
+	/**
+	 * Gets {@link #parametersCapture}.
+	 *
+	 * @return {@link #parametersCapture}
+	 */
+	public Boolean isParametersCapture() {
+		return this.parametersCapture;
+	}
+
+	/**
+	 * Sets {@link #parametersCapture}.
+	 *
+	 * @param parametersCapture
+	 *            New value for {@link #parametersCapture}
+	 */
+	public void setParametersCapture(Boolean parametersCapture) {
+		this.parametersCapture = parametersCapture;
 	}
 
 }

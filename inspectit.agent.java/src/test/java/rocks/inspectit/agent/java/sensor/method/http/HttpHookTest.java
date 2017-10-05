@@ -95,7 +95,7 @@ public class HttpHookTest extends AbstractLogSupport {
 		when(threadMXBean.isThreadCpuTimeSupported()).thenReturn(true);
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		MapUtils.putAll(map, new String[][] { { "sessioncapture", "true" } });
+		MapUtils.putAll(map, new String[][] { { "sessioncapture", "true" }, { "attributescapture", "true" }, { "parameterscapture", "true" } });
 		httpHook = new HttpHook(timer, platformManager, map, threadMXBean);
 	}
 

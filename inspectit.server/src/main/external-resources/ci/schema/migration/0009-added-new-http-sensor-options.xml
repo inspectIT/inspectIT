@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+	<!-- In this update we'll add new attributes to the HTTP sensor config. -->
+
+	<!--Copy all -->
+	<xsl:template match="@*|node()">
+		<xsl:copy>
+			<xsl:apply-templates select="@*|node()" />
+		</xsl:copy>
+	</xsl:template>
+
+	<!--Added new attributes to http-sensor-config -->
+	<xsl:template match="http-sensor-config">
+		<xsl:copy>
+			<xsl:apply-templates select="@* | node()"/>
+			<xsl:attribute name="attributesCapture">false</xsl:attribute>
+			<xsl:attribute name="parametersCapture">false</xsl:attribute>
+		</xsl:copy>
+	</xsl:template>
+
+</xsl:stylesheet>
