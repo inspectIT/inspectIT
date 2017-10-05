@@ -291,7 +291,11 @@ public class JmxSensor implements IJmxSensor, InitializingBean, DisposableBean {
 			} catch (RuntimeMBeanException e) {
 				iterator.remove();
 				log.warn("JMX::Runtime error reading the attribute " + descriptor.getAttributeName() + " from the MBean " + descriptor.getmBeanObjectName()
-						+ ". Attribute removed from the actively read list.", e);
+				+ ". Attribute removed from the actively read list.", e);
+			} catch (Exception e) {
+				iterator.remove();
+				log.warn("JMX::Exception. An exception has been thrown during attempt to fetch the attribute " + descriptor.getAttributeName() + " from the MBean " + descriptor.getmBeanObjectName()
+				+ ". Attribute removed from the actively read list.", e);
 			}
 		}
 	}

@@ -566,8 +566,8 @@ public class JmxSensorTest extends TestBase {
 
 		@DataProvider(name = "throwableProvider")
 		public Object[][] getThrowables() {
-			return new Object[][] { { AttributeNotFoundException.class }, { InstanceNotFoundException.class }, { MBeanException.class }, { ReflectionException.class },
-				{ RuntimeMBeanException.class } };
+			return new Object[][] { { AttributeNotFoundException.class }, { InstanceNotFoundException.class }, { MBeanException.class }, { ReflectionException.class }, { RuntimeMBeanException.class },
+				{ UnsupportedOperationException.class } };
 		}
 
 	}
