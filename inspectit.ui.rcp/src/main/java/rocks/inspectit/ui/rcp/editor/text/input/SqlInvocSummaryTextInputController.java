@@ -32,6 +32,8 @@ import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
 import rocks.inspectit.shared.all.communication.data.SqlStatementData;
 import rocks.inspectit.shared.all.util.ObjectUtils;
 import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeElement;
+import rocks.inspectit.shared.cs.data.invocationtree.InvocationTreeUtil;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.InspectITImages;
 import rocks.inspectit.ui.rcp.editor.root.IRootEditor;
@@ -227,6 +229,8 @@ public class SqlInvocSummaryTextInputController extends AbstractTextInputControl
 			Object object = data.get(0);
 			if (object instanceof InvocationSequenceData) {
 				updateRepresentation((List<InvocationSequenceData>) data);
+			} else if (object instanceof InvocationTreeElement) {
+				updateRepresentation(InvocationTreeUtil.getInvocationSequences((InvocationTreeElement) object));
 			}
 		} else {
 			setDefaultText();
