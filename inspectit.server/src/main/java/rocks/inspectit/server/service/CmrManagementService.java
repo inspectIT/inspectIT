@@ -124,8 +124,14 @@ public class CmrManagementService implements ICmrManagementService {
 		CmrStatusData cmrStatusData = new CmrStatusData();
 		cmrStatusData.setCurrentBufferSize(buffer.getCurrentSize());
 		cmrStatusData.setMaxBufferSize(buffer.getMaxSize());
-		cmrStatusData.setBufferOldestElement(buffer.getOldestElement());
-		cmrStatusData.setBufferNewestElement(buffer.getNewestElement());
+		DefaultData oldestElement = buffer.getOldestElement();
+		if (null != oldestElement) {
+			cmrStatusData.setBufferOldestElementDate(new Date(oldestElement.getTimeStamp().getTime()));
+		}
+		DefaultData newestElement = buffer.getNewestElement();
+		if (null != newestElement) {
+			cmrStatusData.setBufferNewestElementDate(new Date(newestElement.getTimeStamp().getTime()));
+		}
 		cmrStatusData.setStorageDataSpaceLeft(storageManager.getBytesHardDriveOccupancyLeft());
 		cmrStatusData.setStorageMaxDataSpace(storageManager.getMaxBytesHardDriveOccupancy());
 		cmrStatusData.setWarnSpaceLeftActive(storageManager.isSpaceWarnActive());
