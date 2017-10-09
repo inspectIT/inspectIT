@@ -34,7 +34,6 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.progress.UIJob;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.communication.data.cmr.CmrStatusData;
 import rocks.inspectit.shared.all.externalservice.ExternalServiceStatus;
 import rocks.inspectit.shared.all.externalservice.ExternalServiceType;
@@ -427,9 +426,9 @@ public class CmrRepositoryPropertyForm extends AbstractPropertyForm {
 			String string = occupancy + "% (" + occMb + " / " + maxMb + ")";
 			bufferSize.setText(string);
 
-			DefaultData oldestData = cmrStatusData.getBufferOldestElement();
-			if (null != oldestData) {
-				bufferDate.setText(NumberFormatter.formatTime(oldestData.getTimeStamp().getTime()));
+			Date oldestDataData = cmrStatusData.getBufferOldestElementDate();
+			if (null != oldestDataData) {
+				bufferDate.setText(NumberFormatter.formatTime(oldestDataData.getTime()));
 			} else {
 				bufferDate.setText("-");
 			}
@@ -581,6 +580,7 @@ public class CmrRepositoryPropertyForm extends AbstractPropertyForm {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void dispose() {
 		super.dispose();
 		recordCountdownJob.cancel();
@@ -589,7 +589,7 @@ public class CmrRepositoryPropertyForm extends AbstractPropertyForm {
 
 	/**
 	 * Gets {@link CmrRepositoryDefinition}.
-	 * 
+	 *
 	 * @return {@link CmrRepositoryDefinition}
 	 */
 	public CmrRepositoryDefinition getCmrRepositoryDefinition() {
@@ -598,7 +598,7 @@ public class CmrRepositoryPropertyForm extends AbstractPropertyForm {
 
 	/**
 	 * Sets {@link CmrRepositoryDefinition}.
-	 * 
+	 *
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition}
 	 * @link {@link CmrRepositoryDefinition}

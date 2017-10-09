@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import rocks.inspectit.shared.all.communication.DefaultData;
 import rocks.inspectit.shared.all.externalservice.ExternalServiceStatus;
 import rocks.inspectit.shared.all.externalservice.ExternalServiceType;
 
@@ -33,14 +32,14 @@ public class CmrStatusData implements Serializable {
 	private long maxBufferSize;
 
 	/**
-	 * Oldest element in buffer.
+	 * Date of the oldest element in buffer.
 	 */
-	private DefaultData bufferOldestElement;
+	private Date bufferOldestElementDate;
 
 	/**
 	 * Newest element in the buffer.
 	 */
-	private DefaultData bufferNewestElement;
+	private Date bufferNewestElementDate;
 
 	/**
 	 * Amount of bytes that has left for storage data.
@@ -130,41 +129,41 @@ public class CmrStatusData implements Serializable {
 	}
 
 	/**
-	 * Gets {@link #bufferOldestElement}.
+	 * Gets {@link #bufferOldestElementDate}.
 	 *
-	 * @return {@link #bufferOldestElement}
+	 * @return {@link #bufferOldestElementDate}
 	 */
-	public DefaultData getBufferOldestElement() {
-		return bufferOldestElement;
+	public Date getBufferOldestElementDate() {
+		return this.bufferOldestElementDate;
 	}
 
 	/**
-	 * Sets {@link #bufferOldestElement}.
+	 * Sets {@link #bufferOldestElementDate}.
 	 *
-	 * @param bufferOldestElement
-	 *            New value for {@link #bufferOldestElement}
+	 * @param bufferOldestElementDate
+	 *            New value for {@link #bufferOldestElementDate}
 	 */
-	public void setBufferOldestElement(DefaultData bufferOldestElement) {
-		this.bufferOldestElement = bufferOldestElement;
+	public void setBufferOldestElementDate(Date bufferOldestElementDate) {
+		this.bufferOldestElementDate = bufferOldestElementDate;
 	}
 
 	/**
-	 * Gets {@link #bufferNewestElement}.
+	 * Gets {@link #bufferNewestElementDate}.
 	 *
-	 * @return {@link #bufferNewestElement}
+	 * @return {@link #bufferNewestElementDate}
 	 */
-	public DefaultData getBufferNewestElement() {
-		return bufferNewestElement;
+	public Date getBufferNewestElementDate() {
+		return this.bufferNewestElementDate;
 	}
 
 	/**
-	 * Sets {@link #bufferNewestElement}.
+	 * Sets {@link #bufferNewestElementDate}.
 	 *
-	 * @param bufferNewestElement
-	 *            New value for {@link #bufferNewestElement}
+	 * @param bufferNewestElementDate
+	 *            New value for {@link #bufferNewestElementDate}
 	 */
-	public void setBufferNewestElement(DefaultData bufferNewestElement) {
-		this.bufferNewestElement = bufferNewestElement;
+	public void setBufferNewestElementDate(Date bufferNewestElementDate) {
+		this.bufferNewestElementDate = bufferNewestElementDate;
 	}
 
 	/**
@@ -307,8 +306,8 @@ public class CmrStatusData implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((bufferNewestElement == null) ? 0 : bufferNewestElement.hashCode());
-		result = (prime * result) + ((bufferOldestElement == null) ? 0 : bufferOldestElement.hashCode());
+		result = (prime * result) + ((bufferNewestElementDate == null) ? 0 : bufferNewestElementDate.hashCode());
+		result = (prime * result) + ((bufferOldestElementDate == null) ? 0 : bufferOldestElementDate.hashCode());
 		result = (prime * result) + (canWriteMore ? 1231 : 1237);
 		result = (prime * result) + (int) (currentBufferSize ^ (currentBufferSize >>> 32));
 		result = (prime * result) + ((databaseSize == null) ? 0 : databaseSize.hashCode());
@@ -336,18 +335,18 @@ public class CmrStatusData implements Serializable {
 			return false;
 		}
 		CmrStatusData other = (CmrStatusData) obj;
-		if (bufferNewestElement == null) {
-			if (other.bufferNewestElement != null) {
+		if (bufferNewestElementDate == null) {
+			if (other.bufferNewestElementDate != null) {
 				return false;
 			}
-		} else if (!bufferNewestElement.equals(other.bufferNewestElement)) {
+		} else if (!bufferNewestElementDate.equals(other.bufferNewestElementDate)) {
 			return false;
 		}
-		if (bufferOldestElement == null) {
-			if (other.bufferOldestElement != null) {
+		if (bufferOldestElementDate == null) {
+			if (other.bufferOldestElementDate != null) {
 				return false;
 			}
-		} else if (!bufferOldestElement.equals(other.bufferOldestElement)) {
+		} else if (!bufferOldestElementDate.equals(other.bufferOldestElementDate)) {
 			return false;
 		}
 		if (canWriteMore != other.canWriteMore) {
