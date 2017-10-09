@@ -29,6 +29,7 @@ import rocks.inspectit.shared.cs.storage.LocalStorageData;
 import rocks.inspectit.ui.rcp.InspectIT;
 import rocks.inspectit.ui.rcp.editor.ISubView;
 import rocks.inspectit.ui.rcp.editor.SubViewFactory;
+import rocks.inspectit.ui.rcp.editor.banner.InfluxBannerSubView;
 import rocks.inspectit.ui.rcp.editor.composite.AbstractCompositeSubView;
 import rocks.inspectit.ui.rcp.editor.inputdefinition.InputDefinition;
 import rocks.inspectit.ui.rcp.editor.preferences.IPreferencePanel;
@@ -485,6 +486,12 @@ public abstract class AbstractRootEditor extends EditorPart implements IRootEdit
 				AbstractCompositeSubView compositeSubView = (AbstractCompositeSubView) subView;
 				List<ISubView> allViews = compositeSubView.getSubViews();
 				if ((null != allViews) && (allViews.size() > 1)) {
+					// make sure we don't have influxDB wrapper
+					for (ISubView subView : allViews) {
+						if (InfluxBannerSubView.class.isInstance(subView)) {
+							return false;
+						}
+					}
 					return true;
 				}
 			}
