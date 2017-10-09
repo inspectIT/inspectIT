@@ -110,7 +110,7 @@ public abstract class OpenUrlHandler extends AbstractHandler {
 		 */
 		@Override
 		protected String getUrlString(ExecutionEvent event) {
-			return "mailto:support.inspectit@novatec-gmbh.de&subject=Support%20needed";
+			return "http://www.inspectit.rocks/support/";
 		}
 	}
 
