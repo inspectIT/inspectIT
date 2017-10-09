@@ -530,15 +530,16 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 	 * @param cmrRepositoryDefinition
 	 *            {@link CmrRepositoryDefinition} which should be removed
 	 */
-	public void removeRepositoryFromExpandedList(CmrRepositoryDefinition cmrRepositoryDefinition) {
-		Object object = null;
-		for (Iterator<Object> iterator = expandedList.iterator(); iterator.hasNext();) {
-			object = iterator.next();
-			if (object instanceof DeferredAgentsComposite) {
-				DeferredAgentsComposite daComp = (DeferredAgentsComposite) object;
-				if (daComp.getCmrRepositoryDefinition().equals(cmrRepositoryDefinition)) {
-					iterator.remove();
-					break;
+	public synchronized void removeRepositoryFromExpandedList(CmrRepositoryDefinition cmrRepositoryDefinition) {
+		if (CollectionUtils.isNotEmpty(expandedList)) {
+			for (Iterator<Object> iterator = expandedList.iterator(); iterator.hasNext();) {
+				Object object = iterator.next();
+				if (object instanceof DeferredAgentsComposite) {
+					DeferredAgentsComposite daComp = (DeferredAgentsComposite) object;
+					if (daComp.getCmrRepositoryDefinition().equals(cmrRepositoryDefinition)) {
+						iterator.remove();
+						break;
+					}
 				}
 			}
 		}
@@ -621,7 +622,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 			StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
 			treeViewer.refresh(toUpdate, true);
 
-			if (null != lastSelectedAgentLeaf && !selection.isEmpty() && selection.getFirstElement() instanceof AgentLeaf) {
+			if ((null != lastSelectedAgentLeaf) && !selection.isEmpty() && (selection.getFirstElement() instanceof AgentLeaf)) {
 				for (DeferredAgentsComposite composite : inputList) {
 					if (composite.getChildren().contains(lastSelectedAgentLeaf)) {
 						treeViewer.expandToObjectAndSelect(lastSelectedAgentLeaf, 0);
@@ -1020,7 +1021,7 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 	/**
 	 * Updates the properties of the {@link AbstractPropertyForm} and switches between
 	 * {@link AgentPropertyForm} and {@link CmrRepositoryPropertyForm}.
-	 * 
+	 *
 	 * @author Tobias Angerstein
 	 *
 	 */
@@ -1037,7 +1038,8 @@ public class RepositoryManagerView extends ViewPart implements IRefreshableView,
 					// is still loading the agents
 					return;
 				}
-				if ((firstElement instanceof ICmrRepositoryProvider && propertyForm instanceof CmrRepositoryPropertyForm) || (firstElement instanceof AgentLeaf && propertyForm instanceof AgentPropertyForm)) {
+				if (((firstElement instanceof ICmrRepositoryProvider) && (propertyForm instanceof CmrRepositoryPropertyForm))
+						|| ((firstElement instanceof AgentLeaf) && (propertyForm instanceof AgentPropertyForm))) {
 					propertyForm.selectionChanged(event);
 				} else {
 					propertyForm.dispose();
