@@ -175,7 +175,7 @@ jar {
 	archivesBaseName = distJarName
 	
 	// to create manifest we need all libs that are dependencies
-	def allLibs = [configurations.serverProd, project(':inspectit.shared.all').jar.outputs, project(':inspectit.shared.cs').jar.outputs]
+	def allLibs = [configurations.serverProd, project(':inspectit.shared.all').jar.outputs, project(':inspectit.shared.cs').jar.outputs, project(':inspectit.server.diagnosis').jar.outputs]
 	def manifestLibs = ''
 	allLibs.each { lib ->
 		manifestLibs += lib.files.collect{'libs/' + it.name}.iterator().join(' ')
