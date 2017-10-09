@@ -9,8 +9,8 @@ ext {
 	serverJavaOpts64bit = '-XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=80 -XX:+UseCMSInitiatingOccupancyOnly -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+DisableExplicitGC -XX:SurvivorRatio=5 -XX:TargetSurvivorRatio=90 -XX:AutoBoxCacheMax=20000 -XX:BiasedLockingStartupDelay=500 -XX:+UseFPUForSpilling -XX:+UseFastAccessorMethods -XX:+UseBiasedLocking -XX:+UseCompressedOops -XX:+HeapDumpOnOutOfMemoryError'
 	serverJavaOptsLinux = '-server'
 	serverJavaOptsWin = ''
-	serverJavaLocgcLinux = '-verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -XX:+PrintTenuringDistribution -XX:+UseGCLogFileRotation -Xloggc:logs/gc.log'
-	serverJavaLocgcWin = '-verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -XX:+PrintTenuringDistribution -XX:+UseGCLogFileRotation -Xloggc:logs\\\\gc.log'
+	serverJavaLocgcLinux = '-verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -XX:+PrintTenuringDistribution -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=20M -Xloggc:logs/gc.log'
+	serverJavaLocgcWin = '-verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -XX:+PrintTenuringDistribution -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=20M -Xloggc:logs\\\\gc.log'
 
 	serverJavaOptsForTests = ['-XX:+UseConcMarkSweepGC', '-XX:CMSInitiatingOccupancyFraction=80', '-XX:+UseCMSInitiatingOccupancyOnly', '-XX:+UseParNewGC', '-XX:+CMSParallelRemarkEnabled', '-XX:+DisableExplicitGC', '-XX:SurvivorRatio=4', '-XX:TargetSurvivorRatio=90', '-XX:BiasedLockingStartupDelay=500', '-XX:+UseFastAccessorMethods', '-XX:+UseBiasedLocking', '-XX:+HeapDumpOnOutOfMemoryError']
 }
