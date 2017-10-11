@@ -69,6 +69,11 @@ public final class UnderlyingSystemInfo {
 		JAVA_1_8,
 
 		/**
+		 * Denotes Java version 1.9.
+		 */
+		JAVA_1_9,
+
+		/**
 		 * Denotes unknown java version.
 		 */
 		OTHER;
@@ -197,6 +202,8 @@ public final class UnderlyingSystemInfo {
 			return JavaVersion.JAVA_1_7;
 		} else if (getJavaVersionMatches("1.8")) {
 			return JavaVersion.JAVA_1_8;
+		} else if (getJavaVersionMatches("9")) {
+			return JavaVersion.JAVA_1_9;
 		} else {
 			return JavaVersion.OTHER;
 		}
