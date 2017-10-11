@@ -23,36 +23,71 @@ We hope that together we can build an alternative to the (great!) commercial too
 | --- | --- | --- | --- |
 | ![](http://inspectit.github.io/inspectIT/screenshots/grafanaDashboards.png) | ![](http://inspectit.github.io/inspectIT/screenshots/EUM_Summary.png) | ![](http://inspectit.github.io/inspectIT/screenshots/EUM_One_page.png) | ![](http://inspectit.github.io/inspectIT/screenshots/EUM-3rd-Party.png) |
 
-- Browser end user monitoring: automatic injection of a JavaScript agent into your application HTML code.
-- Detailed trace representation (invocation sequence) for every request containing all interactions with the systems.
-- Support for inter-JVM communication based on HTTP and JMS: each trace shows interaction with all correlated JVMs.
-- Automatic enrichment of every trace with HTTP information, SQL queries, exceptions, parameters and many more.
-- Detailed exception capturing allows to analyze functional problems.
-- Drill down into one invocation sequence to find and analyze problematic requests.
-- Drill up from an problem within an invocation sequence and find business-related information like the URL the  request was sent to.
-- Aggregated views for every captured metric, e.g. [aggregated SQL overview](http://inspectit.github.io/inspectIT/screenshots/sqlOverviewWithStorage.png) shows metrics aggregated by SQL query.
-- Talk in invocation sequences! Store, import and export detailed traces with all information instead of noting down which clicks lead to a problem.
-- Monitor your hardware metrics like cpu, memory or threads.
-- Monitor metrics exposed via JMX beans.
-- Dynamic instrumentation - change measurement points on the monitored JVM without a need for a restart.
-- Have a view on your applications and business transactions by using flexible business context definition.
-- Integration with influxDB and Grafana for easy monitoring with pre-defined dashboards.
-- Simple e-mail alerting is possible on all long-term monitoring data.
-- No more config files! We have graphical configuration interfaces for everything.
-- Provides SDK that implements opentracing.io API. All user spans are combined with inspectIT measurements in a trace.
-- Easy and transparent integration of the inspectIT agents in the application.
-- Reproducing problems is a thing of the past! You already have a trace representation that you can analyze.
-- Optimized for low overhead.
-- Production-proof: Used for >8 years at our customers and during performance firefights.
-- One server is enough for most environments supporting a big number of agents.
-- RESTful API for automation and integration with other tools.
-- Fully adaptable user interface.
-- Extensible system: Missing something? Write your own extensions.
+- [**Browser end user monitoring**](#user-content-end-user-monitoring): automatic injection of a JavaScript agent into your application HTML code.
+- [**Trace based**](#user-content-tracing)
+  - Detailed trace representation (invocation sequence) for every request containing all interactions with the systems.
+  - Support for inter-JVM communication based on HTTP and JMS: each trace shows interaction with all correlated JVMs.
+  - Support for Browser-JVM communication: correlation between user actions in the browser and backend requests.
+  - Provides SDK that implements opentracing.io API. All user spans are combined with inspectIT measurements in a trace.
+- **Variety of information**
+  - Automatic enrichment of every trace with HTTP information, SQL queries, exceptions, parameters and many more.
+  - Detailed exception capturing allows to analyze functional problems.
+  - Drill down into one invocation sequence to find and analyze problematic requests.
+  - Drill up from an problem within an invocation sequence and find business-related information like the URL the request was sent to.
+  - Aggregated views for every captured metric, e.g. [aggregated SQL overview](http://inspectit.github.io/inspectIT/screenshots/sqlOverviewWithStorage.png) shows metrics aggregated by SQL query.
+- **Business context**
+  - Have a view on your applications and business transactions by using flexible business context definition.
+  - Monitor and analyze requests by the functional use-case.
+- **Monitoring**
+  - Monitor your hardware metrics like cpu, memory or threads.
+  - Monitor metrics exposed via JMX beans.
+  - Integration with influxDB and Grafana for easy monitoring with [pre-defined dashboards](https://github.com/inspectit-labs/dashboards).
+  - Simple e-mail alerting is possible on all long-term monitoring data.
+- [**Diagnosis service**](#user-content-automatic-performance-problems-detection) for automatic performance problem detection. 
+- **RESTful API** for automation and integration with other tools.
+- **Usability at its best**.
+  - Easy and transparent [integration](#user-content-integration) of the inspectIT agent in the application (compatible with Java 6, 7, 8, and 9).
+  - Set of [out-of-the-box profiles](#user-content-out-of-the-box-profiles) for quick start.
+  - Dynamic instrumentation - change measurement points on the monitored JVM without a need for a restart.
+  - Store, import and export detailed traces with all information instead of noting down which clicks lead to a problem.
+  - No more config files! We have fully adaptable graphical configuration interfaces for everything.
+- **Optimized for low overhead.**
+  - Production-proof: Used for >8 years at our customers and during performance firefights.
+  - One server is enough for most environments supporting a medium number of agents.
+- **Extensible system**: Missing something? Write your own extensions.
 
 ### End user monitoring
-<sup>:warning: *Experimental*</sup>
+<sup>:warning: *We recommend to first try this feature on your system configuration in a safe environment.*</sup>
 
 The inspectIT 1.8 line comes with a new feature: Browser End User Experience Monitoring (EUM). This feature allows you to measure the performance at the browser side of the end user, giving more detailed insights than the back-end instrumentation alone. This is done by automatically injecting a JavaScript agent into your applications HTML code, which in turn captures relevant metrics at the client-side and sends them back to inspectIT using AJAX Requests. Check the [official feature documentation](https://inspectit-performance.atlassian.net/wiki/display/DOC18/Working+with+End+User+Monitoring) to help you started.
+
+### Tracing
+[![OpenTracing Badge](https://img.shields.io/badge/OpenTracing-enabled-blue.svg)](http://opentracing.io)
+
+The inspectIT provides set of remote sensors that enable to trace and correlate calls made between JVM nodes in your application. Such traces can provide end-to-end view on the user request execution even if it spans over multiple JVMs. In addition, if end-user-monitoring is active inspectIT is capable of correlating browser side actions like page loads or clicks to resulting back-end requests ([screenshot](http://inspectit.github.io/inspectIT/screenshots/tracingOverview.png)).
+
+The remote tracing is done in inspectIT as per [opentracing.io specification](https://github.com/opentracing/specification/blob/master/specification.md), with similar data model based on spans. However, inspectIT combines the captured spans with the invocation sequences created on each JVM and is able to provide not only the landscape of the JVMs that interacted, but also provide details on the invocation execution during complete trace. This includes all the data that is captured as part of invocation sequences, as SQL statements, exceptions, method calls, etc. Visit the [official feature documentation](https://inspectit-performance.atlassian.net/wiki/display/DOC18/Working+with+remote+traces) to help you started.
+
+With a set of default inspectIT profiles you can getting automatic tracing for following technologies and libraries without a need to change your source code nor dependencies:
+
+- Java
+  - Executor service (Java 6+)
+- HTTP
+  - Java Servlet API (version 2.x & up)
+  - Java URL Connection (Java 6+)
+  - Apache HttpComponents Client (version 4.x)
+  - Apache HttpComponents Async Client (version 4.x)
+  - Jetty Http Client (versions 7.x & 8.x)
+  - Spring Rest Template (version 3.x & 4.x)	
+- JMS
+  - Java Message Service API (version 1.x & up)
+
+The inspectIT does provide the [opentracing.io API](http://opentracing.io/) implementation as part of it's [inspectit.agent.java.sdk](inspectit.agent.java.sdk) project, thus users of the opentracng.io API can easily switch to inspectIT as the implementation.
+
+### Automatic performance problems detection 
+<sup>:warning: *Experimental*</sup>
+
+As the result of the [diagnoseIT research project](https://diagnoseit.github.io/), inspectIT version line 1.8 offers integrated diagnosis service for automatic performance problems detection. Service can analyze the requests lasting longer than a user-defined baseline and provide insights on where the performance problems can be. The overview of found problems is provided in the [monitoring dashboards](https://github.com/inspectit-labs/dashboards). Visit the [official feature documentation](https://inspectit-performance.atlassian.net/wiki/display/DOC18/Working+with+automatic+problem+diagnosis) to help you started.
 
 ### Out-of-the-box profiles
 inspectIT already ships with out-of-the-box instrumentations for commonly used Java technologies. If your technology is missing, you can easily instrument it manually (or [request a new profile](https://inspectit-performance.atlassian.net/wiki/display/CONTRIBUTE/Add+feature+requests)). We currently support:
@@ -67,10 +102,11 @@ inspectIT already ships with out-of-the-box instrumentations for commonly used J
   - JDBC
   - JPA
   - Hibernate
-- Remote communication
+- Remote communication tracing
   - HTTP
   - JMS
 - Other
+  - Executor service tracing
   - Apache Struts
   - Apache MyFaces Trinidad
 
