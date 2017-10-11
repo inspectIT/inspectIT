@@ -3,6 +3,7 @@ package rocks.inspectit.agent.java.util;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.Matchers.theInstance;
 
 import org.mockito.InjectMocks;
@@ -169,11 +170,12 @@ public class ReflectionCacheTest extends AbstractLogSupport {
 
 		@Test
 		public void normalUsageJavaClass() {
-			String testInstance = "test";
+			Exception testCause = new Exception();
+			Exception testInstance = new Exception(testCause);
 
-			char[] field = (char[]) cache.getField(String.class, "value", testInstance, null);
+			Exception cause = (Exception) cache.getField(testInstance.getClass(), "cause", testInstance, null);
 
-			assertThat(field, is(equalTo(testInstance.toCharArray())));
+			assertThat(cause, is(sameInstance(testCause)));
 		}
 
 		@Test

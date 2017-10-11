@@ -38,6 +38,11 @@
 		<Class name="rocks.inspectit.agent.java.event.AgentMessagesReceivedEvent" />
 		<Bug pattern="SE_BAD_FIELD" />
 	</Match>
+	<Match>
+		<Class name="rocks.inspectit.agent.java.javaagent.JavaAgent$InspectItClassLoader" />
+		<Method name="getParentClassLoader" />
+		<Bug pattern="REC_CATCH_EXCEPTION" />
+	</Match>
 	<!-- Agent ignores END -->
 
 	<!-- CMR ignores START -->
