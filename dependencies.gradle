@@ -175,14 +175,19 @@ dependencies {
 
 	/** inspectit.agent.java */
 	agentJavaProd (
-		'org.ow2.asm:info.novatec.asm-all-shaded:5.0.4',
+		'org.ow2.asm:info.novatec.asm-all-shaded:6.0',
 		'commons-codec:commons-codec:1.6',
 		'org.slf4j:jcl-over-slf4j:1.7.21',
 		'org.slf4j:log4j-over-slf4j:1.7.21',
 		'ch.qos.logback:logback-core:1.1.7',
 		'ch.qos.logback:logback-classic:1.1.7',
 		'piccolo:piccolo:1.0.3',
-		'com.lmax:disruptor:3.3.6'
+		'com.lmax:disruptor:3.3.6',
+		
+		// javax.annotation-api needed as we use them, but they are removed in java 9 from java.base module
+		// currently only to support starting agent with Java 9, but needed if we want to start 
+		// any other component with Java 9 in future
+		'javax.annotation:javax.annotation-api:1.2'
 	)
 
 	/** inspectit.server */

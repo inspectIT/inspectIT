@@ -169,11 +169,12 @@ public class ReflectionCacheTest extends AbstractLogSupport {
 
 		@Test
 		public void normalUsageJavaClass() {
-			String testInstance = "test";
+			Exception testCause = new Exception();
+			Exception testInstance = new Exception(testCause);
 
-			char[] field = (char[]) cache.getField(String.class, "value", testInstance, null);
+			Object cause = cache.getField(testInstance.getClass(), "cause", testInstance, null);
 
-			assertThat(field, is(equalTo(testInstance.toCharArray())));
+			assertThat(cause, is((Object) testCause));
 		}
 
 		@Test
