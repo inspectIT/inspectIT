@@ -9,7 +9,7 @@ The *Java Agent SDK* is a library provided by the open source APM tool [inspectI
 <dependency>
     <groupId>rocks.inspectit</groupId>
     <artifactId>agent-java-sdk</artifactId>
-    <version>1.7.11</version>
+    <version>1.8.5</version>
 </dependency>
 ```
 
