@@ -336,7 +336,7 @@ public class JavaAgent implements ClassFileTransformer {
 		 *            the urls to search for the classes for.
 		 */
 		public InspectItClassLoader(URL[] urls) {
-			super(urls, null);
+			super(urls, getParentClassLoader());
 
 			try {
 				File agentFile = getInspectItAgentJarFileLocation();
@@ -363,6 +363,23 @@ public class JavaAgent implements ClassFileTransformer {
 			// ignore the following classes because they are used in the JavaAgent class
 			ignoreClasses.add(JavaAgent.class.getName());
 			ignoreClasses.add(InspectItClassLoader.class.getName());
+		}
+
+		/**
+		 * @return Returns the platform class loader if we are on Java 9 as this one can load needed
+		 *         Java classes for us.
+		 */
+		private static ClassLoader getParentClassLoader() {
+			try {
+				String javaVersion = System.getProperty("java.version");
+				if ("9".equals(javaVersion)) {
+					return (ClassLoader) ClassLoader.class.getDeclaredMethod("getPlatformClassLoader", new Class[] {}).invoke(null);
+				} else {
+					return null;
+				}
+			} catch (Exception e) {
+				return null;
+			}
 		}
 
 		/**
