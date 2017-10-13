@@ -834,19 +834,24 @@ public class StorageManagerView extends ViewPart implements CmrRepositoryChangeL
 	public void setShowProperties(boolean show) {
 		if (show) {
 			StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
+			boolean created = false;
 			if (!selection.isEmpty()) {
 				if (selection.getFirstElement() instanceof StorageLeaf) {
 					StorageLeaf storageLeaf = ((StorageLeaf) selection.getFirstElement());
 					storagePropertyForm = new StorageDataPropertyForm(mainComposite, storageLeaf);
 					storagePropertyForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+					created = true;
 				} else if (selection.getFirstElement() instanceof LocalStorageLeaf) {
 					IStorageData storageData = ((LocalStorageLeaf) selection.getFirstElement()).getLocalStorageData();
 					storagePropertyForm = new StorageDataPropertyForm(mainComposite, null, storageData);
 					storagePropertyForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-				} else {
-					storagePropertyForm = new StorageDataPropertyForm(mainComposite);
-					storagePropertyForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+					created = true;
 				}
+			}
+
+			if (!created) {
+				storagePropertyForm = new StorageDataPropertyForm(mainComposite);
+				storagePropertyForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			}
 
 			treeViewer.addSelectionChangedListener(storagePropertyForm);
