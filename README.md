@@ -1,6 +1,11 @@
-[![Website](https://img.shields.io/badge/Website-visit-brightgreen.svg)](http://www.inspectit.rocks)  [![Twitter Account](https://img.shields.io/badge/Twitter-follow%20us-brightgreen.svg)](https://twitter.com/inspectIT_APM) [![Gitter](https://img.shields.io/badge/Gitter-join%20chat-brightgreen.svg)](https://gitter.im/inspectIT/chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![LinkedIn Group](https://img.shields.io/badge/LinkedIn-join%20group-brightgreen.svg)](https://www.linkedin.com/groups/inspectIT-APM-User-Group-8533412/about) [![YouTube](https://img.shields.io/badge/YouTube-watch-brightgreen.svg)](https://www.youtube.com/channel/UCcE-Z-Yndk67PjObEn071fg) [![Build Status](http://jenkins.inspectit.rocks/buildStatus/icon?job=inspectIT%20-%20Integration)](http://jenkins.inspectit.rocks/job/inspectIT%20-%20Integration/) [![License](https://img.shields.io/badge/License-Apache/v2-brightgreen.svg)](https://github.com/inspectIT/inspectIT/blob/master/license/LICENSE.txt)
+[![Twitter Account](https://img.shields.io/badge/Twitter-follow%20us-brightgreen.svg)](https://twitter.com/inspectIT_APM) [![Gitter](https://img.shields.io/badge/Gitter-join%20chat-brightgreen.svg)](https://gitter.im/inspectIT/chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![LinkedIn Group](https://img.shields.io/badge/LinkedIn-join%20group-brightgreen.svg)](https://www.linkedin.com/groups/inspectIT-APM-User-Group-8533412/about) [![YouTube](https://img.shields.io/badge/YouTube-watch-brightgreen.svg)](https://www.youtube.com/channel/UCcE-Z-Yndk67PjObEn071fg) [![Build Status](http://jenkins.inspectit.rocks/buildStatus/icon?job=inspectIT%20-%20Integration)](http://jenkins.inspectit.rocks/job/inspectIT%20-%20Integration/) [![License](https://img.shields.io/badge/License-Apache/v2-brightgreen.svg)](https://github.com/inspectIT/inspectIT/blob/master/license/LICENSE.txt)
 
-## Overview
+# inspectIT
+
+> inspectIT is an open source APM (Application Performance Management) tool for analyzing Java (EE) applications.
+
+[![inspectIT](https://raw.githubusercontent.com/inspectit-labs/awesome-inspectit/master/media/inspectit.png)](http://www.inspectit.rocks/)
+
 [inspectIT](http://inspectit.rocks) is the leading Open Source APM (application performance management) tool for monitoring and analyzing your Java(EE) software applications.
 
 Various sensors capture end-to-end information for every request from the end user, to the business tier all the way to the backends. inspectIT is based on an application-centric, business-focused approach, where each technical request is mapped to an application and to a business use-case. With inspectIT you always know about the health of your software and can easily analyze any problems that arise.
@@ -149,6 +154,10 @@ The [end user documentation](https://inspectit-performance.atlassian.net/wiki/di
 
 ## Getting Started
 
+For an easy and quick start using inspectIT check out the following video resources.
+
+[![alte](http://inspectit.github.io/inspectIT/video-thumbnails/thumb_integration_spring_java.png "Integration of the open source APM tool inspectIT into a Sping Boot or Java application")](https://www.youtube.com/watch?v=x0fnYSANIFk)
+
 ### Download
 [![Docker Pulls](https://img.shields.io/docker/pulls/inspectit/inspectit.svg?label=docker%20pulls%20UI)](https://registry.hub.docker.com/u/inspectit/inspectit/) [![Docker Pulls](https://img.shields.io/docker/pulls/inspectit/cmr.svg?label=docker%20pulls%20CMR)](https://registry.hub.docker.com/u/inspectit/cmr/) [![Docker Pulls](https://img.shields.io/docker/pulls/inspectit/jetty.svg?label=docker%20pulls%20agent%20jetty)](https://registry.hub.docker.com/u/inspectit/jetty/) [![Docker Pulls](https://img.shields.io/docker/pulls/inspectit/jboss.svg?label=docker%20pulls%20agent%20jboss)](https://registry.hub.docker.com/u/inspectit/jboss/) [![Docker Pulls](https://img.shields.io/docker/pulls/inspectit/glassfish.svg?label=docker%20pulls%20agent%20glassfish)](https://registry.hub.docker.com/u/inspectit/glassfish/) [![Docker Pulls](https://img.shields.io/docker/pulls/inspectit/tomcat.svg?label=docker%20pulls%20agent%20tomcat)](https://registry.hub.docker.com/u/inspectit/tomcat/)
 
@@ -159,6 +168,9 @@ You can get inspectIT in three ways:
 
 ### Try it out with a demo application!
 You can easily test the inspectIT features by starting out the demo based on the Spring Petclinic application. The repository [inspectit-labs/spring-petclinic-microservices](https://github.com/inspectit-labs/spring-petclinic-microservices) contains start-up and docker scripts that integrate the inspectIT into the famous Spring demo app. Also check the [inspectit-labs/workshop](https://github.com/inspectit-labs/workshop) for the in-detail step-by-step workshop that will walk you through using inspectIT with the demo application. 
+
+### Awesome inspectIT List
+You can find a lot more helpful resources in the [inspectIT's awesome list](https://github.com/inspectit-labs/awesome-inspectit).
 
 ## Get in Touch
 [![Twitter Account](https://img.shields.io/badge/Twitter-follow%20us-brightgreen.svg)](https://twitter.com/inspectIT_APM) [![Gitter](https://img.shields.io/badge/Gitter-join%20chat-brightgreen.svg)](https://gitter.im/inspectIT/chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![LinkedIn Group](https://img.shields.io/badge/LinkedIn-join%20group-brightgreen.svg)](https://www.linkedin.com/groups/inspectIT-APM-User-Group-8533412/about) 
