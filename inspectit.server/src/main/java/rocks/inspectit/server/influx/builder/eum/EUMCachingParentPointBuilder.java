@@ -183,37 +183,37 @@ public class EUMCachingParentPointBuilder implements IPointBuilder<DefaultData> 
 				AbstractEUMPointBuilder responsibleBuilder = subBuilders.get(details.getClass());
 
 				if (responsibleBuilder != null) {
+					synchronized (details) {
+						boolean requiredDataIsPresent = true;
+						PageLoadRequest plr = null;
+						UserSessionInfo sessInfo = null;
 
-					boolean requiredDataIsPresent = true;
-					PageLoadRequest plr = null;
-					UserSessionInfo sessInfo = null;
+						Long sessId = span.getSessionId();
+						Long tabId = span.getTabId();
+						Pair<Long, Long> plrSessionTabId = new Pair<Long, Long>(sessId, tabId);
 
-					Long sessId = span.getSessionId();
-					Long tabId = span.getTabId();
-					Pair<Long, Long> plrSessionTabId = new Pair<Long, Long>(sessId, tabId);
+						if (responsibleBuilder.requiresPageLoadRequest()) {
+							plr = pageLoadRequestCache.getIfPresent(plrSessionTabId);
+							if (plr == null) { // data is not yet available
+								requiredDataIsPresent = false;
+								missingPageLoadRequestsMap.put(plrSessionTabId, details);
+							}
+						}
+						if (responsibleBuilder.requiresSessionMetaInfo() && isBrowserInfoCaptured) {
+							sessInfo = sessionInfoCache.getIfPresent(sessId);
+							// data is not yet available but might come in the future
+							if ((sessInfo == null)) {
+								requiredDataIsPresent = false;
+								missingSessionInfosMap.put(sessId, details);
+							}
+						}
 
-					if (responsibleBuilder.requiresPageLoadRequest()) {
-						plr = pageLoadRequestCache.getIfPresent(plrSessionTabId);
-						if (plr == null) { // data is not yet available
-							requiredDataIsPresent = false;
-							missingPageLoadRequestsMap.put(plrSessionTabId, details);
+						if (requiredDataIsPresent) {
+							result.addAll(responsibleBuilder.build(sessInfo, plr, details));
+						} else {
+							pendingDataPoints.put(details, new Pair<>(isBrowserInfoCaptured, responsibleBuilder));
 						}
 					}
-					if (responsibleBuilder.requiresSessionMetaInfo() && isBrowserInfoCaptured) {
-						sessInfo = sessionInfoCache.getIfPresent(sessId);
-						// data is not yet available but might come in the future
-						if ((sessInfo == null)) {
-							requiredDataIsPresent = false;
-							missingSessionInfosMap.put(sessId, details);
-						}
-					}
-
-					if (requiredDataIsPresent) {
-						result.addAll(responsibleBuilder.build(sessInfo, plr, details));
-					} else {
-						pendingDataPoints.put(details, new Pair<>(isBrowserInfoCaptured, responsibleBuilder));
-					}
-
 				}
 			}
 		}
@@ -287,34 +287,36 @@ public class EUMCachingParentPointBuilder implements IPointBuilder<DefaultData> 
 		synchronized (element) {
 			@SuppressWarnings("rawtypes")
 			Pair<Boolean, AbstractEUMPointBuilder> pair = pendingDataPoints.getIfPresent(element);
-			@SuppressWarnings("rawtypes")
-			AbstractEUMPointBuilder responsibleBuilder = pair.getSecond();
-			boolean isBrowserInfoCaptured = pair.getFirst();
+			if (pair != null) {
+				@SuppressWarnings("rawtypes")
+				AbstractEUMPointBuilder responsibleBuilder = pair.getSecond();
+				boolean isBrowserInfoCaptured = pair.getFirst();
 
-			boolean requiredDataIsPresent = true;
-			PageLoadRequest plr = null;
-			UserSessionInfo sessInfo = null;
+				boolean requiredDataIsPresent = true;
+				PageLoadRequest plr = null;
+				UserSessionInfo sessInfo = null;
 
-			Long sessId = element.getOwningSpan().getSessionId();
-			Long tabId = element.getOwningSpan().getTabId();
-			Pair<Long, Long> plrSessionTabId = new Pair<Long, Long>(sessId, tabId);
+				Long sessId = element.getOwningSpan().getSessionId();
+				Long tabId = element.getOwningSpan().getTabId();
+				Pair<Long, Long> plrSessionTabId = new Pair<Long, Long>(sessId, tabId);
 
-			if (responsibleBuilder.requiresPageLoadRequest()) {
-				plr = pageLoadRequestCache.getIfPresent(plrSessionTabId);
-				if (plr == null) { // data is not yet available
-					requiredDataIsPresent = false;
+				if (responsibleBuilder.requiresPageLoadRequest()) {
+					plr = pageLoadRequestCache.getIfPresent(plrSessionTabId);
+					if (plr == null) { // data is not yet available
+						requiredDataIsPresent = false;
+					}
 				}
-			}
-			if (responsibleBuilder.requiresSessionMetaInfo() && isBrowserInfoCaptured) {
-				sessInfo = sessionInfoCache.getIfPresent(sessId);
-				if ((sessInfo == null)) { // data is not yet available
-					requiredDataIsPresent = false;
+				if (responsibleBuilder.requiresSessionMetaInfo() && isBrowserInfoCaptured) {
+					sessInfo = sessionInfoCache.getIfPresent(sessId);
+					if ((sessInfo == null)) { // data is not yet available
+						requiredDataIsPresent = false;
+					}
 				}
-			}
 
-			if (requiredDataIsPresent) {
-				dataPointsToWrite.addAll(responsibleBuilder.build(sessInfo, plr, element));
-				pendingDataPoints.invalidate(element);
+				if (requiredDataIsPresent) {
+					dataPointsToWrite.addAll(responsibleBuilder.build(sessInfo, plr, element));
+					pendingDataPoints.invalidate(element);
+				}
 			}
 		}
 	}
