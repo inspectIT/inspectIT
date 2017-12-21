@@ -111,6 +111,39 @@ public class ProblemOccurrence {
 	}
 
 	/**
+	 * Constructor that creates new ProblemOccurrence based on InvocationSequenceData.
+	 *
+	 * @param requestRoot
+	 *            root InvocationSequenceData
+	 * @param globalContext
+	 *            identified globalContext
+	 * @param rootCause
+	 *            identified rootCauses
+	 */
+	public ProblemOccurrence(final InvocationSequenceData requestRoot, final InvocationSequenceData globalContext, final RootCause rootCause) {
+
+		if (requestRoot == null) {
+			throw new IllegalArgumentException("requestRoot cannot be null");
+		}
+		if (globalContext == null) {
+			throw new IllegalArgumentException("globalContext cannot be null");
+		}
+		if (rootCause == null) {
+			throw new IllegalArgumentException("rootCause cannot be null");
+		}
+
+		this.businessTransactionNameIdent = requestRoot.getBusinessTransactionId();
+		this.applicationNameIdent = requestRoot.getApplicationId();
+		this.requestRoot = new InvocationIdentifier(requestRoot);
+		this.globalContext = new InvocationIdentifier(globalContext);
+		this.problemContext = new InvocationIdentifier(globalContext);
+		this.rootCause = rootCause;
+		this.causeType = CauseType.SINGLE;
+		this.sourceType = SourceType.TIMERDATA;
+	}
+
+
+	/**
 	 * Gets {@link #requestRoot}.
 	 *
 	 * @return {@link #requestRoot}

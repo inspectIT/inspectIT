@@ -38,6 +38,19 @@ public class TimeWastingOperationsRule {
 	private static final Double PROPORTION = 0.8;
 
 	/**
+	 * In case a method is called more often than this value, it is considered to be a
+	 * TimeWastingOperation.
+	 */
+	private static final int METHODEXECUTIONCOUNT = 15;
+
+	/**
+	 * In case the baseline is below that threshold set it to this value. Otherwise there is the
+	 * danger that the problem diagnosis can take too long. Then too many methods with low response
+	 * time can be detected as TimeWastingOperation.
+	 */
+	private static final int MINIMUMBASELINE = 100;
+
+	/**
 	 * An {@link AggregatedDiagnosisData} is considered as a
 	 * <code>Time Wasting Operation</code>, if the cumulative exclusive time of already found
 	 * <code>Time Wasting Operations</code> subtracted from the <code>Global Context's</code>
@@ -60,6 +73,7 @@ public class TimeWastingOperationsRule {
 	 */
 	@Action(resultTag = RuleConstants.DIAGNOSIS_TAG_TIME_WASTING_OPERATIONS, resultQuantity = Action.Quantity.MULTIPLE)
 	public List<AggregatedDiagnosisData> action() {
+		setMinimumBaseline();
 		return getTimeWastingOperations(getTimeWastingOperationsCandidatesSorted());
 	}
 
@@ -80,7 +94,8 @@ public class TimeWastingOperationsRule {
 
 		for (AggregatedDiagnosisData aggregatedDiagnosisData : timeWastingOperationsCandidates) {
 			double aggregatedDataExclusiveDuration = aggregatedDiagnosisData.getAggregatedDiagnosisTimerData().getExclusiveDuration();
-			if ((sumExecTime < (PROPORTION * globalContextDuration)) || (aggregatedDataExclusiveDuration > baseline)) {
+			if ((sumExecTime < (PROPORTION * globalContextDuration)) || (aggregatedDataExclusiveDuration > baseline)
+					|| (aggregatedDiagnosisData.getAggregatedDiagnosisTimerData().getExclusiveCount() >= METHODEXECUTIONCOUNT)) {
 				// increase sumExclusiveTime by duration of Time Wasting Operation.
 				sumExecTime += aggregatedDataExclusiveDuration;
 				timeWastingOperations.add(aggregatedDiagnosisData);
@@ -102,11 +117,6 @@ public class TimeWastingOperationsRule {
 	private List<AggregatedDiagnosisData> getTimeWastingOperationsCandidatesSorted() {
 		List<InvocationSequenceData> invocationSequenceDataList = asInvocationSequenceDataList(Collections.singletonList(globalContext),
 				new ArrayList<InvocationSequenceData>(globalContext.getNestedSequences().size()));
-
-		// in case no timer are available, this should not happen. Just to be sure.
-		if (invocationSequenceDataList.isEmpty()) {
-			invocationSequenceDataList.add(globalContext);
-		}
 
 		DiagnosisDataAggregationPerformer diagnosisDataAggregationPerformer = new DiagnosisDataAggregationPerformer();
 		diagnosisDataAggregationPerformer.aggregateInvocationSequenceDataList(invocationSequenceDataList);
@@ -147,5 +157,14 @@ public class TimeWastingOperationsRule {
 			asInvocationSequenceDataList(invocationSequence.getNestedSequences(), resultList);
 		}
 		return resultList;
+	}
+
+	/**
+	 * Ensures that the baseline is not below 100ms. Otherwise the diagnosis can take too long.
+	 */
+	private void setMinimumBaseline() {
+		if (baseline < MINIMUMBASELINE) {
+			baseline = MINIMUMBASELINE;
+		}
 	}
 }

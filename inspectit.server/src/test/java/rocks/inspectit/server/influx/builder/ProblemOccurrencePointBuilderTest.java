@@ -49,7 +49,8 @@ public class ProblemOccurrencePointBuilderTest extends AbstractPointBuilderTest 
 		static final String ROOTCAUSE_METHOD_NAME = "rootCauseMethodName";
 		static final String PROBLEM_CONTEXT_FQN = PROBLEM_CONTEXT_METHOD_NAME + "Fqn";
 		static final String ROOT_CAUSE_FQN = ROOTCAUSE_METHOD_NAME + "Fqn";
-		static final String METHOD_FQN = "methodFqn";
+		static final String METHOD = "methodName";
+		static final String FQN = "fqn";
 		static final double EXCLUSIVE_DURATION = 50;
 		static final double DURATION = 100;
 		static final String UNKNOWN_METHOD_FQN = "Unknown method";
@@ -102,7 +103,8 @@ public class ProblemOccurrencePointBuilderTest extends AbstractPointBuilderTest 
 			when(aggregatedDiagnosisTimerData.getExclusiveDuration()).thenReturn(EXCLUSIVE_DURATION);
 			when(applicationData.getName()).thenReturn(APPLICATION_NAME);
 			when(businessTransactionData.getName()).thenReturn(BUSINESS_TX);
-			when(methodIdent.getFullyQualifiedMethodSignature()).thenReturn(METHOD_FQN);
+			when(methodIdent.getMethodName()).thenReturn(METHOD);
+			when(methodIdent.getFQN()).thenReturn(FQN);
 		}
 
 		@Test
@@ -118,8 +120,8 @@ public class ProblemOccurrencePointBuilderTest extends AbstractPointBuilderTest 
 			assertThat(getPrecision(pointBuilder), is(TimeUnit.MILLISECONDS));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_APPLICATION_NAME, String.valueOf(APPLICATION_NAME)));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_BUSINESS_TRANSACTION_NAME, String.valueOf(BUSINESS_TX)));
-			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_PROBLEM_CONTEXT_METHOD_NAME, METHOD_FQN));
-			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_ROOTCAUSE_METHOD_NAME, METHOD_FQN));
+			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_PROBLEM_CONTEXT_METHOD_NAME, FQN + "." + METHOD));
+			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_ROOTCAUSE_METHOD_NAME, FQN + "." + METHOD));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_CAUSESTRUCTURE_CAUSE_TYPE, String.valueOf(causeType)));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_CAUSESTRUCTURE_SOURCE_TYPE, String.valueOf(sourceType)));
 			assertThat(getFields(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.FIELD_INVOCATION_ROOT_DURATION, DURATION));
@@ -142,8 +144,8 @@ public class ProblemOccurrencePointBuilderTest extends AbstractPointBuilderTest 
 			assertThat(getPrecision(pointBuilder), is(TimeUnit.MILLISECONDS));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_APPLICATION_NAME, String.valueOf(ApplicationDefinition.UNKNOWN_APP)));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_BUSINESS_TRANSACTION_NAME, String.valueOf(BUSINESS_TX)));
-			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_PROBLEM_CONTEXT_METHOD_NAME, METHOD_FQN));
-			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_ROOTCAUSE_METHOD_NAME, METHOD_FQN));
+			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_PROBLEM_CONTEXT_METHOD_NAME, FQN + "." + METHOD));
+			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_ROOTCAUSE_METHOD_NAME, FQN + "." + METHOD));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_CAUSESTRUCTURE_CAUSE_TYPE, String.valueOf(causeType)));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_CAUSESTRUCTURE_SOURCE_TYPE, String.valueOf(sourceType)));
 			assertThat(getFields(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.FIELD_INVOCATION_ROOT_DURATION, DURATION));
@@ -164,8 +166,8 @@ public class ProblemOccurrencePointBuilderTest extends AbstractPointBuilderTest 
 			assertThat(getPrecision(pointBuilder), is(TimeUnit.MILLISECONDS));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_APPLICATION_NAME, String.valueOf(APPLICATION_NAME)));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_BUSINESS_TRANSACTION_NAME, String.valueOf(BUSINESS_TX)));
-			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_PROBLEM_CONTEXT_METHOD_NAME, METHOD_FQN));
-			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_ROOTCAUSE_METHOD_NAME, METHOD_FQN));
+			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_PROBLEM_CONTEXT_METHOD_NAME, FQN + "." + METHOD));
+			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_ROOTCAUSE_METHOD_NAME, FQN + "." + METHOD));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_CAUSESTRUCTURE_CAUSE_TYPE, String.valueOf(causeType)));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_CAUSESTRUCTURE_SOURCE_TYPE, String.valueOf(sourceType)));
 			assertThat(getFields(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.FIELD_INVOCATION_ROOT_DURATION, DURATION));
@@ -188,8 +190,8 @@ public class ProblemOccurrencePointBuilderTest extends AbstractPointBuilderTest 
 			assertThat(getPrecision(pointBuilder), is(TimeUnit.MILLISECONDS));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_APPLICATION_NAME, String.valueOf(APPLICATION_NAME)));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_BUSINESS_TRANSACTION_NAME, BusinessTransactionDefinition.UNKNOWN_BUSINESS_TX));
-			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_PROBLEM_CONTEXT_METHOD_NAME, METHOD_FQN));
-			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_ROOTCAUSE_METHOD_NAME, METHOD_FQN));
+			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_PROBLEM_CONTEXT_METHOD_NAME, FQN + "." + METHOD));
+			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_ROOTCAUSE_METHOD_NAME, FQN + "." + METHOD));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_CAUSESTRUCTURE_CAUSE_TYPE, String.valueOf(causeType)));
 			assertThat(getTags(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.TAG_CAUSESTRUCTURE_SOURCE_TYPE, String.valueOf(sourceType)));
 			assertThat(getFields(pointBuilder), hasEntry(Series.ProblemOccurrenceInformation.FIELD_INVOCATION_ROOT_DURATION, DURATION));

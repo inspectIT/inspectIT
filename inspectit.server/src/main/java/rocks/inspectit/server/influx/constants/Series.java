@@ -255,6 +255,11 @@ public interface Series {
 		String FIELD_ROOTCAUSE_METHOD_EXCLUSIVE_TIME = "rootCauseMethodExclusiveTime";
 
 		/**
+		 * RootCause exclusiveCount.
+		 */
+		String FIELD_ROOTCAUSE_METHOD_EXCLUSIVE_COUNT = "rootCauseMethodExclusiveCount";
+
+		/**
 		 * ApplicationName of ProblemOccurrence.
 		 */
 		String TAG_APPLICATION_NAME = "applicationName";

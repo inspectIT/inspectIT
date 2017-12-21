@@ -69,13 +69,13 @@ public class ProblemOccurrencePointBuilder {
 		String problemContextName = UNKNOWN_METHOD_FQN;
 		MethodIdent problemContextMethodIdent = cachedDataService.getMethodIdentForId(data.getProblemContext().getMethodIdent());
 		if (problemContextMethodIdent != null) {
-			problemContextName = problemContextMethodIdent.getFullyQualifiedMethodSignature();
+			problemContextName = problemContextMethodIdent.getFQN() + "." + problemContextMethodIdent.getMethodName();
 		}
 
 		String rootCauseName = UNKNOWN_METHOD_FQN;
 		MethodIdent rootCauseMethodIdent = cachedDataService.getMethodIdentForId(data.getRootCause().getMethodIdent());
 		if (rootCauseMethodIdent != null) {
-			rootCauseName = rootCauseMethodIdent.getFullyQualifiedMethodSignature();
+			rootCauseName = rootCauseMethodIdent.getFQN() + "." + rootCauseMethodIdent.getMethodName();
 		}
 
 		builder.tag(Series.ProblemOccurrenceInformation.TAG_APPLICATION_NAME, applicationName);
@@ -98,6 +98,7 @@ public class ProblemOccurrencePointBuilder {
 		builder.addField(Series.ProblemOccurrenceInformation.FIELD_INVOCATION_ROOT_DURATION, data.getRequestRoot().getDiagnosisTimerData().getDuration());
 		builder.addField(Series.ProblemOccurrenceInformation.FIELD_GLOBAL_CONTEXT_METHOD_EXCLUSIVE_TIME, data.getGlobalContext().getDiagnosisTimerData().getExclusiveDuration());
 		builder.addField(Series.ProblemOccurrenceInformation.FIELD_ROOTCAUSE_METHOD_EXCLUSIVE_TIME, data.getRootCause().getAggregatedDiagnosisTimerData().getExclusiveDuration());
+		builder.addField(Series.ProblemOccurrenceInformation.FIELD_ROOTCAUSE_METHOD_EXCLUSIVE_COUNT, data.getRootCause().getAggregatedDiagnosisTimerData().getExclusiveCount());
 	}
 
 	/**
