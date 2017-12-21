@@ -7,6 +7,7 @@ import rocks.inspectit.server.diagnosis.engine.rule.annotation.TagValue;
 import rocks.inspectit.server.diagnosis.engine.tag.Tags;
 import rocks.inspectit.server.diagnosis.service.rules.RuleConstants;
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.cs.communication.data.InvocationSequenceDataHelper;
 
 /**
  * Rule for detecting the <code>Global Context</code> within an {@link InvocationSequenceData}. The
@@ -78,7 +79,8 @@ public class GlobalContextRule {
 
 	/**
 	 * Returns child of passed {@link InvocationSequenceData} with the highest duration. Returns
-	 * <code>null</code> if the passed {@link InvocationSequenceData} has no children.
+	 * <code>null</code> if the passed {@link InvocationSequenceData} has no children. Only children
+	 * with TimerData are relevant.
 	 *
 	 * @param currentInvocationSequence
 	 *            The current investigated invocation sequence in the invocation tree.
@@ -88,11 +90,13 @@ public class GlobalContextRule {
 		boolean first = true;
 		InvocationSequenceData childWithMaxDuration = null;
 		for (InvocationSequenceData child : currentInvocationSequence.getNestedSequences()) {
-			if (first) {
-				childWithMaxDuration = child;
-				first = false;
-			} else if (child.getDuration() > childWithMaxDuration.getDuration()) {
-				childWithMaxDuration = child;
+			if (InvocationSequenceDataHelper.getTimerDataOrSQLData(child) != null) {
+				if (first) {
+					childWithMaxDuration = child;
+					first = false;
+				} else if (child.getDuration() > childWithMaxDuration.getDuration()) {
+					childWithMaxDuration = child;
+				}
 			}
 		}
 		return childWithMaxDuration;

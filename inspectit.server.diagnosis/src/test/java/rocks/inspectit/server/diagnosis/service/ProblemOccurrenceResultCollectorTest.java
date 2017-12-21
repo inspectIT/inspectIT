@@ -151,28 +151,6 @@ public class ProblemOccurrenceResultCollectorTest extends TestBase {
 		}
 
 		@Test(expectedExceptions = RuntimeException.class)
-		public void collectProblemInstancesWithRuntimeExceptionGlobalContextNotFound() {
-			CauseStructure causeStructure = new CauseStructure(CauseType.SINGLE, SourceType.TIMERDATA);
-			AggregatedDiagnosisData aggregatedInvocationSequenceData = null;
-			aggregatedInvocationSequenceData = DiagnosisDataAggregator.getInstance().getAggregatedDiagnosisData(secondChildSequence);
-			DiagnosisDataAggregator.getInstance().aggregate(aggregatedInvocationSequenceData, secondChildSequence);
-			Multimap<String, Tag> tagMap = ArrayListMultimap.create();
-			Tag tagOne = new Tag("Test", secondChildSequence, Tags.rootTag(secondChildSequence));
-			Tag tagTwo = new Tag(RuleConstants.DIAGNOSIS_TAG_PROBLEM_CONTEXT, new CauseCluster(secondChildSequence), tagOne);
-			Tag tagThree = new Tag(RuleConstants.DIAGNOSIS_TAG_PROBLEM_CAUSE, aggregatedInvocationSequenceData, tagTwo);
-			Tag tagFour = new Tag(RuleConstants.DIAGNOSIS_TAG_CAUSE_STRUCTURE, causeStructure, tagThree);
-			tagMap.put("D", tagFour);
-			when(sessionContext.getInput()).thenReturn(secondChildSequence);
-			when(sessionContext.getStorage()).thenReturn(storage);
-			when(storage.mapTags(TagState.LEAF)).thenReturn(tagMap);
-			ProblemOccurrenceResultCollector problemInstanceResultCollector = new ProblemOccurrenceResultCollector();
-
-			List<ProblemOccurrence> problemOccurrence = problemInstanceResultCollector.collect(sessionContext);
-
-			assertThat(problemOccurrence, hasSize(0));
-		}
-
-		@Test(expectedExceptions = RuntimeException.class)
 		public void collectProblemInstancesWithRuntimeExceptionProblemContext() {
 			CauseStructure causeStructure = new CauseStructure(CauseType.SINGLE, SourceType.TIMERDATA);
 			AggregatedDiagnosisData aggregatedInvocationSequenceData = null;
@@ -181,28 +159,6 @@ public class ProblemOccurrenceResultCollectorTest extends TestBase {
 			Multimap<String, Tag> tagMap = ArrayListMultimap.create();
 			Tag tagOne = new Tag(RuleConstants.DIAGNOSIS_TAG_GLOBAL_CONTEXT, secondChildSequence, Tags.rootTag(secondChildSequence));
 			Tag tagTwo = new Tag(RuleConstants.DIAGNOSIS_TAG_PROBLEM_CONTEXT, "Test", tagOne);
-			Tag tagThree = new Tag(RuleConstants.DIAGNOSIS_TAG_PROBLEM_CAUSE, aggregatedInvocationSequenceData, tagTwo);
-			Tag tagFour = new Tag(RuleConstants.DIAGNOSIS_TAG_CAUSE_STRUCTURE, causeStructure, tagThree);
-			tagMap.put("D", tagFour);
-			when(sessionContext.getInput()).thenReturn(secondChildSequence);
-			when(sessionContext.getStorage()).thenReturn(storage);
-			when(storage.mapTags(TagState.LEAF)).thenReturn(tagMap);
-			ProblemOccurrenceResultCollector problemInstanceResultCollector = new ProblemOccurrenceResultCollector();
-
-			List<ProblemOccurrence> problemOccurrence = problemInstanceResultCollector.collect(sessionContext);
-
-			assertThat(problemOccurrence, hasSize(0));
-		}
-
-		@Test(expectedExceptions = RuntimeException.class)
-		public void collectProblemInstancesWithRuntimeExceptionProblemContextNotFound() {
-			CauseStructure causeStructure = new CauseStructure(CauseType.SINGLE, SourceType.TIMERDATA);
-			AggregatedDiagnosisData aggregatedInvocationSequenceData = null;
-			aggregatedInvocationSequenceData = DiagnosisDataAggregator.getInstance().getAggregatedDiagnosisData(secondChildSequence);
-			DiagnosisDataAggregator.getInstance().aggregate(aggregatedInvocationSequenceData, secondChildSequence);
-			Multimap<String, Tag> tagMap = ArrayListMultimap.create();
-			Tag tagOne = new Tag(RuleConstants.DIAGNOSIS_TAG_GLOBAL_CONTEXT, secondChildSequence, Tags.rootTag(secondChildSequence));
-			Tag tagTwo = new Tag("Test", new CauseCluster(secondChildSequence), tagOne);
 			Tag tagThree = new Tag(RuleConstants.DIAGNOSIS_TAG_PROBLEM_CAUSE, aggregatedInvocationSequenceData, tagTwo);
 			Tag tagFour = new Tag(RuleConstants.DIAGNOSIS_TAG_CAUSE_STRUCTURE, causeStructure, tagThree);
 			tagMap.put("D", tagFour);
@@ -239,28 +195,6 @@ public class ProblemOccurrenceResultCollectorTest extends TestBase {
 		}
 
 		@Test(expectedExceptions = RuntimeException.class)
-		public void collectProblemInstancesWithRuntimeExceptionRootCauseNotFound() {
-			CauseStructure causeStructure = new CauseStructure(CauseType.SINGLE, SourceType.TIMERDATA);
-			AggregatedDiagnosisData aggregatedInvocationSequenceData = null;
-			aggregatedInvocationSequenceData = DiagnosisDataAggregator.getInstance().getAggregatedDiagnosisData(secondChildSequence);
-			DiagnosisDataAggregator.getInstance().aggregate(aggregatedInvocationSequenceData, secondChildSequence);
-			Multimap<String, Tag> tagMap = ArrayListMultimap.create();
-			Tag tagOne = new Tag(RuleConstants.DIAGNOSIS_TAG_GLOBAL_CONTEXT, secondChildSequence, Tags.rootTag(secondChildSequence));
-			Tag tagTwo = new Tag(RuleConstants.DIAGNOSIS_TAG_PROBLEM_CONTEXT, new CauseCluster(secondChildSequence), tagOne);
-			Tag tagThree = new Tag("Test", aggregatedInvocationSequenceData, tagTwo);
-			Tag tagFour = new Tag(RuleConstants.DIAGNOSIS_TAG_CAUSE_STRUCTURE, causeStructure, tagThree);
-			tagMap.put("D", tagFour);
-			when(sessionContext.getInput()).thenReturn(secondChildSequence);
-			when(sessionContext.getStorage()).thenReturn(storage);
-			when(storage.mapTags(TagState.LEAF)).thenReturn(tagMap);
-			ProblemOccurrenceResultCollector problemInstanceResultCollector = new ProblemOccurrenceResultCollector();
-
-			List<ProblemOccurrence> problemOccurrence = problemInstanceResultCollector.collect(sessionContext);
-
-			assertThat(problemOccurrence, hasSize(0));
-		}
-
-		@Test(expectedExceptions = RuntimeException.class)
 		public void collectProblemInstancesWithRuntimeExceptionCauseStructure() {
 			AggregatedDiagnosisData aggregatedInvocationSequenceData = null;
 			aggregatedInvocationSequenceData = DiagnosisDataAggregator.getInstance().getAggregatedDiagnosisData(secondChildSequence);
@@ -281,26 +215,5 @@ public class ProblemOccurrenceResultCollectorTest extends TestBase {
 			assertThat(problemOccurrence, hasSize(0));
 		}
 
-		@Test(expectedExceptions = RuntimeException.class)
-		public void collectProblemInstancesWithRuntimeExceptionCauseStructureNotFound() {
-			CauseStructure causeStructure = new CauseStructure(CauseType.SINGLE, SourceType.TIMERDATA);
-			AggregatedDiagnosisData aggregatedInvocationSequenceData = null;
-			aggregatedInvocationSequenceData = DiagnosisDataAggregator.getInstance().getAggregatedDiagnosisData(secondChildSequence);
-			DiagnosisDataAggregator.getInstance().aggregate(aggregatedInvocationSequenceData, secondChildSequence);
-			Multimap<String, Tag> tagMap = ArrayListMultimap.create();
-			Tag tagOne = new Tag(RuleConstants.DIAGNOSIS_TAG_GLOBAL_CONTEXT, secondChildSequence, Tags.rootTag(secondChildSequence));
-			Tag tagTwo = new Tag(RuleConstants.DIAGNOSIS_TAG_PROBLEM_CONTEXT, new CauseCluster(secondChildSequence), tagOne);
-			Tag tagThree = new Tag(RuleConstants.DIAGNOSIS_TAG_PROBLEM_CAUSE, aggregatedInvocationSequenceData, tagTwo);
-			Tag tagFour = new Tag("Test", causeStructure, tagThree);
-			tagMap.put("D", tagFour);
-			when(sessionContext.getInput()).thenReturn(secondChildSequence);
-			when(sessionContext.getStorage()).thenReturn(storage);
-			when(storage.mapTags(TagState.LEAF)).thenReturn(tagMap);
-			ProblemOccurrenceResultCollector problemInstanceResultCollector = new ProblemOccurrenceResultCollector();
-
-			List<ProblemOccurrence> problemOccurrence = problemInstanceResultCollector.collect(sessionContext);
-
-			assertThat(problemOccurrence, hasSize(0));
-		}
 	}
 }

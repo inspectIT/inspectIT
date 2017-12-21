@@ -241,15 +241,15 @@ public class TimeWastingOperationsRuleTest extends TestBase {
 			long platformIdent = 108;
 			double highDuration = 2000;
 			TimerData timerData = new TimerData(new Timestamp(System.currentTimeMillis()), 10L, 20L, 30L);
+			timerData.calculateExclusiveMin(1);
 			List<InvocationSequenceData> nestedSequences = new ArrayList<>();
 			when(globalContext.getTimerData()).thenReturn(timerData);
 			when(globalContext.getDuration()).thenReturn(highDuration);
 			when(globalContext.getMethodIdent()).thenReturn(platformIdent);
 			when(globalContext.getNestedSequences()).thenReturn(nestedSequences);
-
 			List<AggregatedDiagnosisData> timeWastingOperationsResults = timeWastingOperationsRule.action();
 
-			assertThat("Method ident must be the same that the global context", timeWastingOperationsResults.get(0).getMethodIdent(), is(platformIdent));
+			assertThat("Method ident must be the same than the global context", timeWastingOperationsResults.get(0).getMethodIdent(), is(platformIdent));
 		}
 
 		@Test

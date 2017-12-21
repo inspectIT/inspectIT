@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.testng.annotations.Test;
 
 import rocks.inspectit.shared.all.communication.data.InvocationSequenceData;
+import rocks.inspectit.shared.all.communication.data.TimerData;
 import rocks.inspectit.shared.all.testbase.TestBase;
 
 /**
@@ -56,10 +57,25 @@ public class GlobalContextRuleTest extends TestBase {
 			List<InvocationSequenceData> nestedSequences = new ArrayList<>();
 			InvocationSequenceData firstChildSequence = new InvocationSequenceData(defDate, platformIdent, sensorTypeIdent, methodIdent);
 			firstChildSequence.setDuration(200d);
+			TimerData firstChildTimerData = new TimerData(new Timestamp(System.currentTimeMillis()), 10L, 20L, 30L);
+			firstChildTimerData.calculateExclusiveMin(200d);
+			firstChildTimerData.setExclusiveDuration(200d);
+			firstChildSequence.setTimerData(firstChildTimerData);
+
 			InvocationSequenceData higherDurationChild = new InvocationSequenceData(defDate, platformIdent, sensorTypeIdent, methodIdent);
 			higherDurationChild.setDuration(4000d);
+			TimerData higherDurationChildTimerData = new TimerData(new Timestamp(System.currentTimeMillis()), 10L, 20L, 30L);
+			higherDurationChildTimerData.calculateExclusiveMin(4000d);
+			higherDurationChildTimerData.setExclusiveDuration(4000d);
+			higherDurationChild.setTimerData(higherDurationChildTimerData);
+
 			InvocationSequenceData secondChildSequence = new InvocationSequenceData(defDate, platformIdent, sensorTypeIdent, methodIdent);
 			secondChildSequence.setDuration(500d);
+			TimerData secondChildSequenceTimerData = new TimerData(new Timestamp(System.currentTimeMillis()), 10L, 20L, 30L);
+			secondChildSequenceTimerData.calculateExclusiveMin(500d);
+			secondChildSequenceTimerData.setExclusiveDuration(500d);
+			secondChildSequence.setTimerData(secondChildSequenceTimerData);
+
 			nestedSequences.add(firstChildSequence);
 			nestedSequences.add(higherDurationChild);
 			nestedSequences.add(secondChildSequence);
