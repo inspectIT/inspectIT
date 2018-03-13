@@ -14,6 +14,10 @@ For Web applications the tool integrates the [End user monitoring](#user-content
 
 We hope that together we can build an alternative to the (great!) commercial tools available so that it is up the end user to choose his tooling. **Let's make inspectIT even more awesome!**
 
+| :mega: Road-Map Announcement |
+| --- |
+| The inspectIT team would like to inform the public and our open source community about the future plans for our beloved APM tool and the planned roadmap. [You can read more in our public announcment.](http://www.inspectit.rocks/public-announcement-inspectit-future-plans-and-road-map) |
+
 ## Features
 
 | See all requests | Trace-based analysis | Remote traces | Details (SQL) |
