@@ -170,6 +170,8 @@ You can get inspectIT in three ways:
 - Download a [specific version](https://github.com/inspectIT/inspectIT/releases)
 - Use a pre-built [Docker image](https://hub.docker.com/u/inspectit/)
 
+***:warning: Mac OSX users**: please read the [Running on MacOS](https://inspectit-performance.atlassian.net/wiki/spaces/DOC18/pages/93687103/Running+on+MacOS) to find out how to start the inspectIT UI on Mac.*
+
 ### Try it out with a demo application!
 You can easily test the inspectIT features by starting out the demo based on the Spring Petclinic application. The repository [inspectit-labs/spring-petclinic-microservices](https://github.com/inspectit-labs/spring-petclinic-microservices) contains start-up and docker scripts that integrate the inspectIT into the famous Spring demo app. Also check the [inspectit-labs/workshop](https://github.com/inspectit-labs/workshop) for the in-detail step-by-step workshop that will walk you through using inspectIT with the demo application. 
 
