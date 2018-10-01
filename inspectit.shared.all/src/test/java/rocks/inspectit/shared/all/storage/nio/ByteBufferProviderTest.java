@@ -4,12 +4,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.slf4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -36,6 +38,7 @@ public class ByteBufferProviderTest {
 	@BeforeMethod
 	public void init() {
 		byteBufferProvider = new ByteBufferProvider(new ByteBufferFactory(1), 1);
+		byteBufferProvider.log = mock(Logger.class);
 		byteBufferProvider.setBufferPoolMaxDirectMemoryOccupancy(0.6f);
 		byteBufferProvider.setBufferPoolMinDirectMemoryOccupancy(0.3f);
 	}
