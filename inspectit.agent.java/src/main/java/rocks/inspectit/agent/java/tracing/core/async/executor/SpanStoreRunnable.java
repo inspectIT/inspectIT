@@ -55,4 +55,25 @@ public class SpanStoreRunnable extends SpanStore implements Runnable, TagsProvid
 	public Map<String, String> getTags() {
 		return ImmutableMap.of(ExtraTags.RUNNABLE_TYPE, runnable.getClass().getName());
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Delegate the implementation to the runnable, as some Executor depend in the equals/hashCode of the originally submitted Runnable.
+	 */
+	@Override
+	public boolean equals(Object o) {
+		return runnable.equals(o);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Delegate the implementation to the runnable, as some Executor depend in the equals/hashCode of the originally submitted Runnable.
+	 */
+	@Override
+	public int hashCode() {
+		return runnable.hashCode();
+	}
+
 }
