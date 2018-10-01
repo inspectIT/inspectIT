@@ -252,12 +252,12 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 		// assume that the maxDirect memory is 64MB
 		long maxDirectMemory = 64 * 1024 * 1024;
 		try {
-			if (UnderlyingSystemInfo.JVM_PROVIDER.equals(JvmProvider.SUN) || UnderlyingSystemInfo.JVM_PROVIDER.equals(JvmProvider.ORACLE)) {
-				Class<?> vmClazz = Class.forName("sun.misc.VM");
-				Method directMemoryMethod = vmClazz.getMethod("maxDirectMemory");
-				directMemoryMethod.setAccessible(true);
-				maxDirectMemory = (Long) directMemoryMethod.invoke(null);
-			}
+			Class<?> vmClazz = Class.forName("sun.misc.VM");
+			Method directMemoryMethod = vmClazz.getMethod("maxDirectMemory");
+			directMemoryMethod.setAccessible(true);
+			maxDirectMemory = (Long) directMemoryMethod.invoke(null);
+
+			log.debug("Direct memory available for the JVM {}", maxDirectMemory);
 		} catch (Exception e) {
 			if (log.isDebugEnabled()) {
 				log.debug("Exception occurred trying to use the class sun.misc.VM via reflection", e);
@@ -275,6 +275,9 @@ public class ByteBufferProvider extends GenericObjectPool<ByteBuffer> implements
 		int maxActive = (int) (poolMaxCapacity / bufferSize);
 		super.setMaxIdle(maxIdle);
 		super.setMaxActive(maxActive);
+
+		log.info("|-Updated byte buffer pool capacity, maxIdle={} and maxActive={}", maxIdle, maxActive);
+		log.info("|-Default byte buffer size set to {}", bufferSize);
 	}
 
 	/**

@@ -244,30 +244,27 @@ class TcpConnection {
 			}
 
 			// calculate how much we have already written
-			try {
-				long written = 0;
-				List<ByteBuffer> buffers = outputStream.getAllByteBuffers();
-				for (ByteBuffer buffer : buffers) {
-					written += buffer.position();
-				}
-
-				// then try to write until the end
-				while (written < outputStream.getTotalWriteSize()) {
-					long writeSize = socketChannel.write(buffers.toArray(new ByteBuffer[buffers.size()]));
-					if (0 == writeSize) {
-						// if we can not write any more we go out
-						break outerloop;
-					}
-					written += writeSize;
-				}
-			} finally {
-				// here we have done with this output stream
-				// remove it from the write queue, prepare for new usage and return to the idle
-				// queue
-				writeQueue.remove(outputStream);
-				outputStream.prepare();
-				idleQueue.offer(outputStream);
+			long written = 0;
+			List<ByteBuffer> buffers = outputStream.getAllByteBuffers();
+			for (ByteBuffer buffer : buffers) {
+				written += buffer.position();
 			}
+
+			// then try to write until the end
+			while (written < outputStream.getTotalWriteSize()) {
+				long writeSize = socketChannel.write(buffers.toArray(new ByteBuffer[buffers.size()]));
+				if (0 == writeSize) {
+					// if we can not write any more we go out
+					break outerloop;
+				}
+				written += writeSize;
+			}
+			// here we have done with this output stream
+			// remove it from the write queue, prepare for new usage and return to the idle
+			// queue
+			writeQueue.remove(outputStream);
+			outputStream.prepare();
+			idleQueue.offer(outputStream);
 		}
 
 		return writeQueue.isEmpty();
