@@ -185,7 +185,7 @@ public class Connection {
 	public void close() {
 		boolean wasConnected = isConnected;
 		isConnected = false;
-		tcp.close();
+		tcp.close(true);
 		if ((udp != null) && (udp.connectedAddress != null)) {
 			udp.close();
 		}

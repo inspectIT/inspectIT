@@ -126,13 +126,13 @@ class TcpConnection {
 
 			return selectionKey;
 		} catch (IOException ex) {
-			close();
+			close(true);
 			throw ex;
 		}
 	}
 
 	public void connect(Selector selector, SocketAddress remoteAddress, int timeout) throws IOException {
-		close();
+		close(false);
 		// writeBuffer.clear(); Commented out by ISE
 		readBuffer.clear();
 		readBuffer.flip();
@@ -158,7 +158,7 @@ class TcpConnection {
 
 			lastReadTime = lastWriteTime = System.currentTimeMillis();
 		} catch (IOException ex) {
-			close();
+			close(true);
 			IOException ioEx = new IOException("Unable to connect to: " + remoteAddress);
 			ioEx.initCause(ex);
 			throw ioEx;
@@ -351,7 +351,7 @@ class TcpConnection {
 		return !writeQueue.isEmpty();
 	}
 
-	public void close() {
+	public void close(boolean destory) {
 		try {
 			if (socketChannel != null) {
 				socketChannel.close();
@@ -373,6 +373,25 @@ class TcpConnection {
 				ExtendedByteBufferOutputStream outputStream = writeQueue.poll();
 				if (null != outputStream) {
 					outputStream.close();
+				}
+			}
+			// if we are destroyed then we need to clear the idle queue
+			// otherwise we maintain the correct number of streams as connection can be reused in future
+			if (destory) {
+				while (!idleQueue.isEmpty()) {
+					ExtendedByteBufferOutputStream outputStream = idleQueue.poll();
+					if (null != outputStream) {
+						outputStream.close();
+					}
+				}
+			} else {
+				int idleSize = idleQueue.size();
+				for (int i = idleSize; i < MAX_OUTPUT_STREAMS; i++) {
+					try {
+						idleQueue.add(streamProvider.getExtendedByteBufferOutputStream());
+					} catch (IOException e) {
+						throw new KryoNetException("Can not re-populate the output streams for the TCP Connection.", e);
+					}
 				}
 			}
 
