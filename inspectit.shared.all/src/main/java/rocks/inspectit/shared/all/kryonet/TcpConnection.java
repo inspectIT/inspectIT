@@ -351,7 +351,7 @@ class TcpConnection {
 		return !writeQueue.isEmpty();
 	}
 
-	public void close(boolean destory) {
+	public void close(boolean destroy) {
 		try {
 			if (socketChannel != null) {
 				socketChannel.close();
@@ -377,7 +377,7 @@ class TcpConnection {
 			}
 			// if we are destroyed then we need to clear the idle queue
 			// otherwise we maintain the correct number of streams as connection can be reused in future
-			if (destory) {
+			if (destroy) {
 				while (!idleQueue.isEmpty()) {
 					ExtendedByteBufferOutputStream outputStream = idleQueue.poll();
 					if (null != outputStream) {
