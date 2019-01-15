@@ -1,8 +1,11 @@
-[![Twitter Account](https://img.shields.io/badge/Twitter-follow%20us-brightgreen.svg)](https://twitter.com/inspectIT_APM) [![Gitter](https://img.shields.io/badge/Gitter-join%20chat-brightgreen.svg)](https://gitter.im/inspectIT/chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![LinkedIn Group](https://img.shields.io/badge/LinkedIn-join%20group-brightgreen.svg)](https://www.linkedin.com/groups/inspectIT-APM-User-Group-8533412/about) [![YouTube](https://img.shields.io/badge/YouTube-watch-brightgreen.svg)](https://www.youtube.com/channel/UCcE-Z-Yndk67PjObEn071fg) [![Build Status](http://jenkins.inspectit.rocks/buildStatus/icon?job=inspectIT%20-%20Integration)](http://jenkins.inspectit.rocks/job/inspectIT%20-%20Integration/) [![License](https://img.shields.io/badge/License-Apache/v2-brightgreen.svg)](https://github.com/inspectIT/inspectIT/blob/master/license/LICENSE.txt)
+| :fire: inspectIT OpenCensus Edition has been released :fire: |
+| --- |
+| The **inspectIT OCE** project provides an *improved Java agent newly developed from scratch* focusing on scalability, compatibility, flexibility and interaction with other awesome open source tools and frameworks. <br /><br /> :small_orange_diamond: Check it out: [inspectIT OpenCensus Edition](https://github.com/inspectIT/inspectit-oce) |
+
+
+[![Build Status](http://jenkins.inspectit.rocks/buildStatus/icon?job=inspectIT%20-%20Integration)](http://jenkins.inspectit.rocks/job/inspectIT%20-%20Integration/) [![License](https://img.shields.io/badge/License-Apache/v2-brightgreen.svg)](https://github.com/inspectIT/inspectIT/blob/master/license/LICENSE.txt)
 
 # inspectIT
-
-> inspectIT is an open source APM (Application Performance Management) tool for analyzing Java (EE) applications.
 
 [![inspectIT](https://raw.githubusercontent.com/inspectit-labs/awesome-inspectit/master/media/inspectit.png)](http://www.inspectit.rocks/)
 
